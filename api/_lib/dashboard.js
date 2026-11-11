@@ -1,4 +1,5 @@
 const { getInstalledGuilds, isConfigured } = require("./drew");
+const { consumeOAuthState, createSession, setHtmlSecurityHeaders } = require("./security");
 
 const BOT_CLIENT_ID = process.env.DISCORD_CLIENT_ID || "1441457111409103010";
 const ADMINISTRATOR = 0x8n;
@@ -57,11 +58,10 @@ const inviteUrlFor = (guildId) => {
   return `https://discord.com/oauth2/authorize?${params.toString()}`;
 };
 
+// Only protections the bot actually enforces today.
 const PROTECTIONS = [
   ["anti_nuke_enabled", "Anti-nuke"],
   ["anti_raid_enabled", "Anti-raid"],
-  ["anti_spam_enabled", "Anti-spam"],
-  ["automod_enabled", "Automod"],
   ["verification_enabled", "Verificación"],
   ["logging_enabled", "Logs"],
 ];
@@ -101,7 +101,8 @@ const renderGuildCard = (guild, installed, apiAvailable) => {
     body = `
       <p class="dash-guild__members"><strong>${numberFormat.format(memberCount)}</strong> miembros</p>
       ${renderProtections(installed.settings)}`;
-    actions = `<a class="ghost" href="/status.html?server=${escapeHtml(guild.id)}">Ver shard y estado</a>`;
+    actions = `<a class="cta" href="/api/dashboard/guild?id=${escapeHtml(guild.id)}">Configurar</a>
+      <a class="ghost" href="/status.html?server=${escapeHtml(guild.id)}">Estado</a>`;
   } else if (apiAvailable) {
     body = '<p class="dash-guild__note">Drew aún no está en este servidor.</p>';
     actions = `<a class="cta cta--discord" href="${escapeHtml(inviteUrlFor(guild.id))}">Invitar a Drew</a>`;
@@ -180,6 +181,10 @@ const renderAuthPage = (user, guilds, installedGuilds, apiAvailable) => {
         <p class="eyebrow">Dashboard</p>
         <h1 class="page-head__title">Hola, <span class="gradient-text">${safeDisplayName}</span></h1>
         <p class="page-head__copy">Conectado como @${safeUsername}. Estos son los servidores que puedes gestionar.</p>
+        <p class="dash-head__actions">
+          <a class="ghost" href="/developers.html">API para desarrolladores e IAs</a>
+          <a class="ghost" href="/api/auth/logout">Cerrar sesión</a>
+        </p>
       </section>
 
       <div class="page-body">
@@ -246,6 +251,7 @@ const renderAuthPage = (user, guilds, installedGuilds, apiAvailable) => {
         <h4>Resources</h4>
         <ul>
           <li><a href="/status.html">Status</a></li>
+          <li><a href="/developers.html">API</a></li>
           <li><a href="https://docs.drewbot.xyz">Docs</a></li>
           <li><a href="https://discord.gg/5e2jm7QDSS" target="_blank" rel="noreferrer">Support</a></li>
         </ul>
@@ -279,6 +285,11 @@ module.exports = async (request, response) => {
   const code = request.query.code;
 
   if (!code || typeof code !== "string") {
+    return redirectToDiscordAuth(response);
+  }
+  // The state must match the cookie set when the login started in this
+  // browser; otherwise someone could log the visitor into their account.
+  if (!consumeOAuthState(request, response, request.query.state)) {
     return redirectToDiscordAuth(response);
   }
 
@@ -324,6 +335,9 @@ module.exports = async (request, response) => {
 
     const tokenData = await tokenResponse.json();
     const accessToken = tokenData.access_token;
+    if (typeof accessToken !== "string" || !accessToken) {
+      return redirectToDiscordAuth(response);
+    }
 
     const [userResponse, guildsResponse] = await Promise.all([
       fetch("https://discord.com/api/users/@me", {
@@ -357,10 +371,21 @@ module.exports = async (request, response) => {
       }
     }
 
+    // The access token is used only for this request and never stored. The
+    // session keeps just the user and the guilds they can manage.
+    createSession(request, response, {
+      userId: user.id,
+      name: user.global_name || user.username,
+      guilds: guilds.filter(canManage).map((g) => ({
+        id: g.id,
+        level: g.owner ? "o" : isAdminOf(g) ? "a" : "m",
+      })),
+    });
+
+    setHtmlSecurityHeaders(response);
     return response
       .status(200)
       .setHeader("Content-Type", "text/html; charset=utf-8")
-      .setHeader("Cache-Control", "private, no-store")
       .send(renderAuthPage(user, guilds, installedGuilds, apiAvailable));
   } catch (_error) {
     return response.status(500).json({
