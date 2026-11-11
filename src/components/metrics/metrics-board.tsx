@@ -46,7 +46,7 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
         viewBox={`0 0 ${W} ${H}`}
         className="h-auto w-full touch-none select-none"
         role="img"
-        aria-label={`${series.label} over the last ${RANGE_LABEL[range]}`}
+        aria-label={`${t(series.label)} · ${t("over the last")} ${t(RANGE_LABEL[range])}`}
         onPointerLeave={() => setHover(null)}
         onPointerMove={(e) => {
           const r = e.currentTarget.getBoundingClientRect();
@@ -114,7 +114,7 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
 function Delta({ now, before, invert }: { now: number; before: number; invert?: boolean }) {
   if (!before) return null;
   const d = now - before;
-  if (d === 0) return <span className="text-xs text-mute">no change</span>;
+  if (d === 0) return <span className="text-xs text-mute">{t("no change")}</span>;
   const good = invert ? d < 0 : d > 0;
   const pct = Math.abs((d / before) * 100);
   return (
@@ -201,9 +201,9 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
       label: "Members per server",
       icon: TrendingUp,
       value: cur?.guilds ? formatExact(Math.round(cur.users / cur.guilds)) : "0",
-      note: <Muted>on average</Muted>,
+      note: <Muted>{t("on average")}</Muted>,
     },
-    { label: `Commands (${range})`, icon: Terminal, value: formatCompact(stats.commands), note: <Muted>{stats.perHour.toFixed(1)} per hour</Muted> },
+    { label: `Commands (${range})`, icon: Terminal, value: formatCompact(stats.commands), note: <Muted>{stats.perHour.toFixed(1)} {t("per hour")}</Muted> },
     {
       label: "Avg latency",
       icon: Gauge,
@@ -216,7 +216,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
       value: points.length ? `${stats.availability.toFixed(stats.availability === 100 ? 0 : 2)}%` : "...",
       note: <Muted>{cur ? `${cur.shardsOnline}/${cur.shardsTotal} shards online` : ""}</Muted>,
     },
-    { label: "Uptime", icon: Clock3, value: cur?.uptimeSeconds ? formatUptime(cur.uptimeSeconds) : "...", note: <Muted>since last restart</Muted> },
+    { label: "Uptime", icon: Clock3, value: cur?.uptimeSeconds ? formatUptime(cur.uptimeSeconds) : "...", note: <Muted>{t("since last restart")}</Muted> },
   ];
 
   return (
@@ -273,7 +273,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
                   <h2 className="flex items-center gap-2 text-sm font-medium">
                     <s.icon className="size-4 text-brand" /> {s.label}
                   </h2>
-                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-mute">{RANGE_LABEL[range]}</span>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-mute">{t(RANGE_LABEL[range])}</span>
                 </header>
                 <Chart points={points} series={s} range={range} />
               </article>
