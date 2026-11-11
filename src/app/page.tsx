@@ -151,10 +151,10 @@ export default async function HomePage() {
             className="pointer-events-none absolute -bottom-20 right-[-40px] opacity-25 sm:right-10 sm:opacity-40"
           />
           <div className="relative mx-auto max-w-7xl px-6 py-16 sm:px-10 sm:py-20 lg:px-12">
-            <h2 className="text-balance text-4xl font-semibold tracking-[-0.02em] text-[#03110a] sm:text-5xl">
+            <h2 className="text-balance text-4xl font-semibold tracking-[-0.02em] text-white sm:text-5xl">
               Protect your server in under a minute
             </h2>
-            <p className="mt-4 text-lg text-[#06301c]">Invite Drew, run /opsec setup and sleep well tonight</p>
+            <p className="mt-4 text-lg text-white/90">Invite Drew, run /opsec setup and sleep well tonight</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a
                 href={SITE.invite}
@@ -164,7 +164,7 @@ export default async function HomePage() {
               </a>
               <a
                 href={SITE.support}
-                className="inline-flex h-12 items-center gap-2 rounded-md border border-black/15 bg-white/30 px-6 text-[0.98rem] font-semibold text-[#03110a] transition-all hover:-translate-y-0.5 hover:bg-white/45"
+                className="inline-flex h-12 items-center gap-2 rounded-md border border-white bg-white px-6 text-[0.98rem] font-semibold text-[#03110a] shadow-lg transition-all hover:-translate-y-0.5 hover:bg-white/90"
               >
                 Join support
               </a>
