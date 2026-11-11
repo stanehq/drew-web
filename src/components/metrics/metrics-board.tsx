@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useId, useMemo, useState } from "react";
-import { Activity, Gauge, Server, Terminal, Users } from "lucide-react";
+import { Activity, Clock3, Gauge, Hash, Layers, Server, ShieldCheck, Terminal, TrendingUp, Users } from "lucide-react";
 import type { PublicMetricPoint, PublicMetrics } from "@/lib/public-metrics";
-import { formatCompact, formatExact } from "@/lib/format";
-import { Aurora } from "@/components/aurora";
+import { formatCompact, formatExact, formatUptime } from "@/lib/format";
 
 const RANGES = ["24h", "7d", "30d", "90d"] as const;
 type Range = (typeof RANGES)[number];
@@ -28,11 +27,12 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
   const max = Math.max(1, ...values);
   const min = series.bars ? 0 : Math.min(...values);
   const span = Math.max(1, max - min);
-  const lo = series.bars ? 0 : Math.max(0, min - span * 0.15);
-  const hi = max + span * 0.15;
+  const flat = max === min;
+  const lo = series.bars ? 0 : flat ? Math.max(0, min - 1) : Math.max(0, min - span * 0.15);
+  const hi = flat ? max + 1 : max + span * 0.15;
   const x = (i: number) => PAD.l + (points.length <= 1 ? (W - PAD.l - PAD.r) / 2 : (i / (points.length - 1)) * (W - PAD.l - PAD.r));
   const y = (v: number) => PAD.t + (1 - (v - lo) / (hi - lo || 1)) * (H - PAD.t - PAD.b);
-  const ticks = [lo, (lo + hi) / 2, hi];
+  const ticks = [lo, (lo + hi) / 2, hi].filter((t, i, a) => a.findIndex((u) => Math.round(u) === Math.round(t)) === i);
   const line = values.map((v, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join("");
   const area = `${line}L${x(values.length - 1).toFixed(1)},${H - PAD.b}L${x(0).toFixed(1)},${H - PAD.b}Z`;
   const barW = Math.max(2, ((W - PAD.l - PAD.r) / Math.max(points.length, 1)) * 0.6);
@@ -127,9 +127,13 @@ function Delta({ now, before, invert }: { now: number; before: number; invert?: 
 const CHARTS: Series[] = [
   { key: "guilds", label: "Servers", icon: Server },
   { key: "users", label: "Members", icon: Users },
+  { key: "channels", label: "Channels", icon: Hash },
   { key: "commands", label: "Commands", icon: Terminal, bars: true },
   { key: "latencyMs", label: "Gateway latency", icon: Gauge, unit: "ms" },
+  { key: "shardsOnline", label: "Shards online", icon: Layers },
 ];
+
+const Muted = ({ children }: { children: React.ReactNode }) => <span className="text-xs text-mute">{children}</span>;
 
 export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics | null; initialRange: Range }) {
   const [range, setRange] = useState<Range>(initialRange);
@@ -164,38 +168,90 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
   };
 
   const points = useMemo(() => (data?.range === range ? data.points : []), [data, range]);
-  const first = points[0];
-  const last = points[points.length - 1];
-  const commandsInRange = points.reduce((s, p) => s + p.commands, 0);
-  const avgLatency = points.length ? points.reduce((s, p) => s + p.latencyMs, 0) / points.length : 0;
+  const stats = useMemo(() => {
+    const first = points[0];
+    const last = points[points.length - 1];
+    const commands = points.reduce((s, p) => s + p.commands, 0);
+    const latencies = points.map((p) => p.latencyMs).filter((v) => v > 0);
+    const avgLatency = latencies.length ? latencies.reduce((a, b) => a + b, 0) / latencies.length : 0;
+    const healthy = points.filter((p) => p.shardsTotal > 0 && p.shardsOnline >= p.shardsTotal).length;
+    const availability = points.length ? (healthy / points.length) * 100 : 0;
+    const spanHours = first && last ? Math.max(1, (last.t - first.t) / 3600) : 1;
+    const peakUsers = points.reduce<PublicMetricPoint | null>((m, p) => (!m || p.users > m.users ? p : m), null);
+    const busiest = points.reduce<PublicMetricPoint | null>((m, p) => (!m || p.commands > m.commands ? p : m), null);
+    return {
+      first,
+      last,
+      commands,
+      perHour: commands / spanHours,
+      avgLatency,
+      best: latencies.length ? Math.min(...latencies) : 0,
+      worst: latencies.length ? Math.max(...latencies) : 0,
+      availability,
+      peakUsers,
+      busiest,
+    };
+  }, [points]);
   const cur = data?.current;
+  const { first, last } = stats;
+  const signed = (n: number) => `${n >= 0 ? "+" : "−"}${formatExact(Math.abs(n))}`;
 
   const kpis = [
-    { label: "Servers", icon: Server, value: formatExact(cur?.guilds ?? 0), delta: first && last && <Delta now={last.guilds} before={first.guilds} /> },
-    { label: "Members", icon: Users, value: formatCompact(cur?.users ?? 0), delta: first && last && <Delta now={last.users} before={first.users} /> },
-    { label: `Commands · ${range}`, icon: Terminal, value: formatCompact(commandsInRange), delta: <span className="text-xs text-mute">{formatCompact(cur?.commandsUsed ?? 0)} since restart</span> },
-    { label: "Avg latency", icon: Gauge, value: `${Math.round(avgLatency || cur?.latencyMs || 0)} ms`, delta: <span className="text-xs text-mute">{cur ? `${cur.shardsOnline}/${cur.shardsTotal} shards online` : ""}</span> },
+    { label: "Servers", icon: Server, value: formatExact(cur?.guilds ?? 0), note: first && last && <Delta now={last.guilds} before={first.guilds} /> },
+    { label: "Members", icon: Users, value: formatCompact(cur?.users ?? 0), note: first && last && <Delta now={last.users} before={first.users} /> },
+    { label: "Channels", icon: Hash, value: formatCompact(cur?.channels ?? 0), note: first && last && <Delta now={last.channels} before={first.channels} /> },
+    {
+      label: "Members per server",
+      icon: TrendingUp,
+      value: cur?.guilds ? formatExact(Math.round(cur.users / cur.guilds)) : "0",
+      note: <Muted>on average</Muted>,
+    },
+    { label: `Commands · ${range}`, icon: Terminal, value: formatCompact(stats.commands), note: <Muted>{stats.perHour.toFixed(1)} per hour</Muted> },
+    {
+      label: "Avg latency",
+      icon: Gauge,
+      value: `${Math.round(stats.avgLatency || cur?.latencyMs || 0)} ms`,
+      note: <Muted>{stats.best ? `${stats.best} best · ${stats.worst} worst` : ""}</Muted>,
+    },
+    {
+      label: "Availability",
+      icon: ShieldCheck,
+      value: points.length ? `${stats.availability.toFixed(stats.availability === 100 ? 0 : 2)}%` : "...",
+      note: <Muted>{cur ? `${cur.shardsOnline}/${cur.shardsTotal} shards online` : ""}</Muted>,
+    },
+    { label: "Uptime", icon: Clock3, value: cur?.uptimeSeconds ? formatUptime(cur.uptimeSeconds) : "...", note: <Muted>since last restart</Muted> },
   ];
 
+  const highlights =
+    points.length >= 2 && first && last
+      ? [
+          ["Growth", `${signed(last.guilds - first.guilds)} servers, ${signed(last.users - first.users)} members`],
+          ["Peak members", stats.peakUsers ? `${formatExact(stats.peakUsers.users)} on ${fmtFull(stats.peakUsers.t)}` : "..."],
+          [
+            "Busiest period",
+            stats.busiest && stats.busiest.commands > 0 ? `${formatExact(stats.busiest.commands)} commands at ${fmtFull(stats.busiest.t)}` : "No commands yet",
+          ],
+        ]
+      : [];
+
   return (
-    <section className="noise relative isolate overflow-hidden pb-24 pt-32 sm:pt-36">
-      <div className="dot-grid absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_at_top,black,transparent_60%)]" />
-      <Aurora className="-z-10 opacity-50" />
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="animate-fade-up flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+    <section className="relative isolate overflow-hidden border-b border-line pt-[76px]">
+      <div className="line-grid absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_70%_50%_at_50%_0%,black,transparent)]" />
+      <div className="mx-auto max-w-6xl border-x border-line">
+        <div className="animate-fade-up flex flex-col gap-6 px-4 pb-10 pt-16 sm:flex-row sm:items-end sm:justify-between sm:px-8">
           <div>
             <p className="eyebrow">Metrics</p>
-            <h1 className="mt-3 text-4xl font-semibold tracking-[-0.03em] sm:text-5xl">Drew in numbers.</h1>
+            <h1 className="mt-3 text-5xl font-semibold tracking-[-0.045em] sm:text-6xl">Drew in numbers.</h1>
             <p className="mt-3 max-w-xl text-soft">Public, aggregate figures sampled every five minutes. No server or user data is shown.</p>
           </div>
-          <div role="tablist" aria-label="Time range" className="flex w-fit border border-line bg-white/[0.03] p-1">
+          <div role="tablist" aria-label="Time range" className="flex w-fit border border-line bg-night p-1">
             {RANGES.map((r) => (
               <button
                 key={r}
                 role="tab"
                 aria-selected={range === r}
                 onClick={() => pick(r)}
-                className={`px-4 py-1.5 font-mono text-xs transition-colors ${range === r ?"bg-brand text-[#03110a]":"text-soft hover:text-fg"}`}
+                className={`px-4 py-1.5 font-mono text-xs transition-colors ${range === r ? "bg-brand text-[#03110a]" : "text-soft hover:text-fg"}`}
               >
                 {r}
               </button>
@@ -203,20 +259,31 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
           </div>
         </div>
 
-        <div className="mt-10 grid grid-cols-2 gap-3 lg:grid-cols-4">
-          {kpis.map(({ label, icon: Icon, value, delta }) => (
-            <div key={label} className="surface min-w-0 p-5">
+        <div className="grid grid-cols-2 gap-px border-t border-line bg-line lg:grid-cols-4">
+          {kpis.map(({ label, icon: Icon, value, note }) => (
+            <div key={label} className="min-w-0 bg-ink p-5 sm:p-6">
               <p className="flex items-center gap-2 text-xs text-mute">
                 <Icon className="size-3.5 text-brand" /> {label}
               </p>
-              <p className="mt-3 truncate text-2xl font-semibold tracking-tight sm:text-3xl">{data ? value : "..."}</p>
-              <div className="mt-1 h-4">{data && delta}</div>
+              <p className="mt-3 truncate font-display text-2xl font-semibold tabular-nums tracking-[-0.03em] sm:text-3xl">{data ? value : "..."}</p>
+              <div className="mt-1.5 min-h-5 truncate leading-5">{data && note}</div>
             </div>
           ))}
         </div>
 
+        {highlights.length > 0 && (
+          <div className="grid gap-px border-t border-line bg-line md:grid-cols-3">
+            {highlights.map(([k, v]) => (
+              <div key={k} className="min-w-0 bg-night px-5 py-4 sm:px-6">
+                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-mute">{k}</p>
+                <p className="mt-1 truncate text-sm text-fg">{v}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
         {points.length < 2 ? (
-          <div className="surface mt-4 flex flex-col items-center gap-3 px-6 py-20 text-center">
+          <div className="flex flex-col items-center gap-3 border-t border-line px-6 py-20 text-center">
             <Activity className="size-6 text-brand" />
             <p className="font-medium">{failed || !data ? "Metrics are unavailable right now." : "Collecting data…"}</p>
             <p className="max-w-sm text-sm text-mute">
@@ -226,9 +293,9 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
             </p>
           </div>
         ) : (
-          <div className="mt-4 grid gap-4 lg:grid-cols-2">
+          <div className="grid gap-px border-t border-line bg-line lg:grid-cols-2">
             {CHARTS.map((s) => (
-              <article key={s.key} className="surface min-w-0 p-5">
+              <article key={s.key} className="min-w-0 bg-ink p-5 sm:p-6">
                 <header className="mb-3 flex items-center justify-between">
                   <h2 className="flex items-center gap-2 text-sm font-medium">
                     <s.icon className="size-4 text-brand" /> {s.label}
@@ -240,7 +307,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
             ))}
           </div>
         )}
-        {failed && data && <p className="mt-4 text-center text-xs text-warn">Showing the last data we received. Retrying…</p>}
+        {failed && data && <p className="border-t border-line py-3 text-center text-xs text-warn">Showing the last data we received. Retrying…</p>}
       </div>
     </section>
   );

@@ -13,6 +13,7 @@ import {
   Users,
 } from "lucide-react";
 import { ButtonLink } from "@/components/button";
+import { CommandField } from "@/components/command-field";
 import { DiscordIcon } from "@/components/discord-icon";
 import { LiveStats } from "@/components/live-stats";
 import { SITE } from "@/lib/site";
@@ -52,7 +53,7 @@ export default function HomePage() {
     <>
       {/* Hero */}
       <section className="relative isolate overflow-hidden border-b border-line pt-[76px]">
-        <div className="line-grid absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_0%,black,transparent)]" />
+        <CommandField className="-z-10" />
         <div
           className="absolute left-1/2 top-0 -z-10 h-[420px] w-[820px] max-w-full -translate-x-1/2 bg-[radial-gradient(closest-side,rgb(65_207_139/0.18),transparent)] blur-2xl"
           aria-hidden
@@ -135,37 +136,35 @@ export default function HomePage() {
 
       {/* CTA */}
       <section className="border-b border-line">
-        <div className="relative mx-auto max-w-6xl overflow-hidden border-x border-line bg-brand md:bg-[linear-gradient(110deg,#41cf8b_0%,#2fae72_40%,#0e2a1d_80%,#07100c_100%)]">
-          <div className="line-grid absolute inset-0 opacity-30 [mask-image:linear-gradient(90deg,transparent,black)]" aria-hidden />
-          <div className="relative grid items-center gap-8 px-6 py-16 sm:px-12 md:grid-cols-[1.4fr_1fr]">
-            <div>
-              <h2 className="text-balance text-4xl font-semibold tracking-[-0.035em] text-[#03110a] sm:text-5xl">
-                Protect your server in under a minute.
-              </h2>
-              <p className="mt-4 text-lg text-[#06301c]">Invite Drew, run /opsec setup, and sleep well tonight.</p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <a
-                  href={SITE.invite}
-                  className="inline-flex h-12 items-center gap-2 bg-[#03110a] px-6 text-[0.98rem] font-medium text-white transition-colors hover:bg-black"
-                >
-                  <DiscordIcon /> Add to Discord
-                </a>
-                <Link
-                  href="/pricing"
-                  className="inline-flex h-12 items-center gap-2 px-6 text-[0.98rem] font-medium text-[#03110a] ring-1 ring-inset ring-[#03110a]/30 transition-colors hover:bg-white/20"
-                >
-                  See pricing <ArrowRight className="size-4" />
-                </Link>
-              </div>
+        <div className="relative mx-auto max-w-6xl overflow-hidden border-x border-line bg-brand bg-no-repeat bg-origin-border md:bg-[linear-gradient(110deg,#41cf8b_0%,#2fae72_38%,#0e2a1d_78%,#07100c_100%)]">
+          <div className="dot-grid absolute inset-0 opacity-40 [mask-image:linear-gradient(90deg,transparent,black)]" aria-hidden />
+          <Image
+            src="/brand/drew-icon.svg"
+            unoptimized
+            alt=""
+            width={340}
+            height={340}
+            className="pointer-events-none absolute -bottom-20 right-[-40px] opacity-25 sm:right-10 sm:opacity-40"
+          />
+          <div className="relative max-w-xl px-8 py-16 sm:px-14">
+            <h2 className="text-balance text-4xl font-semibold tracking-[-0.035em] text-[#03110a] sm:text-5xl">
+              Protect your server in under a minute.
+            </h2>
+            <p className="mt-4 text-lg text-[#06301c]">Invite Drew, run /opsec setup, and sleep well tonight.</p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a
+                href={SITE.invite}
+                className="inline-flex h-12 items-center gap-2 bg-[#03110a] px-6 text-[0.98rem] font-medium text-white transition-colors hover:bg-black"
+              >
+                <DiscordIcon /> Add to Discord
+              </a>
+              <a
+                href={SITE.support}
+                className="inline-flex h-12 items-center gap-2 bg-white/25 px-6 text-[0.98rem] font-medium text-[#03110a] ring-1 ring-inset ring-black/10 transition-colors hover:bg-white/35"
+              >
+                Join support
+              </a>
             </div>
-            <Image
-              src="/brand/drew-icon.svg"
-              unoptimized
-              alt=""
-              width={260}
-              height={260}
-              className="pointer-events-none hidden justify-self-center drop-shadow-[0_20px_40px_rgb(0_0_0/0.35)] md:block"
-            />
           </div>
         </div>
       </section>

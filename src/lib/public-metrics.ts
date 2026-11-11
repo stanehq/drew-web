@@ -1,7 +1,7 @@
 import "server-only";
 import { getBotMetrics, type MetricRange } from "./drew";
 
-export type PublicMetricPoint = { t: number; guilds: number; users: number; shardsOnline: number; shardsTotal: number; latencyMs: number; commands: number };
+export type PublicMetricPoint = { t: number; guilds: number; users: number; channels: number; shardsOnline: number; shardsTotal: number; latencyMs: number; commands: number };
 export type PublicMetrics = {
   available: true;
   range: MetricRange;
@@ -9,7 +9,16 @@ export type PublicMetrics = {
   to: number;
   stepSeconds: number;
   points: PublicMetricPoint[];
-  current: { guilds: number; users: number; shardsOnline: number; shardsTotal: number; latencyMs: number; commandsUsed: number };
+  current: {
+    guilds: number;
+    users: number;
+    channels: number;
+    shardsOnline: number;
+    shardsTotal: number;
+    latencyMs: number;
+    commandsUsed: number;
+    uptimeSeconds: number;
+  };
 };
 
 const n = (v: unknown) => (Number.isFinite(Number(v)) ? Number(v) : 0);
@@ -27,6 +36,7 @@ export async function getPublicMetrics(range: MetricRange): Promise<PublicMetric
       t: n(p.t),
       guilds: n(p.guilds),
       users: n(p.users),
+      channels: n(p.channels),
       shardsOnline: n(p.shards_online),
       shardsTotal: n(p.shards_total),
       latencyMs: n(p.latency_ms),
@@ -35,10 +45,12 @@ export async function getPublicMetrics(range: MetricRange): Promise<PublicMetric
     current: {
       guilds: n(m.current?.guilds),
       users: n(m.current?.users),
+      channels: n(m.current?.channels),
       shardsOnline: n(m.current?.shards_online),
       shardsTotal: n(m.current?.shards_total),
       latencyMs: n(m.current?.latency_ms),
       commandsUsed: n(m.current?.commands_used),
+      uptimeSeconds: n(m.current?.uptime_seconds),
     },
   };
 }
