@@ -7,8 +7,10 @@ export const SITE = {
   docs: "https://docs.drewbot.xyz",
   topgg: "https://top.gg/bot/1441457111409103010",
   api: "https://api.drewbot.xyz/api/v1",
-  privacy: "https://drewbot.xyz/privacy/",
-  terms: "https://drewbot.xyz/tos/",
+  privacy: "/privacy",
+  terms: "/terms",
+  purchaseTerms: "/purchase-terms",
+  userAgreement: "/user-agreement",
   invite:
     "https://discord.com/oauth2/authorize?client_id=1441457111409103010&permissions=8&integration_type=0&scope=bot+applications.commands",
 };

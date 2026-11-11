@@ -10,6 +10,13 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Legal pages read their markdown at request time.
+  outputFileTracingIncludes: {
+    "/terms": ["./content/legal/**"],
+    "/privacy": ["./content/legal/**"],
+    "/purchase-terms": ["./content/legal/**"],
+    "/user-agreement": ["./content/legal/**"],
+  },
   reactStrictMode: true,
   images: {
     remotePatterns: [{ protocol: "https", hostname: "cdn.discordapp.com" }],
@@ -24,6 +31,10 @@ const nextConfig: NextConfig = {
       { source: "/status.html", destination: "/status", permanent: true },
       { source: "/premium.html", destination: "/pricing", permanent: true },
       { source: "/premium", destination: "/pricing", permanent: true },
+      { source: "/tos", destination: "/terms", permanent: true },
+      { source: "/tos.html", destination: "/terms", permanent: true },
+      { source: "/privacy.html", destination: "/privacy", permanent: true },
+      { source: "/purchase", destination: "/purchase-terms", permanent: true },
       { source: "/developers.html", destination: "/developers", permanent: true },
       { source: "/404.html", destination: "/", permanent: true },
       {

@@ -62,7 +62,7 @@ const FAQ = [
   ["Which payment methods do you accept?", "PayPal, credit and debit cards and crypto. Apple Pay and Google Pay where available."],
   [
     "Do you offer refunds?",
-    "Refunds are reviewed case by case. If you live in the EU you also have a 14-day right of withdrawal. Details are in our purchase terms.",
+    "Refunds are reviewed case by case. If you live in the EU you also have a 14-day right of withdrawal. Details are in our Purchase Terms.",
   ],
 ];
 
