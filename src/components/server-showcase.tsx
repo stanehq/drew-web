@@ -5,63 +5,58 @@ import type { PublicServer, PublicShowcase } from "@/lib/public-showcase";
 
 function ServerCard({ s }: { s: PublicServer }) {
   return (
-    <li className="flex w-[290px] shrink-0 items-center gap-4 border border-line bg-night px-5 py-4">
+    <li className="flex h-[108px] w-[360px] shrink-0 items-center gap-5 rounded-[24px] border border-white/[0.035] bg-[#151619] px-6 py-5 shadow-[0_8px_24px_rgba(0,0,0,0.16)] sm:w-[396px]">
       {s.icon ? (
-        <Image src={s.icon} alt="" width={52} height={52} className="size-[52px] shrink-0 border border-line" />
+        <Image src={s.icon} alt="" width={72} height={72} className="size-[72px] shrink-0 rounded-[18px] object-cover" />
       ) : (
-        <span className="flex size-[52px] shrink-0 items-center justify-center border border-line bg-white/[0.04] font-display text-lg font-semibold text-soft">
+        <span className="flex size-[72px] shrink-0 items-center justify-center rounded-[18px] bg-white/[0.05] font-display text-xl font-semibold text-soft">
           {s.name.slice(0, 1).toUpperCase()}
         </span>
       )}
       <div className="min-w-0">
-        <p className="flex items-center gap-1.5 truncate font-medium text-fg">
+        <p className="flex items-center gap-1.5 truncate text-[1.05rem] font-semibold text-fg">
           <span className="truncate">{s.name}</span>
           {(s.verified || s.partnered) && (
             <BadgeCheck className="size-4 shrink-0 text-brand" aria-label={s.verified ? "Verified" : "Partnered"} />
           )}
         </p>
-        <p className="mt-1 flex items-center gap-1.5 text-sm text-mute">
-          <Users className="size-3.5" /> {formatCompact(s.members)} members
+        <p className="mt-1 flex items-center gap-1.5 text-sm font-medium text-mute">
+          <Users className="size-3.5" /> {formatCompact(s.members)} Members
         </p>
       </div>
     </li>
   );
 }
 
-// Seconds each card takes to cross, so the speed is the same whatever the count.
 const SECONDS_PER_CARD = 4;
-// Minimum cards per copy of the track, so even a short list fills wide screens.
 const MIN_CARDS = 8;
 
-/** Looping marquee of the largest servers using Drew. */
+/** Full-bleed, seamless server marquee styled like the supplied reference. */
 export function ServerShowcase({ data }: { data: PublicShowcase }) {
   const { servers } = data;
   if (servers.length === 0) return null;
   const repeats = Math.ceil(MIN_CARDS / servers.length);
   const track = Array.from({ length: repeats }, () => servers).flat();
   return (
-    <section className="border-b border-line" aria-label="Servers using Drew">
-      <div className="mx-auto max-w-6xl border-x border-line">
-        <div className="group relative overflow-hidden py-8 [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
-          <div
-            className="flex w-max animate-marquee gap-4 group-hover:[animation-play-state:paused]"
-            style={{ animationDuration: `${track.length * SECONDS_PER_CARD}s` }}
-          >
-            {/* The track is rendered twice so the loop is seamless. */}
-            {[0, 1].map((copy) => (
-              <ul key={copy} className="flex gap-4" aria-hidden={copy === 1 || undefined}>
-                {track.map((s, i) => (
-                  <ServerCard key={`${copy}-${i}`} s={s} />
-                ))}
-              </ul>
-            ))}
-          </div>
+    <section className="w-full overflow-hidden border-b border-line" aria-label="Servers using Drew">
+      <div className="group relative w-full overflow-hidden py-8 [mask-image:linear-gradient(90deg,transparent,black_3%,black_97%,transparent)]">
+        <div
+          className="flex w-max animate-marquee gap-5 group-hover:[animation-play-state:paused]"
+          style={{ animationDuration: `${track.length * SECONDS_PER_CARD}s` }}
+        >
+          {[0, 1].map((copy) => (
+            <ul key={copy} className="flex gap-5" aria-hidden={copy === 1 || undefined}>
+              {track.map((s, i) => (
+                <ServerCard key={`${copy}-${i}`} s={s} />
+              ))}
+            </ul>
+          ))}
         </div>
-        <p className="border-t border-line px-4 py-3 text-center text-xs text-mute">
-          Ranked by people, bots excluded. Server owners can hide theirs with{" "}
-          <code className="font-mono text-soft">/opsec servershow off</code> or from the dashboard.
-        </p>
       </div>
+      <p className="border-t border-line px-4 py-3 text-center text-xs text-mute">
+        Ranked by people, bots excluded. Server owners can hide theirs with{" "}
+        <code className="font-mono text-soft">/opsec servershow off</code> or from the dashboard.
+      </p>
     </section>
   );
 }
