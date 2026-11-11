@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 const endpoints: [string, string, string, string][] = [
-  ["GET", "/schema", "—", "Every setting: type, options, range, description, enforced, privileged"],
+  ["GET", "/schema", "none", "Every setting: type, options, range, description, enforced, privileged"],
   ["GET", "/me", "read", "Which server and scope this token has"],
   ["GET", "/guilds/{id}", "read", "Name, icon, member count, owner"],
   ["GET", "/guilds/{id}/channels", "read", "Text channels, to pick channel IDs"],
@@ -44,7 +44,7 @@ const response = `{
 
 const prompt = `You can configure my Discord server's Drew bot through its API.
 Base URL: ${SITE.api}
-Token: read it from the DREW_TOKEN environment variable; never print it.
+Token: read it from the DREW_TOKEN environment variable and never print it.
 
 1. GET /me to learn the server ID.
 2. GET /schema, then /guilds/{id}/settings, /channels and /roles.
@@ -79,7 +79,7 @@ export default function DevelopersPage() {
               <p className="font-mono text-sm text-brand">{s.n}</p>
               <h2 className="mt-3 text-lg font-semibold tracking-tight">{s.title}</h2>
               <p className="mt-2 flex-1 text-sm leading-relaxed text-mute">{s.body}</p>
-              <code className="mt-5 block overflow-x-auto rounded-xl border border-line bg-[#030605] px-3 py-2 font-mono text-xs text-soft">{s.code}</code>
+              <code className="mt-5 block overflow-x-auto border border-line bg-[#030605] px-3 py-2 font-mono text-xs text-soft">{s.code}</code>
             </article>
           ))}
         </section>
@@ -117,7 +117,7 @@ export default function DevelopersPage() {
                 {endpoints.map(([m, p, s, d]) => (
                   <tr key={m + p}>
                     <td className="px-6 py-3.5">
-                      <span className={`rounded-md px-2 py-0.5 font-mono text-xs ${m === "PATCH" ? "bg-brand/15 text-brand" : "bg-white/[0.06] text-soft"}`}>{m}</span>
+                      <span className={`px-2 py-0.5 font-mono text-xs ${m ==="PATCH"?"bg-brand/15 text-brand":"bg-white/[0.06] text-soft"}`}>{m}</span>
                     </td>
                     <td className="whitespace-nowrap px-6 py-3.5 font-mono text-xs text-fg">{p}</td>
                     <td className="px-6 py-3.5 text-xs text-mute">{s}</td>
@@ -143,7 +143,7 @@ export default function DevelopersPage() {
         <section className="grid gap-4 sm:grid-cols-2">
           {[
             [KeyRound, "Scoped tokens", "Random 256-bit secrets, stored hashed, one server each, expiring and revocable from Discord."],
-            [ShieldCheck, "Validated", "Channels and roles are checked against your server; @everyone and bot roles can't be whitelisted."],
+            [ShieldCheck, "Validated", "Channels and roles are checked against your server, and @everyone and bot roles can't be whitelisted."],
             [FileClock, "Audited", "Every change is attributed in /audit and posted to your log channel."],
             [Sparkles, "Honest schema", "Settings marked enforced: false are stored but have no effect yet, so your AI won't be misled."],
             [Bot, "Rate limited", "120 reads and 30 changes per minute per token."],

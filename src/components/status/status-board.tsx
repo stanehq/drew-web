@@ -57,7 +57,7 @@ function SignalBars({ latency, status }: { latency: number; status: PublicShard[
       {[1, 2, 3, 4].map((b) => (
         <span
           key={b}
-          className={`w-[3px] rounded-sm ${b <= level ? (level >= 3 ? "bg-brand" : "bg-warn") : "bg-white/12"}`}
+          className={`w-[3px] ${b <= level ? (level >= 3 ?"bg-brand":"bg-warn") :"bg-white/12"}`}
           style={{ height: 3 + b * 2.5 }}
         />
       ))}
@@ -128,19 +128,19 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
   const updatedAgo = data ? Math.max(0, Math.round((now - new Date(data.updatedAt).getTime()) / 1000)) : null;
 
   const kpis = [
-    { icon: Server, label: "Servers", value: data ? formatExact(data.guilds) : "—", note: data ? `across ${data.shardCount} shard${data.shardCount === 1 ? "" : "s"}` : "" },
-    { icon: Users, label: "Members", value: data ? formatCompact(data.users) : "—", note: "across all servers" },
+    { icon: Server, label: "Servers", value: data ? formatExact(data.guilds) : "...", note: data ? `across ${data.shardCount} shard${data.shardCount === 1 ? "" : "s"}` : "" },
+    { icon: Users, label: "Members", value: data ? formatCompact(data.users) : "...", note: "across all servers" },
     {
       icon: Activity,
       label: "Shards online",
-      value: data ? `${online.length}` : "—",
+      value: data ? `${online.length}` : "...",
       suffix: data ? `/ ${shards.length}` : "",
       note: data ? `up ${formatUptime(data.uptimeSeconds)}` : "",
     },
     {
       icon: Gauge,
       label: "Gateway latency",
-      value: data ? `${data.latencyMs}ms` : "—",
+      value: data ? `${data.latencyMs}ms` : "...",
       note: latencies.length ? `${Math.min(...latencies)}ms fastest · ${Math.max(...latencies)}ms slowest` : "",
       accent: true,
     },
@@ -165,7 +165,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
             <label htmlFor="server-id" className="mb-2 block font-mono text-[0.7rem] uppercase tracking-[0.2em] text-mute">
               Find your server&apos;s shard
             </label>
-            <div className="surface flex items-center gap-2 rounded-2xl px-4 focus-within:border-brand/50">
+            <div className="surface flex items-center gap-2 px-4 focus-within:border-brand/50">
               <Search className="size-4 text-mute" />
               <input
                 id="server-id"
@@ -177,7 +177,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
                 className="h-12 w-full bg-transparent font-mono text-sm text-fg placeholder:text-mute focus:outline-none"
               />
             </div>
-            <p className={`mt-2 min-h-5 text-xs ${lookupInvalid ? "text-bad" : "text-soft"}`} aria-live="polite">
+            <p className={`mt-2 min-h-5 text-xs ${lookupInvalid ?"text-bad":"text-soft"}`} aria-live="polite">
               {lookupInvalid
                 ? "That doesn't look like a server ID."
                 : target !== null
@@ -194,7 +194,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
 
         {/* Overall */}
         <section
-          className={`surface relative mt-10 overflow-hidden p-6 sm:p-8 ${overall === "operational" ? "border-brand/30" : overall === "degraded" ? "border-warn/30" : "border-bad/30"}`}
+          className={`surface relative mt-10 overflow-hidden p-6 sm:p-8 ${overall ==="operational"?"border-brand/30": overall ==="degraded"?"border-warn/30":"border-bad/30"}`}
           aria-labelledby="overall"
         >
           <div
@@ -204,7 +204,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
           <div className="relative flex flex-wrap items-center justify-between gap-6">
             <div className="flex items-center gap-4">
               <div
-                className={`flex size-14 items-center justify-center rounded-2xl border ${overall === "operational" ? "border-brand/30 bg-brand/10 text-brand" : overall === "degraded" ? "border-warn/30 bg-warn/10 text-warn" : "border-bad/30 bg-bad/10 text-bad"}`}
+                className={`flex size-14 items-center justify-center border ${overall ==="operational"?"border-brand/30 bg-brand/10 text-brand": overall ==="degraded"?"border-warn/30 bg-warn/10 text-warn":"border-bad/30 bg-bad/10 text-bad"}`}
               >
                 {overall === "operational" ? <CheckCircle2 className="size-7" /> : overall === "degraded" ? <TriangleAlert className="size-7" /> : <XCircle className="size-7" />}
               </div>
@@ -243,7 +243,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
               <span
                 key={s.id}
                 title={data ? `Shard ${s.id} · ${STATE[s.status].text}${s.status === "online" ? ` · ${s.latencyMs}ms` : ""}` : undefined}
-                className={`h-full flex-1 rounded-[4px] transition-all hover:opacity-80 ${!data ? "bg-white/[0.06]" : s.status === "online" ? "bg-brand" : s.status === "connecting" ? "bg-warn" : "bg-bad"} ${target === s.id ? "outline outline-2 outline-offset-2 outline-white" : ""}`}
+                className={`h-full flex-1 transition-all hover:opacity-80 ${!data ?"bg-white/[0.06]": s.status ==="online"?"bg-brand": s.status ==="connecting"?"bg-warn":"bg-bad"} ${target === s.id ?"outline outline-2 outline-offset-2 outline-white":""}`}
               />
             ))}
           </div>
@@ -261,7 +261,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
                 <Icon className="size-4 text-brand" />
                 <span className="text-xs">{label}</span>
               </div>
-              <p className={`mt-3 text-3xl font-semibold tabular-nums tracking-tight ${accent ? "text-brand-bright" : ""}`}>
+              <p className={`mt-3 text-3xl font-semibold tabular-nums tracking-tight ${accent ?"text-brand-bright":""}`}>
                 {value}
                 {suffix && <span className="ml-1 text-lg font-medium text-mute">{suffix}</span>}
               </p>
@@ -287,7 +287,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
               return (
                 <li key={key} className="flex items-center justify-between gap-4 px-6 py-4">
                   <div className="flex items-center gap-3">
-                    <div className="flex size-9 items-center justify-center rounded-xl border border-line bg-white/[0.03] text-soft">
+                    <div className="flex size-9 items-center justify-center border border-line bg-white/[0.03] text-soft">
                       <Icon className="size-4" />
                     </div>
                     <div>
@@ -299,9 +299,9 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
                     {svc && svc.status === "operational" && svc.latencyMs > 0 && (
                       <span className="hidden font-mono text-xs text-mute sm:inline">{svc.latencyMs}ms</span>
                     )}
-                    <span className={`inline-flex items-center gap-2 rounded-full border border-line px-3 py-1 text-xs ${STATE[state].ring}`}>
+                    <span className={`inline-flex items-center gap-2 border border-line px-3 py-1 text-xs ${STATE[state].ring}`}>
                       <Dot state={state} />
-                      {data ? STATE[state].text : "—"}
+                      {data ? STATE[state].text : "..."}
                     </span>
                   </div>
                 </li>
@@ -329,7 +329,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
             {shards.map((s) => (
               <article
                 key={s.id}
-                className={`surface surface-hover p-4 ${target === s.id ? "border-brand/60 shadow-[0_0_0_1px_var(--color-brand),0_12px_40px_-10px_rgb(65_207_139/0.5)]" : ""}`}
+                className={`surface surface-hover p-4 ${target === s.id ?"border-brand/60 shadow-[0_0_0_1px_var(--color-brand),0_12px_40px_-10px_rgb(65_207_139/0.5)]":""}`}
                 aria-label={`Shard ${s.id}, ${STATE[s.status].text}`}
               >
                 <div className="flex items-center justify-between">

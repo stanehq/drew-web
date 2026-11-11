@@ -1,0 +1,270 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { BadgeCheck, Check, ChevronDown, Clock3, Minus, ShieldCheck, Sparkles, Zap } from "lucide-react";
+import { buttonClass } from "@/components/button";
+import { formatCompact } from "@/lib/format";
+import { SITE } from "@/lib/site";
+
+type Billing = "monthly" | "yearly";
+
+// Prices in USD. Yearly = 10 months (2 months free).
+const PLANS = [
+  {
+    id: "standard",
+    name: "Standard",
+    monthly: 2.83,
+    blurb: "The full protection stack for growing communities.",
+    features: [
+      "Adaptive automod and filtered invites",
+      "Anti-raid burst detection and lockdown",
+      "Instant rollback for channel and role nukes",
+      "Moderation summaries and reports",
+      "Standard support",
+    ],
+  },
+  {
+    id: "advanced",
+    name: "Advanced",
+    monthly: 6.83,
+    popular: true,
+    blurb: "Maximum coverage for servers that can't afford a bad day.",
+    features: [
+      "Everything in Standard",
+      "Unlimited automod presets and server profiles",
+      "Priority anti-raid monitoring and live alerts",
+      "Custom bot name and avatar",
+      "Extended audit logs and exports",
+      "Priority support",
+    ],
+  },
+] as const;
+
+const COMPARE: [string, boolean | string, boolean | string][] = [
+  ["Anti-nuke and anti-raid", true, true],
+  ["Verification and logging", true, true],
+  ["Instant rollback", true, true],
+  ["Automod presets", "Core set", "Unlimited"],
+  ["Audit log history", "Standard", "Extended"],
+  ["Live incident alerts", false, true],
+  ["Custom bot name and avatar", false, true],
+  ["Exportable reports", false, true],
+  ["Support", "Standard", "Priority"],
+];
+
+const FAQ = [
+  [
+    "How does the free trial work?",
+    "New users get 5 days of Premium for free. Add a payment method to start it. Cancel before the trial ends and you pay nothing.",
+  ],
+  ["Can I cancel anytime?", "Yes. Cancelling stops future renewals and you keep Premium until the end of the period you paid for."],
+  ["Can I switch plans later?", "Yes. Upgrade or downgrade whenever you want and the new price applies from your next billing cycle."],
+  ["Which payment methods do you accept?", "PayPal, credit and debit cards and crypto. Apple Pay and Google Pay where available."],
+  [
+    "Do you offer refunds?",
+    "Refunds are reviewed case by case. If you live in the EU you also have a 14-day right of withdrawal. Details are in our purchase terms.",
+  ],
+];
+
+const money = (n: number) => `$${n.toFixed(2)}`;
+
+export function PricingBoard() {
+  const [billing, setBilling] = useState<Billing>("monthly");
+  const [members, setMembers] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch("/api/stats")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((s: { available?: boolean; users?: number } | null) => s?.available && setMembers(s.users ?? null))
+      .catch(() => {});
+  }, []);
+
+  return (
+    <>
+      <section className="relative isolate overflow-hidden border-b border-line pt-[76px]">
+        <div className="line-grid absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_70%_70%_at_50%_0%,black,transparent)]" />
+        <div
+          className="absolute left-1/2 top-0 -z-10 h-[420px] w-[820px] max-w-full -translate-x-1/2 bg-[radial-gradient(closest-side,rgb(65_207_139/0.18),transparent)] blur-2xl"
+          aria-hidden
+        />
+        <div className="mx-auto max-w-6xl border-x border-line px-4 pb-14 pt-20 text-center sm:px-6 sm:pt-24">
+          <p className="eyebrow">Pricing</p>
+          <h1 className="mx-auto mt-4 max-w-3xl text-balance text-5xl font-semibold leading-[1.03] tracking-[-0.045em] sm:text-6xl">
+            Protection for less than a coffee.
+          </h1>
+          <p className="mx-auto mt-5 max-w-xl text-lg text-soft">
+            Try every Premium feature free for 5 days. Cancel before it ends and you won&apos;t pay a cent.
+          </p>
+          {members !== null && members > 0 && (
+            <p className="mt-6 inline-flex items-center gap-2 border border-line bg-white/[0.03] px-3 py-1.5 text-sm text-soft">
+              <BadgeCheck className="size-4 text-brand" /> Trusted to protect {formatCompact(members)} members
+            </p>
+          )}
+
+          <div role="radiogroup" aria-label="Billing period" className="mx-auto mt-10 flex w-fit border border-line bg-night p-1">
+            {(["monthly", "yearly"] as const).map((b) => (
+              <button
+                key={b}
+                role="radio"
+                aria-checked={billing === b}
+                onClick={() => setBilling(b)}
+                className={`flex items-center gap-2 px-5 py-2 text-sm font-medium transition-colors ${
+                  billing === b ? "bg-white text-ink" : "text-soft hover:text-fg"
+                }`}
+              >
+                {b === "monthly" ? "Monthly" : "Yearly"}
+                {b === "yearly" && (
+                  <span className={`px-1.5 py-0.5 font-mono text-[0.68rem] ${billing === b ? "bg-brand text-[#03110a]" : "bg-brand/15 text-brand"}`}>
+                    2 MONTHS FREE
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="mx-auto grid max-w-6xl gap-px border-x border-t border-line bg-line md:grid-cols-2">
+          {PLANS.map((p) => {
+            const yearly = +(p.monthly * 10).toFixed(2);
+            const perMonth = billing === "monthly" ? p.monthly : yearly / 12;
+            const perDay = perMonth / 30;
+            const popular = "popular" in p && p.popular;
+            return (
+              <article key={p.id} className={`relative flex flex-col p-8 sm:p-10 ${popular ? "bg-[#08130e]" : "bg-ink"}`}>
+                {popular && <div className="absolute inset-x-0 top-0 h-0.5 bg-brand" aria-hidden />}
+                <div className="flex items-center justify-between gap-3">
+                  <h2 className="text-2xl font-semibold tracking-tight">{p.name}</h2>
+                  {popular && (
+                    <span className="inline-flex items-center gap-1.5 bg-brand px-2.5 py-1 text-xs font-semibold text-[#03110a]">
+                      <Sparkles className="size-3.5" /> Most popular
+                    </span>
+                  )}
+                </div>
+                <p className="mt-2 text-soft">{p.blurb}</p>
+
+                <div className="mt-8 flex items-end gap-3">
+                  <span className={`font-display text-6xl font-semibold tracking-[-0.05em] tabular-nums ${popular ? "text-brand-bright" : ""}`}>
+                    {money(perMonth)}
+                  </span>
+                  <div className="pb-2 text-sm leading-tight text-mute">
+                    <span>/ month</span>
+                  </div>
+                </div>
+                <p className="mt-2 h-5 text-sm text-mute">
+                  {billing === "yearly" ? (
+                    <>
+                      Billed {money(yearly)} yearly. <span className="text-brand">You save {money(p.monthly * 12 - yearly)}.</span>
+                    </>
+                  ) : (
+                    <>That&apos;s just {money(perDay)} a day.</>
+                  )}
+                </p>
+
+                <a
+                  href={SITE.support}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={`${buttonClass(popular ? "primary" : "secondary", "lg")} mt-8 w-full`}
+                >
+                  Start 5-day free trial
+                </a>
+                <p className="mt-3 text-center text-xs text-mute">No charge today. Cancel anytime.</p>
+
+                <ul className="mt-8 space-y-3 border-t border-line pt-8 text-[0.95rem]">
+                  {p.features.map((f) => (
+                    <li key={f} className="flex gap-3 text-soft">
+                      <Check className="mt-0.5 size-4 shrink-0 text-brand" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            );
+          })}
+        </div>
+
+        <div className="mx-auto grid max-w-6xl gap-px border-x border-t border-line bg-line sm:grid-cols-3">
+          {[
+            [Clock3, "5 days free", "Test everything before you pay."],
+            [ShieldCheck, "Cancel anytime", "Stop renewals whenever you want."],
+            [Zap, "Secure payments", "PayPal, cards and crypto."],
+          ].map(([Icon, title, body]) => {
+            const I = Icon as typeof Clock3;
+            return (
+              <div key={title as string} className="flex items-start gap-3 bg-ink px-6 py-5">
+                <I className="mt-0.5 size-5 shrink-0 text-brand" />
+                <div>
+                  <p className="font-medium">{title as string}</p>
+                  <p className="text-sm text-mute">{body as string}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Comparison */}
+      <section className="border-b border-line">
+        <div className="mx-auto max-w-6xl border-x border-line">
+          <h2 className="px-4 pb-8 pt-16 text-3xl font-semibold tracking-[-0.03em] sm:px-8 sm:text-4xl">Compare plans</h2>
+          <div className="overflow-x-auto border-t border-line">
+            <table className="w-full min-w-[520px] text-left text-sm">
+              <thead>
+                <tr className="border-b border-line text-mute">
+                  <th className="px-4 py-4 font-medium sm:px-8">Feature</th>
+                  <th className="w-40 px-4 py-4 font-medium">Standard</th>
+                  <th className="w-40 bg-[#08130e] px-4 py-4 font-medium text-brand-bright">Advanced</th>
+                </tr>
+              </thead>
+              <tbody>
+                {COMPARE.map(([label, a, b]) => (
+                  <tr key={label} className="border-b border-line last:border-b-0">
+                    <td className="px-4 py-3.5 text-soft sm:px-8">{label}</td>
+                    {[a, b].map((v, i) => (
+                      <td key={i} className={`px-4 py-3.5 ${i === 1 ? "bg-[#08130e]" : ""}`}>
+                        {v === true ? (
+                          <Check className="size-4 text-brand" aria-label="Included" />
+                        ) : v === false ? (
+                          <Minus className="size-4 text-white/25" aria-label="Not included" />
+                        ) : (
+                          <span className="text-fg">{v}</span>
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="border-b border-line">
+        <div className="mx-auto grid max-w-6xl gap-10 border-x border-line px-4 py-16 sm:px-8 md:grid-cols-[1fr_1.6fr]">
+          <div>
+            <h2 className="text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">Questions?</h2>
+            <p className="mt-3 text-soft">
+              Still unsure?{" "}
+              <a href={SITE.support} className="text-brand-bright underline decoration-brand/40 underline-offset-4 hover:decoration-brand">
+                Ask us on Discord
+              </a>
+              .
+            </p>
+          </div>
+          <div className="border-t border-line">
+            {FAQ.map(([q, a]) => (
+              <details key={q} className="group border-b border-line">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 font-medium [&::-webkit-details-marker]:hidden">
+                  {q}
+                  <ChevronDown className="size-4 shrink-0 text-mute transition-transform group-open:rotate-180" />
+                </summary>
+                <p className="pb-5 text-soft">{a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
