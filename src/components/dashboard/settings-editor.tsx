@@ -35,7 +35,7 @@ const labelFor = (key: string) =>
   key
     .replace(/_enabled$/, "")
     .replaceAll("_", " ")
-    .replace(/^./, (c) => c.toUpperCase()));
+    .replace(/^./, (c) => c.toUpperCase());
 
 type Change = { old: unknown; new: unknown };
 type FieldError = { key: string; message: string };
