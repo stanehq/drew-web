@@ -24,6 +24,7 @@
   --animate-pulse-ring: pulse-ring 2.4s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
   --animate-shine: shine 6s linear infinite;
   --animate-fade-up: fade-up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-marquee: marquee 50s linear infinite;
 
   @keyframes aurora {
     0% { transform: translate3d(-8%, -4%, 0) scale(1); }
@@ -40,6 +41,10 @@
   @keyframes shine {
     from { background-position: 200% 0; }
     to { background-position: -200% 0; }
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(-50% - 0.5rem)); }
   }
   @keyframes fade-up {
     from { opacity: 0; transform: translateY(14px); }
