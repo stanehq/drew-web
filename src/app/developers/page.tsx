@@ -86,7 +86,6 @@ export default function DevelopersPage() {
 
         <section className="surface grid gap-6 p-6 sm:p-8 lg:grid-cols-2">
           <div className="lg:col-span-2">
-            <p className="eyebrow">Example</p>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight">Preview, then apply a change</h2>
             <p className="mt-2 text-sm text-mute">Send the same request with <code className="font-mono text-soft">&quot;dry_run&quot;: false</code> to apply it. Discord IDs are always strings.</p>
           </div>
@@ -96,11 +95,10 @@ export default function DevelopersPage() {
 
         <section className="surface overflow-hidden">
           <div className="border-b border-line p-6 sm:p-8">
-            <p className="eyebrow">Reference</p>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight">Endpoints</h2>
             <p className="mt-2 text-sm text-mute">
-              Base URL <code className="font-mono text-soft">{SITE.api}</code> · header{" "}
-              <code className="font-mono text-soft">Authorization: Bearer drew_…</code>
+              Base URL <code className="font-mono text-soft">{SITE.api}</code>, header{" "}
+              <code className="font-mono text-soft">Authorization: Bearer drew_...</code>
             </p>
           </div>
           <div className="overflow-x-auto">
@@ -132,7 +130,6 @@ export default function DevelopersPage() {
         <section className="surface relative overflow-hidden border-brand/30 p-6 sm:p-8">
           <div className="absolute -right-24 -top-24 size-72 rounded-full bg-brand/15 blur-3xl" aria-hidden />
           <div className="relative">
-            <p className="eyebrow">For AI agents</p>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight">Paste this into your assistant</h2>
             <div className="mt-5">
               <CodeBlock code={prompt} />

@@ -64,10 +64,10 @@ export default async function HomePage() {
         <div className="mx-auto max-w-6xl border-x border-line px-4 pb-20 pt-20 text-center sm:px-6 sm:pt-28">
           <Image src="/brand/drew-icon.svg" unoptimized alt="" width={88} height={88} priority className="animate-fade-up mx-auto" />
           <h1 className="animate-fade-up mx-auto mt-8 max-w-4xl text-balance text-[2.3rem] font-semibold leading-[1.05] tracking-[-0.02em] sm:text-6xl">
-            Discord security <span className="text-brand">that never sleeps.</span>
+            Discord security <span className="text-brand">that never sleeps</span>
           </h1>
           <p className="animate-fade-up mx-auto mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-soft [animation-delay:80ms]">
-            Anti-nuke, anti-raid, verification and logging in one bot. Set it up in a minute and let Drew do the watching.
+            Anti-nuke, anti-raid, verification and logging in one bot. Set it up in a minute and let Drew do the watching
           </p>
           <div className="animate-fade-up mt-10 flex flex-wrap items-center justify-center gap-3 [animation-delay:140ms]">
             <ButtonLink href={SITE.invite} external size="lg">
@@ -90,12 +90,11 @@ export default async function HomePage() {
         <div className="mx-auto max-w-6xl border-x border-line">
           <div className="grid gap-6 px-4 py-16 sm:px-8 md:grid-cols-2 md:items-end">
             <div>
-              <p className="eyebrow">Protection</p>
               <h2 className="mt-3 text-balance text-4xl font-semibold tracking-[-0.02em] sm:text-5xl">
-                Everything your server needs to stay standing.
+                Everything your server needs to stay standing
               </h2>
             </div>
-            <p className="text-lg text-soft md:justify-self-end md:text-right">Set it up in minutes. Drew does the watching, 24/7.</p>
+            <p className="text-lg text-soft md:justify-self-end md:text-right">Set it up in minutes, Drew does the watching 24/7</p>
           </div>
           <div className="grid gap-px border-t border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
             {features.map(({ icon: Icon, title, body, href }) => {
@@ -153,9 +152,9 @@ export default async function HomePage() {
           />
           <div className="relative max-w-xl px-8 py-16 sm:px-14">
             <h2 className="text-balance text-4xl font-semibold tracking-[-0.02em] text-[#03110a] sm:text-5xl">
-              Protect your server in under a minute.
+              Protect your server in under a minute
             </h2>
-            <p className="mt-4 text-lg text-[#06301c]">Invite Drew, run /opsec setup, and sleep well tonight.</p>
+            <p className="mt-4 text-lg text-[#06301c]">Invite Drew, run /opsec setup and sleep well tonight</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a
                 href={SITE.invite}

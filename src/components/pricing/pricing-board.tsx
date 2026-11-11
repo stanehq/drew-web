@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { BadgeCheck, Check, ChevronDown, Clock3, Minus, ShieldCheck, Sparkles, Zap } from "lucide-react";
+import { useState } from "react";
+import { Check, ChevronDown, Clock3, Minus, ShieldCheck, Sparkles, Zap } from "lucide-react";
 import { buttonClass } from "@/components/button";
-import { formatCompact } from "@/lib/format";
 import { SITE } from "@/lib/site";
 
 type Billing = "monthly" | "yearly";
@@ -70,14 +69,7 @@ const money = (n: number) => `$${n.toFixed(2)}`;
 
 export function PricingBoard() {
   const [billing, setBilling] = useState<Billing>("monthly");
-  const [members, setMembers] = useState<number | null>(null);
 
-  useEffect(() => {
-    fetch("/api/stats")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((s: { available?: boolean; users?: number } | null) => s?.available && setMembers(s.users ?? null))
-      .catch(() => {});
-  }, []);
 
   return (
     <>
@@ -88,18 +80,12 @@ export function PricingBoard() {
           aria-hidden
         />
         <div className="mx-auto max-w-6xl border-x border-line px-4 pb-14 pt-20 text-center sm:px-6 sm:pt-24">
-          <p className="eyebrow">Pricing</p>
           <h1 className="mx-auto mt-4 max-w-3xl text-balance text-5xl font-semibold leading-[1.03] tracking-[-0.02em] sm:text-6xl">
-            Protection for less than a coffee.
+            Protection for less than a coffee
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-lg text-soft">
             Try every Premium feature free for 5 days. Cancel before it ends and you won&apos;t pay a cent.
           </p>
-          {members !== null && members > 0 && (
-            <p className="mt-6 inline-flex items-center gap-2 border border-line bg-white/[0.03] px-3 py-1.5 text-sm text-soft">
-              <BadgeCheck className="size-4 text-brand" /> Trusted to protect {formatCompact(members)} members
-            </p>
-          )}
 
           <div role="radiogroup" aria-label="Billing period" className="mx-auto mt-10 flex w-fit border border-line bg-night p-1">
             {(["monthly", "yearly"] as const).map((b) => (

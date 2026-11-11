@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Copyright } from "lucide-react";
 import { SITE } from "@/lib/site";
 import { Logo } from "./logo";
 
@@ -65,7 +66,7 @@ export function SiteFooter() {
         ))}
       </div>
       <div className="border-t border-line">
-        <p className="mx-auto max-w-6xl px-4 py-6 text-xs text-mute sm:px-6">© {new Date().getFullYear()} Drew. All rights reserved.</p>
+        <p className="mx-auto max-w-6xl px-4 py-6 text-xs text-mute sm:px-6"><Copyright className="mr-1 inline size-3 align-[-1px]" aria-label="Copyright" />{new Date().getFullYear()} Drew. All rights reserved.</p>
       </div>
     </footer>
   );

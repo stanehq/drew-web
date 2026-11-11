@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { AlertTriangle, ArrowLeft, Check, Clock, Globe, Lock, ShieldAlert, ShieldCheck, ScrollText, UserCheck, Users, Loader2 } from "lucide-react";
+import { AlertTriangle, ArrowLeft, ArrowRight, Check, Clock, Globe, Lock, ShieldAlert, ShieldCheck, ScrollText, UserCheck, Users, Loader2 } from "lucide-react";
 import type { Channel, GuildInfo, Role, SchemaField, Settings } from "@/lib/drew";
 
 const CATEGORIES: Record<string, { title: string; help: string; icon: typeof ShieldAlert }> = {
@@ -304,7 +304,6 @@ export function SettingsEditor({
             </div>
           )}
           <div>
-            <p className="eyebrow">Configuration</p>
             <h1 className="mt-1 text-3xl font-semibold tracking-tight sm:text-4xl">{guild.name}</h1>
           </div>
         </div>
@@ -407,7 +406,7 @@ export function SettingsEditor({
                   <p key={k} className="flex flex-wrap gap-x-2">
                     <span className="text-fg">{k}</span>
                     <span className="text-mute line-through">{nameFor(k, c.old)}</span>
-                    <span className="text-mute">→</span>
+                    <ArrowRight className="size-3.5 text-mute" aria-hidden />
                     <span className="text-brand">{nameFor(k, c.new)}</span>
                   </p>
                 ))}

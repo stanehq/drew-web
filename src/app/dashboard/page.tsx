@@ -143,7 +143,6 @@ export default async function DashboardPage() {
               </div>
             )}
             <div>
-              <p className="eyebrow">Dashboard</p>
               <h1 className="mt-1 text-3xl font-semibold tracking-tight">Welcome back, {session.name}</h1>
             </div>
           </div>
