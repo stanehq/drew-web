@@ -275,7 +275,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
             {(shards.length ? shards : Array.from({ length: 24 }, (_, i) => ({ id: i, status: "offline" as const, latencyMs: 0, guilds: 0, users: 0 }))).map((s) => (
               <span
                 key={s.id}
-                title={data ? `Shard ${s.id}, ${STATE[s.status].text}${s.status === "online" ? `, ${s.latencyMs}ms` : ""}` : undefined}
+                title={data ? `Shard ${s.id}, ${t(STATE[s.status].text)}${s.status === "online" ? `, ${s.latencyMs}ms` : ""}` : undefined}
                 className={`h-full flex-1 transition-all hover:opacity-80 ${!data ? "bg-white/[0.06]" : s.status === "online" ? (s.latencyMs >= LATENCY_WARN_MS ? "bg-warn" : "bg-brand") : s.status === "connecting" ? "bg-warn" : "bg-bad"} ${target === s.id ?"outline outline-2 outline-offset-2 outline-white":""}`}
               />
             ))}
@@ -326,8 +326,8 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
                       <Icon className="size-4" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium">{meta.label}</p>
-                      <p className="text-xs text-mute">{meta.detail}</p>
+                      <p className="text-sm font-medium">{t(meta.label)}</p>
+                      <p className="text-xs text-mute">{t(meta.detail)}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 text-sm">
@@ -364,7 +364,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
               <article
                 key={s.id}
                 className={`surface surface-hover p-4 ${target === s.id ?"border-brand/60 shadow-[0_0_0_1px_var(--color-brand),0_12px_40px_-10px_rgb(65_207_139/0.5)]":""}`}
-                aria-label={`Shard ${s.id}, ${STATE[s.status].text}`}
+                aria-label={`Shard ${s.id}, ${t(STATE[s.status].text)}`}
               >
                 <div className="flex items-center justify-between">
                   <h3 className="font-semibold tracking-tight">Shard {s.id}</h3>
