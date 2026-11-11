@@ -8,6 +8,8 @@ import { LayoutDashboard, Menu, X } from "lucide-react";
 import { NAV, SITE } from "@/lib/site";
 import { buttonClass } from "./button";
 import { DiscordIcon } from "./discord-icon";
+import { LanguageSelector } from "./language-selector";
+import { useI18n } from "@/lib/i18n";
 
 const DASHBOARD_LOGIN = "/api/auth/discord";
 
@@ -27,8 +29,9 @@ function BrandLockup() {
 
 export function SiteHeader() {
   const pathname = usePathname();
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
-  const links = [...NAV, { href: SITE.docs, label: "Docs" }];
+  const links = [...NAV.map((item) => ({ ...item, label: t(item.label.toLowerCase()) })), { href: SITE.docs, label: t("docs") }];
 
   useEffect(() => {
     const closeOnResize = () => {
@@ -56,6 +59,7 @@ export function SiteHeader() {
           })}
         </nav>
         <div className="hidden shrink-0 items-center justify-self-end gap-3 lg:flex">
+          <LanguageSelector />
           <a href={DASHBOARD_LOGIN} className={buttonClass("outline", "md")}>
             <LayoutDashboard className="size-4" /> Dashboard
           </a>
@@ -83,8 +87,9 @@ export function SiteHeader() {
             ))}
           </nav>
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            <LanguageSelector />
             <a href={DASHBOARD_LOGIN} className={`${buttonClass("outline", "lg")} w-full`}><LayoutDashboard className="size-4" /> Dashboard</a>
-            <a href={SITE.invite} className={`${buttonClass("primary", "lg")} w-full`}><DiscordIcon /> Add to Discord</a>
+            <a href={SITE.invite} className={`${buttonClass("primary", "lg")} w-full`}><DiscordIcon /> {t("invite")}</a>
           </div>
         </div>
       )}
