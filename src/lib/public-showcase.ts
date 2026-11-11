@@ -11,8 +11,8 @@ const safeIcon = (url: unknown) =>
   typeof url === "string" && url.startsWith("https://cdn.discordapp.com/icons/") ? `${url.split("?")[0]}?size=128` : null;
 
 /**
- * Largest servers that are public on Discord (the bot never returns private
- * ones), whitelisted to display fields and cached for five minutes.
+ * Largest servers using Drew, ranked by people (bots excluded), whitelisted
+ * to display fields and cached for five minutes.
  */
 export async function getPublicShowcase(): Promise<PublicShowcase | null> {
   if (!isApiConfigured()) return null;

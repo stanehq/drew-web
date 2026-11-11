@@ -28,11 +28,17 @@ function ServerCard({ s }: { s: PublicServer }) {
   );
 }
 
-/** Looping marquee of the largest public servers using Drew. */
+// Seconds each card takes to cross, so the speed is the same whatever the count.
+const SECONDS_PER_CARD = 4;
+// Minimum cards per copy of the track, so even a short list fills wide screens.
+const MIN_CARDS = 8;
+
+/** Looping marquee of the largest servers using Drew. */
 export function ServerShowcase({ data }: { data: PublicShowcase }) {
   const { servers, total } = data;
   if (servers.length === 0) return null;
-  const animate = servers.length >= 4;
+  const repeats = Math.ceil(MIN_CARDS / servers.length);
+  const track = Array.from({ length: repeats }, () => servers).flat();
   return (
     <section className="border-b border-line" aria-labelledby="showcase-title">
       <div className="mx-auto max-w-6xl border-x border-line">
@@ -42,29 +48,20 @@ export function ServerShowcase({ data }: { data: PublicShowcase }) {
             Protecting {total > 0 ? `${formatCompact(total)} servers` : "servers"}, including these.
           </h2>
         </div>
-        <div
-          className={`group relative overflow-hidden border-t border-line py-8 ${
-            animate ? "[mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]" : ""
-          }`}
-        >
-          {animate ? (
-            <div className="flex w-max animate-marquee gap-4 group-hover:[animation-play-state:paused]">
-              {/* The list is rendered twice so the loop is seamless. */}
-              {[0, 1].map((copy) => (
-                <ul key={copy} className="flex gap-4" aria-hidden={copy === 1 || undefined}>
-                  {servers.map((s, i) => (
-                    <ServerCard key={`${copy}-${i}`} s={s} />
-                  ))}
-                </ul>
-              ))}
-            </div>
-          ) : (
-            <ul className="flex flex-wrap justify-center gap-4 px-4">
-              {servers.map((s, i) => (
-                <ServerCard key={i} s={s} />
-              ))}
-            </ul>
-          )}
+        <div className="group relative overflow-hidden border-t border-line py-8 [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
+          <div
+            className="flex w-max animate-marquee gap-4 group-hover:[animation-play-state:paused]"
+            style={{ animationDuration: `${track.length * SECONDS_PER_CARD}s` }}
+          >
+            {/* The track is rendered twice so the loop is seamless. */}
+            {[0, 1].map((copy) => (
+              <ul key={copy} className="flex gap-4" aria-hidden={copy === 1 || undefined}>
+                {track.map((s, i) => (
+                  <ServerCard key={`${copy}-${i}`} s={s} />
+                ))}
+              </ul>
+            ))}
+          </div>
         </div>
       </div>
     </section>
