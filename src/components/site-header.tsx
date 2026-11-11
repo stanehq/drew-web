@@ -13,14 +13,15 @@ const DASHBOARD_LOGIN = "/api/auth/discord";
 
 function BrandLockup() {
   return (
-    <Link href="/" aria-label="Stane × Drew home" className="inline-flex shrink-0 items-center gap-3">
-      <Image src="/brand/stane-mark.svg" alt="Stane" width={43} height={43} priority className="size-[43px] object-contain" />
+    <div className="inline-flex shrink-0 items-center gap-3">
+      <a href="https://stanelabs.com" target="_blank" rel="noreferrer" aria-label="StaneLabs" className="inline-flex size-12 items-center justify-center overflow-hidden rounded-lg bg-white">
+        <Image src="/brand/stane-mark.webp" alt="Stane" width={48} height={48} priority className="size-12 object-cover" />
+      </a>
       <span aria-hidden className="text-2xl font-light text-white/55">×</span>
-      <span className="inline-flex items-center gap-2">
-        <Image src="/brand/drew-icon.svg" alt="" width={39} height={39} priority />
-        <span className="font-display text-[1.35rem] font-semibold tracking-[-0.03em] text-fg">Drew</span>
-      </span>
-    </Link>
+      <Link href="/" aria-label="Drew home" className="inline-flex shrink-0 items-center">
+        <Image src="/brand/drew-icon.svg" alt="Drew" width={43} height={43} priority />
+      </Link>
+    </div>
   );
 }
 
@@ -39,9 +40,9 @@ export function SiteHeader() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-ink text-fg shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
-      <div className="flex h-[82px] w-full items-center justify-between gap-6 px-5 sm:px-8 lg:px-10">
+      <div className="grid h-[82px] w-full grid-cols-[1fr_auto_1fr] items-center gap-6 px-5 sm:px-8 lg:px-10">
         <BrandLockup />
-        <nav className="hidden h-full flex-1 items-center justify-center gap-1 lg:flex" aria-label="Main">
+        <nav className="hidden h-full items-center justify-center gap-1 lg:flex" aria-label="Main">
           {links.map((item) => {
             const internal = item.href.startsWith("/");
             const route = item.href.split("#")[0];
@@ -54,7 +55,7 @@ export function SiteHeader() {
             );
           })}
         </nav>
-        <div className="hidden shrink-0 items-center gap-3 lg:flex">
+        <div className="hidden shrink-0 items-center justify-self-end gap-3 lg:flex">
           <a href={DASHBOARD_LOGIN} className={buttonClass("outline", "md")}>
             <LayoutDashboard className="size-4" /> Dashboard
           </a>
@@ -64,7 +65,7 @@ export function SiteHeader() {
         </div>
         <button
           type="button"
-          className="inline-flex size-11 items-center justify-center border border-line text-soft transition-colors hover:border-brand/60 hover:bg-brand/10 hover:text-brand-bright lg:hidden"
+          className="col-start-3 inline-flex size-11 items-center justify-self-end border border-line text-soft transition-colors hover:border-brand/60 hover:bg-brand/10 hover:text-brand-bright lg:hidden"
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
           onClick={() => setOpen((value) => !value)}
