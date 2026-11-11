@@ -285,17 +285,17 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
         {/* KPIs */}
         <section className="mt-5 grid grid-cols-2 gap-4 lg:grid-cols-4" aria-label="Summary">
           {kpis.map(({ icon: Icon, label, value, suffix, note, health }) => {
-            const t = TONE[health?.tone ?? "idle"];
+            const toneStyles = TONE[health?.tone ?? "idle"];
             return (
-              <div key={label} className={`surface relative overflow-hidden p-5 ${health ? t.border : ""}`}>
-                {health && health.tone !== "idle" && <span className={`absolute inset-x-0 top-0 h-0.5 ${t.bar}`} aria-hidden />}
+              <div key={label} className={`surface relative overflow-hidden p-5 ${health ? toneStyles.border : ""}`}>
+                {health && health.tone !== "idle" && <span className={`absolute inset-x-0 top-0 h-0.5 ${toneStyles.bar}`} aria-hidden />}
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2 text-mute">
-                    <Icon className={`size-4 ${health ? t.icon : "text-brand"}`} />
+                    <Icon className={`size-4 ${health ? toneStyles.icon : "text-brand"}`} />
                     <span className="text-xs">{t(label)}</span>
                   </div>
                 </div>
-                <p className={`mt-3 text-3xl font-semibold tabular-nums tracking-tight ${health ? t.text : ""}`}>
+                <p className={`mt-3 text-3xl font-semibold tabular-nums tracking-tight ${health ? toneStyles.text : ""}`}>
                   {value}
                   {suffix && <span className="ml-1 text-lg font-medium text-mute">{suffix}</span>}
                 </p>
