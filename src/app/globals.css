@@ -24,6 +24,7 @@
   --animate-pulse-ring: pulse-ring 2.4s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
   --animate-shine: shine 6s linear infinite;
   --animate-fade-up: fade-up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-marquee: marquee 50s linear infinite;
 
   @keyframes aurora {
     0% { transform: translate3d(-8%, -4%, 0) scale(1); }
@@ -40,6 +41,10 @@
   @keyframes shine {
     from { background-position: 200% 0; }
     to { background-position: -200% 0; }
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(-50% - 0.5rem)); }
   }
   @keyframes fade-up {
     from { opacity: 0; transform: translateY(14px); }
@@ -148,6 +153,94 @@
     opacity: 0.035;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
+}
+
+/* Long-form legal text rendered from content/legal. */
+.legal {
+  max-width: 46rem;
+  color: var(--color-soft);
+  line-height: 1.75;
+}
+.legal h2 {
+  margin: 2.75rem 0 0.9rem;
+  scroll-margin-top: 96px;
+  font-size: 1.45rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--color-fg);
+}
+.legal h3 {
+  margin: 1.9rem 0 0.6rem;
+  scroll-margin-top: 96px;
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: var(--color-fg);
+}
+.legal h2:first-child {
+  margin-top: 0;
+}
+.legal p,
+.legal ul,
+.legal ol,
+.legal table {
+  margin: 0.9rem 0;
+}
+.legal ul {
+  list-style: square;
+  padding-left: 1.25rem;
+}
+.legal ol {
+  list-style: decimal;
+  padding-left: 1.25rem;
+}
+.legal li {
+  margin: 0.3rem 0;
+}
+.legal li::marker {
+  color: var(--color-brand);
+}
+.legal strong {
+  color: var(--color-fg);
+  font-weight: 600;
+}
+.legal a {
+  color: var(--color-brand-bright);
+  text-decoration: underline;
+  text-decoration-color: rgb(65 207 139 / 0.4);
+  text-underline-offset: 3px;
+}
+.legal a:hover {
+  text-decoration-color: var(--color-brand);
+}
+.legal hr {
+  margin: 2.5rem 0;
+  border: 0;
+  border-top: 1px solid var(--color-line);
+}
+.legal table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+.legal th,
+.legal td {
+  border: 1px solid var(--color-line);
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+.legal th {
+  background: var(--color-night);
+  color: var(--color-fg);
+  font-weight: 600;
+}
+.legal code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: rgb(255 255 255 / 0.06);
+  padding: 0.1rem 0.35rem;
 }
 
 @media (prefers-reduced-motion: reduce) {

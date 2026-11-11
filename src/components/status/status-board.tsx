@@ -51,18 +51,48 @@ function Dot({ state, pulse }: { state: keyof typeof STATE; pulse?: boolean }) {
 }
 
 function SignalBars({ latency, status }: { latency: number; status: PublicShard["status"] }) {
-  const level = status !== "online" ? 0 : latency < 80 ? 4 : latency < 150 ? 3 : latency < 300 ? 2 : 1;
+  const level = status !== "online" ? 0 : latency < 80 ? 4 : latency < LATENCY_WARN_MS ? 3 : latency < LATENCY_BAD_MS ? 2 : 1;
   return (
     <span className="inline-flex items-end gap-[2px]" aria-hidden>
       {[1, 2, 3, 4].map((b) => (
         <span
           key={b}
-          className={`w-[3px] ${b <= level ? (level >= 3 ?"bg-brand":"bg-warn") :"bg-white/12"}`}
+          className={`w-[3px] ${b <= level ? (level >= 3 ? "bg-brand" : level === 2 ? "bg-warn" : "bg-bad") : "bg-white/12"}`}
           style={{ height: 3 + b * 2.5 }}
         />
       ))}
     </span>
   );
+}
+
+type Tone = "good" | "warn" | "bad" | "idle";
+
+const TONE = {
+  good: { text: "text-brand-bright", icon: "text-brand", bar: "bg-brand", border: "border-brand/30", pill: "bg-brand/10 text-brand ring-brand/30" },
+  warn: { text: "text-warn", icon: "text-warn", bar: "bg-warn", border: "border-warn/40", pill: "bg-warn/10 text-warn ring-warn/30" },
+  bad: { text: "text-bad", icon: "text-bad", bar: "bg-bad", border: "border-bad/40", pill: "bg-bad/10 text-bad ring-bad/30" },
+  idle: { text: "text-fg", icon: "text-brand", bar: "bg-white/10", border: "", pill: "bg-white/[0.06] text-mute ring-line" },
+} as const;
+
+// Gateway latency: under 150 ms is healthy, 150 to 299 ms is elevated, 300 ms or more is high.
+const LATENCY_WARN_MS = 150;
+const LATENCY_BAD_MS = 300;
+
+function latencyTone(ms: number): { tone: Tone; label: string } {
+  if (!ms || ms <= 0) return { tone: "idle", label: "No data" };
+  if (ms < 80) return { tone: "good", label: "Excellent" };
+  if (ms < LATENCY_WARN_MS) return { tone: "good", label: "Good" };
+  if (ms < LATENCY_BAD_MS) return { tone: "warn", label: "Elevated" };
+  return { tone: "bad", label: "High" };
+}
+
+// Shards: all online is healthy, up to a quarter down is degraded, more is an outage.
+function shardTone(online: number, total: number): { tone: Tone; label: string } {
+  if (total === 0) return { tone: "idle", label: "No data" };
+  const down = total - online;
+  if (down === 0) return { tone: "good", label: "All online" };
+  if (online === 0) return { tone: "bad", label: "All down" };
+  return { tone: down / total > 0.25 ? "bad" : "warn", label: `${down} down` };
 }
 
 function shardForGuild(id: string, count: number) {
@@ -112,7 +142,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
   const overall: "operational" | "degraded" | "down" =
     !data || shards.length === 0 || online.length === 0
       ? "down"
-      : online.length < shards.length || servicesDown > 0 || !data.ready
+      : online.length < shards.length || servicesDown > 0 || !data.ready || data.latencyMs >= LATENCY_BAD_MS
         ? "degraded"
         : "operational";
   const overallTitle = !data
@@ -127,7 +157,17 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
 
   const updatedAgo = data ? Math.max(0, Math.round((now - new Date(data.updatedAt).getTime()) / 1000)) : null;
 
-  const kpis = [
+  const shardHealth = data ? shardTone(online.length, shards.length) : null;
+  const latencyHealth = data ? latencyTone(data.latencyMs) : null;
+
+  const kpis: {
+    icon: typeof Server;
+    label: string;
+    value: string;
+    suffix?: string;
+    note: string;
+    health?: { tone: Tone; label: string } | null;
+  }[] = [
     { icon: Server, label: "Servers", value: data ? formatExact(data.guilds) : "...", note: data ? `across ${data.shardCount} shard${data.shardCount === 1 ? "" : "s"}` : "" },
     { icon: Users, label: "Members", value: data ? formatCompact(data.users) : "...", note: "across all servers" },
     {
@@ -136,13 +176,14 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
       value: data ? `${online.length}` : "...",
       suffix: data ? `/ ${shards.length}` : "",
       note: data ? `up ${formatUptime(data.uptimeSeconds)}` : "",
+      health: shardHealth,
     },
     {
       icon: Gauge,
       label: "Gateway latency",
       value: data ? `${data.latencyMs}ms` : "...",
       note: latencies.length ? `${Math.min(...latencies)}ms fastest · ${Math.max(...latencies)}ms slowest` : "",
-      accent: true,
+      health: latencyHealth,
     },
   ];
 
@@ -243,7 +284,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
               <span
                 key={s.id}
                 title={data ? `Shard ${s.id} · ${STATE[s.status].text}${s.status === "online" ? ` · ${s.latencyMs}ms` : ""}` : undefined}
-                className={`h-full flex-1 transition-all hover:opacity-80 ${!data ?"bg-white/[0.06]": s.status ==="online"?"bg-brand": s.status ==="connecting"?"bg-warn":"bg-bad"} ${target === s.id ?"outline outline-2 outline-offset-2 outline-white":""}`}
+                className={`h-full flex-1 transition-all hover:opacity-80 ${!data ? "bg-white/[0.06]" : s.status === "online" ? (s.latencyMs >= LATENCY_WARN_MS ? "bg-warn" : "bg-brand") : s.status === "connecting" ? "bg-warn" : "bg-bad"} ${target === s.id ?"outline outline-2 outline-offset-2 outline-white":""}`}
               />
             ))}
           </div>
@@ -255,19 +296,28 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
 
         {/* KPIs */}
         <section className="mt-5 grid grid-cols-2 gap-4 lg:grid-cols-4" aria-label="Summary">
-          {kpis.map(({ icon: Icon, label, value, suffix, note, accent }) => (
-            <div key={label} className="surface p-5">
-              <div className="flex items-center gap-2 text-mute">
-                <Icon className="size-4 text-brand" />
-                <span className="text-xs">{label}</span>
+          {kpis.map(({ icon: Icon, label, value, suffix, note, health }) => {
+            const t = TONE[health?.tone ?? "idle"];
+            return (
+              <div key={label} className={`surface relative overflow-hidden p-5 ${health ? t.border : ""}`}>
+                {health && health.tone !== "idle" && <span className={`absolute inset-x-0 top-0 h-0.5 ${t.bar}`} aria-hidden />}
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 text-mute">
+                    <Icon className={`size-4 ${health ? t.icon : "text-brand"}`} />
+                    <span className="text-xs">{label}</span>
+                  </div>
+                  {health && (
+                    <span className={`px-1.5 py-0.5 font-mono text-[0.65rem] uppercase tracking-wider ring-1 ring-inset ${t.pill}`}>{health.label}</span>
+                  )}
+                </div>
+                <p className={`mt-3 text-3xl font-semibold tabular-nums tracking-tight ${health ? t.text : ""}`}>
+                  {value}
+                  {suffix && <span className="ml-1 text-lg font-medium text-mute">{suffix}</span>}
+                </p>
+                <p className="mt-1 min-h-4 text-xs text-mute">{note}</p>
               </div>
-              <p className={`mt-3 text-3xl font-semibold tabular-nums tracking-tight ${accent ?"text-brand-bright":""}`}>
-                {value}
-                {suffix && <span className="ml-1 text-lg font-medium text-mute">{suffix}</span>}
-              </p>
-              <p className="mt-1 min-h-4 text-xs text-mute">{note}</p>
-            </div>
-          ))}
+            );
+          })}
         </section>
 
         {/* Services */}
@@ -337,7 +387,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
                   <Dot state={s.status} pulse={s.status === "online"} />
                 </div>
                 <div className="mt-4 flex items-center justify-between font-mono text-xs">
-                  <span className="inline-flex items-center gap-2 text-fg">
+                  <span className={`inline-flex items-center gap-2 ${s.status === "online" ? TONE[latencyTone(s.latencyMs).tone].text : "text-mute"}`}>
                     <SignalBars latency={s.latencyMs} status={s.status} />
                     {s.status === "online" ? `${s.latencyMs}ms` : STATE[s.status].text}
                   </span>

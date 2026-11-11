@@ -212,3 +212,10 @@ export type MetricRange = (typeof METRIC_RANGES)[number];
 
 export const getBotMetrics = (range: MetricRange) =>
   request<BotMetrics>(`/api/v1/client/metrics?range=${range}`, { timeoutMs: 8000 });
+
+// ---- Public showcase (largest public servers) -------------------------------
+
+export type ShowcaseGuild = { name: string; icon_url: string | null; member_count: number; verified: boolean; partnered: boolean };
+export type Showcase = { total_guilds: number; guilds: ShowcaseGuild[] };
+
+export const getShowcase = () => request<Showcase>("/api/v1/client/showcase");

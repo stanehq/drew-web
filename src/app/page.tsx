@@ -16,6 +16,8 @@ import { ButtonLink } from "@/components/button";
 import { CommandField } from "@/components/command-field";
 import { DiscordIcon } from "@/components/discord-icon";
 import { LiveStats } from "@/components/live-stats";
+import { ServerShowcase } from "@/components/server-showcase";
+import { getPublicShowcase } from "@/lib/public-showcase";
 import { SITE } from "@/lib/site";
 
 const features = [
@@ -48,7 +50,8 @@ const steps = [
   { n: "03", title: "Relax", body: "Drew watches every change, 24/7, and reacts in milliseconds." },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const showcase = await getPublicShowcase();
   return (
     <>
       {/* Hero */}
@@ -79,6 +82,8 @@ export default function HomePage() {
           <LiveStats />
         </div>
       </section>
+
+      {showcase && <ServerShowcase data={showcase} />}
 
       {/* Features */}
       <section id="features" className="scroll-mt-20 border-b border-line">
