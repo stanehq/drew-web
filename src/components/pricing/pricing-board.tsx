@@ -89,7 +89,7 @@ export function PricingBoard() {
         />
         <div className="mx-auto max-w-6xl border-x border-line px-4 pb-14 pt-20 text-center sm:px-6 sm:pt-24">
           <p className="eyebrow">Pricing</p>
-          <h1 className="mx-auto mt-4 max-w-3xl text-balance text-5xl font-semibold leading-[1.03] tracking-[-0.045em] sm:text-6xl">
+          <h1 className="mx-auto mt-4 max-w-3xl text-balance text-5xl font-semibold leading-[1.03] tracking-[-0.02em] sm:text-6xl">
             Protection for less than a coffee.
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-lg text-soft">
@@ -143,7 +143,7 @@ export function PricingBoard() {
                 <p className="mt-2 text-soft">{p.blurb}</p>
 
                 <div className="mt-8 flex items-end gap-3">
-                  <span className={`font-display text-6xl font-semibold tracking-[-0.05em] tabular-nums ${popular ? "text-brand-bright" : ""}`}>
+                  <span className={`font-display text-6xl font-semibold tracking-[-0.02em] tabular-nums ${popular ? "text-brand-bright" : ""}`}>
                     {money(perMonth)}
                   </span>
                   <div className="pb-2 text-sm leading-tight text-mute">
@@ -206,7 +206,7 @@ export function PricingBoard() {
       {/* Comparison */}
       <section className="border-b border-line">
         <div className="mx-auto max-w-6xl border-x border-line">
-          <h2 className="px-4 pb-8 pt-16 text-3xl font-semibold tracking-[-0.03em] sm:px-8 sm:text-4xl">Compare plans</h2>
+          <h2 className="px-4 pb-8 pt-16 text-3xl font-semibold tracking-[-0.02em] sm:px-8 sm:text-4xl">Compare plans</h2>
           <div className="overflow-x-auto border-t border-line">
             <table className="w-full min-w-[520px] text-left text-sm">
               <thead>
@@ -243,7 +243,7 @@ export function PricingBoard() {
       <section className="border-b border-line">
         <div className="mx-auto grid max-w-6xl gap-10 border-x border-line px-4 py-16 sm:px-8 md:grid-cols-[1fr_1.6fr]">
           <div>
-            <h2 className="text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">Questions?</h2>
+            <h2 className="text-3xl font-semibold tracking-[-0.02em] sm:text-4xl">Questions?</h2>
             <p className="mt-3 text-soft">
               Still unsure?{" "}
               <a href={SITE.support} className="text-brand-bright underline decoration-brand/40 underline-offset-4 hover:decoration-brand">

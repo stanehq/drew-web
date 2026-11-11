@@ -38,7 +38,7 @@ export function ServerShowcase({ data }: { data: PublicShowcase }) {
       <div className="mx-auto max-w-6xl border-x border-line">
         <div className="flex flex-col gap-2 px-4 pb-8 pt-14 text-center sm:px-8">
           <p className="eyebrow">Trusted by communities</p>
-          <h2 id="showcase-title" className="text-balance text-3xl font-semibold tracking-[-0.035em] sm:text-4xl">
+          <h2 id="showcase-title" className="text-balance text-3xl font-semibold tracking-[-0.02em] sm:text-4xl">
             Protecting {total > 0 ? `${formatCompact(total)} servers` : "servers"}, including these.
           </h2>
         </div>

@@ -10,7 +10,7 @@ export function PageHero({ eyebrow, title, children }: { eyebrow: string; title:
       />
       <div className="animate-fade-up mx-auto max-w-3xl px-4 text-center sm:px-6">
         <p className="eyebrow">{eyebrow}</p>
-        <h1 className="mt-4 text-balance text-5xl font-semibold leading-[1.04] tracking-[-0.045em] sm:text-6xl">{title}</h1>
+        <h1 className="mt-4 text-balance text-5xl font-semibold leading-[1.04] tracking-[-0.02em] sm:text-6xl">{title}</h1>
         {children && <div className="mt-5 text-pretty text-lg leading-relaxed text-soft">{children}</div>}
       </div>
     </section>

@@ -15,8 +15,8 @@
   --color-warn: #f5b84b;
   --color-bad: #f2545b;
 
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-inter-tight), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-albert), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-unbounded), var(--font-albert), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, monospace;
 
   --animate-aurora: aurora 18s ease-in-out infinite alternate;
@@ -63,13 +63,11 @@
     background: var(--color-ink);
     color: var(--color-fg);
     font-family: var(--font-sans);
-    font-feature-settings: "cv11", "ss01", "ss03";
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
   h1, h2, h3, h4 {
     font-family: var(--font-display);
-    font-feature-settings: "ss01", "cv11";
   }
   ::selection {
     background: rgb(65 207 139 / 0.35);

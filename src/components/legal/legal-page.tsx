@@ -8,7 +8,7 @@ export async function LegalPage({ slug }: { slug: LegalSlug }) {
       <div className="mx-auto max-w-6xl border-x border-line">
         <header className="border-b border-line px-4 pb-10 pt-16 sm:px-8">
           <p className="eyebrow">Legal</p>
-          <h1 className="mt-3 text-4xl font-semibold tracking-[-0.04em] sm:text-5xl">{doc.title}</h1>
+          <h1 className="mt-3 text-4xl font-semibold tracking-[-0.02em] sm:text-5xl">{doc.title}</h1>
           {doc.updated && <p className="mt-3 text-sm text-mute">{doc.updated}</p>}
         </header>
         <div className="grid lg:grid-cols-[240px_1fr]">
