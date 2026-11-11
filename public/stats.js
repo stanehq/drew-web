@@ -43,12 +43,12 @@
     const dot = section.querySelector("[data-stat-status]");
     if (latency) {
       latency.textContent = stats.ready
-        ? `Online · ${stats.latencyMs} ms gateway latency`
+        ? `Online · ${stats.latencyMs}ms gateway latency`
         : "Connecting to Discord…";
     }
     if (dot) {
-      dot.classList.toggle("live-stats__dot--online", Boolean(stats.ready));
-      dot.classList.toggle("live-stats__dot--degraded", !stats.ready);
+      dot.classList.toggle("is-online", Boolean(stats.ready));
+      dot.classList.toggle("is-connecting", !stats.ready);
     }
 
     section.hidden = false;

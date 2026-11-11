@@ -45,7 +45,7 @@
   };
 
   const dot = (status) => {
-    const node = el("span", `status-dot is-${status}`);
+    const node = el("span", `dot is-${status}`);
     node.setAttribute("aria-hidden", "true");
     return node;
   };
@@ -94,7 +94,11 @@
 
     const shard = state.shards.find((s) => s.id === shardId);
     const statusText = shard ? STATE_TEXT[shard.status].toLowerCase() : "unknown";
-    result.textContent = `Your server is on shard ${shardId} (${statusText}).`;
+    result.replaceChildren(
+      document.createTextNode("Your server is on "),
+      el("strong", "", `shard ${shardId}`),
+      document.createTextNode(` (${statusText}).`),
+    );
 
     const card = root.querySelector(`[data-shard-id="${shardId}"]`);
     if (card) {
@@ -118,6 +122,7 @@
       title = "Drew is partially degraded";
     }
 
+    $("[data-overall]").classList.toggle("surface-card--accent", overall === "operational");
     const heading = $("[data-overall-title]");
     heading.replaceChildren(dot(overall), document.createTextNode(title));
 
@@ -173,7 +178,7 @@
         if (info.status === "operational" && info.latencyMs > 0) {
           detail += ` · ${info.latencyMs}ms`;
         }
-        right.append(el("span", "status-muted", detail), dot(info.status));
+        right.append(el("span", "", detail), dot(info.status));
         item.append(right);
         return item;
       }),
@@ -183,7 +188,7 @@
   const renderShards = (data) => {
     $("[data-shards]").replaceChildren(
       ...data.shards.map((shard) => {
-        const card = el("article", "status-shard");
+        const card = el("article", "surface-card status-shard");
         card.dataset.shardId = String(shard.id);
 
         const head = el("div", "status-shard__head");

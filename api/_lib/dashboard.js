@@ -66,65 +66,59 @@ const PROTECTIONS = [
   ["logging_enabled", "Logs"],
 ];
 
-const renderDrewStatus = (guild, installed, apiAvailable) => {
-  if (!apiAvailable) {
+const renderGuildIcon = (guild, guildName) => {
+  const guildIcon = guildIconUrlFor(guild);
+  return guildIcon
+    ? `<img class="dash-guild__icon" src="${escapeHtml(guildIcon)}" alt="" loading="lazy" />`
+    : `<span class="dash-guild__icon dash-guild__icon--fallback" aria-hidden="true">${guildName.slice(0, 1).toUpperCase()}</span>`;
+};
+
+const renderProtections = (settings) => {
+  if (!settings) {
     return "";
   }
-
-  if (!installed) {
-    return `
-      <div class="oauth-guild-card__drew">
-        <p class="oauth-guild-card__note">Drew no está en este servidor.</p>
-        <a class="cta cta--small" href="${escapeHtml(inviteUrlFor(guild.id))}">Invitar a Drew</a>
-      </div>
-    `;
-  }
-
-  const settings = installed.settings;
-  const memberCount = Number(installed.member_count) || 0;
-  const protections = settings
-    ? PROTECTIONS.map(
-        ([key, label]) =>
-          `<li class="oauth-protection ${settings[key] ? "oauth-protection--on" : "oauth-protection--off"}">
-            <span aria-hidden="true">${settings[key] ? "●" : "○"}</span>
-            ${escapeHtml(label)}
-            <span class="visually-hidden">${settings[key] ? "activado" : "desactivado"}</span>
-          </li>`,
-      ).join("")
-    : "";
-
-  return `
-    <div class="oauth-guild-card__drew">
-      <p class="oauth-guild-card__note">${numberFormat.format(memberCount)} miembros</p>
-      ${protections ? `<ul class="oauth-protections">${protections}</ul>` : ""}
-    </div>
-  `;
+  const items = PROTECTIONS.map(
+    ([key, label]) =>
+      `<li class="${settings[key] ? "" : "is-off"}">${escapeHtml(label)}<span class="visually-hidden">: ${
+        settings[key] ? "activado" : "desactivado"
+      }</span></li>`,
+  ).join("");
+  return `<ul class="check-list dash-guild__protections">${items}</ul>`;
 };
 
 const renderGuildCard = (guild, installed, apiAvailable) => {
   const guildName = escapeHtml(guild.name || "Servidor sin nombre");
-  const guildIcon = guildIconUrlFor(guild);
-  const isAdmin = isAdminOf(guild);
+  const badges = [
+    guild.owner ? '<span class="pill pill--dark">Owner</span>' : "",
+    !guild.owner && isAdminOf(guild) ? '<span class="pill">Admin</span>' : "",
+    installed ? '<span class="pill pill--accent">Drew activo</span>' : "",
+  ].join("");
+
+  let body = "";
+  let actions = "";
+  if (apiAvailable && installed) {
+    const memberCount = Number(installed.member_count) || 0;
+    body = `
+      <p class="dash-guild__members"><strong>${numberFormat.format(memberCount)}</strong> miembros</p>
+      ${renderProtections(installed.settings)}`;
+    actions = `<a class="ghost" href="/status.html?server=${escapeHtml(guild.id)}">Ver shard y estado</a>`;
+  } else if (apiAvailable) {
+    body = '<p class="dash-guild__note">Drew aún no está en este servidor.</p>';
+    actions = `<a class="cta cta--discord" href="${escapeHtml(inviteUrlFor(guild.id))}">Invitar a Drew</a>`;
+  }
 
   return `
-    <article class="dashboard-card oauth-guild-card">
-      <div class="oauth-guild-card__head">
-        ${
-          guildIcon
-            ? `<img class="oauth-guild-card__icon" src="${escapeHtml(guildIcon)}" alt="${guildName}" loading="lazy" />`
-            : `<div class="oauth-guild-card__icon oauth-guild-card__icon--fallback">${guildName.slice(0, 1).toUpperCase()}</div>`
-        }
-        <div>
+    <article class="surface-card dash-guild${installed ? " surface-card--accent" : ""}">
+      <header class="dash-guild__head">
+        ${renderGuildIcon(guild, guildName)}
+        <div class="dash-guild__title">
           <h3>${guildName}</h3>
-          <p>ID: <code>${escapeHtml(guild.id)}</code></p>
+          <p class="stat-note">ID ${escapeHtml(guild.id)}</p>
         </div>
-      </div>
-      <div class="oauth-guild-card__badges">
-        ${guild.owner ? '<span class="badge oauth-badge-owner">Owner</span>' : ""}
-        ${isAdmin ? '<span class="badge oauth-badge-admin">Admin</span>' : ""}
-        ${installed ? '<span class="badge oauth-badge-drew">Drew activo</span>' : ""}
-      </div>
-      ${renderDrewStatus(guild, installed, apiAvailable)}
+      </header>
+      ${badges ? `<div class="dash-guild__badges">${badges}</div>` : ""}
+      ${body}
+      ${actions ? `<div class="dash-guild__actions">${actions}</div>` : ""}
     </article>
   `;
 };
@@ -133,7 +127,6 @@ const renderAuthPage = (user, guilds, installedGuilds, apiAvailable) => {
   const avatarUrl = avatarUrlFor(user);
   const safeDisplayName = escapeHtml(user.global_name || user.username || "Usuario");
   const safeUsername = escapeHtml(user.username || "unknown");
-  const safeEmail = escapeHtml(user.email || "No disponible");
   const manageableGuilds = guilds
     .filter(canManage)
     // Servers with Drew first, then alphabetically.
@@ -155,199 +148,11 @@ const renderAuthPage = (user, guilds, installedGuilds, apiAvailable) => {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Drew Dashboard</title>
+    <meta name="robots" content="noindex" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="stylesheet" href="/styles.css" />
     <script defer src="https://va.vercel-scripts.com/v1/script.js"></script>
     <script defer src="/theme.js"></script>
-    <style>
-      .oauth-grid {
-        display: grid;
-        gap: 24px;
-      }
-
-      .oauth-stats {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 24px;
-      }
-
-      .oauth-stat h3 {
-        font-size: 0.95rem;
-        color: var(--muted);
-        margin-bottom: 12px;
-      }
-
-      .oauth-stat p {
-        font-size: 2rem;
-        font-weight: 700;
-      }
-
-      .oauth-profile {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-      }
-
-      .oauth-profile__avatar {
-        width: 72px;
-        height: 72px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 1px solid var(--stroke);
-      }
-
-      .oauth-profile__fallback {
-        width: 72px;
-        height: 72px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, #f2b400, #0d0d0d);
-        color: #ffffff;
-        font-weight: 700;
-      }
-
-      .oauth-profile h2 {
-        margin-bottom: 6px;
-      }
-
-      .oauth-profile p {
-        color: var(--muted);
-        margin: 0;
-      }
-
-      .oauth-guilds__header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 16px;
-        margin-bottom: 16px;
-      }
-
-      .oauth-guilds__header p {
-        color: var(--muted);
-        margin: 0;
-      }
-
-      .oauth-guilds-list {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        gap: 18px;
-      }
-
-      .oauth-guild-card {
-        display: grid;
-        gap: 12px;
-      }
-
-      .oauth-guild-card__head {
-        display: flex;
-        gap: 12px;
-      }
-
-      .oauth-guild-card__icon {
-        width: 44px;
-        height: 44px;
-        border-radius: 10px;
-        object-fit: cover;
-        border: 1px solid var(--stroke);
-      }
-
-      .oauth-guild-card__icon--fallback {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-        background: var(--accent);
-        color: var(--cta-text);
-      }
-
-      .oauth-guild-card h3 {
-        margin: 0 0 6px;
-        font-size: 1.05rem;
-      }
-
-      .oauth-guild-card p {
-        color: var(--muted);
-        font-size: 0.88rem;
-      }
-
-      .oauth-guild-card__badges {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
-
-      .oauth-badge-owner {
-        background: #f2b400;
-        color: #000;
-      }
-
-      .oauth-badge-admin {
-        background: var(--accent);
-        color: var(--cta-text);
-      }
-
-      .oauth-empty {
-        color: var(--muted);
-      }
-
-      .oauth-badge-drew {
-        background: #1f9d55;
-        color: #ffffff;
-      }
-
-      .oauth-badge-owner,
-      .oauth-badge-admin,
-      .oauth-badge-drew {
-        margin-top: 0;
-      }
-
-      .oauth-guild-card__drew {
-        display: grid;
-        gap: 10px;
-        justify-items: start;
-      }
-
-      .oauth-guild-card__note {
-        margin: 0;
-      }
-
-      .oauth-protections {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px 12px;
-        font-size: 0.85rem;
-      }
-
-      .oauth-protection--on span[aria-hidden] {
-        color: #1f9d55;
-      }
-
-      .oauth-protection--off {
-        color: var(--muted);
-        opacity: 0.7;
-      }
-
-      .oauth-notice {
-        color: var(--muted);
-        margin: 0;
-      }
-
-      .visually-hidden {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
-        clip: rect(0 0 0 0);
-        white-space: nowrap;
-      }
-
-    </style>
   </head>
   <body>
     <header class="topbar">
@@ -358,72 +163,69 @@ const renderAuthPage = (user, guilds, installedGuilds, apiAvailable) => {
         <a href="https://discord.gg/5e2jm7QDSS" target="_blank" rel="noreferrer">Support</a>
       </nav>
       <div class="topbar__actions">
-        <a class="cta cta--small" href="/api/auth/discord">Dashboard</a>
+        <a class="cta cta--small" href="/api/auth/discord" aria-current="page">Dashboard</a>
         <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label="Switch to dark mode">
           <span class="theme-toggle__text" data-theme-label>light</span>
         </button>
       </div>
     </header>
 
-    <main class="dashboard-shell oauth-grid">
-      <section class="dashboard-auth">
-        <article class="dashboard-auth__card">
-          <div class="oauth-profile">
-            ${
-              avatarUrl
-                ? `<img class="oauth-profile__avatar" src="${escapeHtml(avatarUrl)}" alt="Avatar de ${safeDisplayName}" />`
-                : `<div class="oauth-profile__fallback">${safeDisplayName.slice(0, 1).toUpperCase()}</div>`
-            }
+    <main>
+      <section class="page-head dash-head">
+        ${
+          avatarUrl
+            ? `<img class="dash-head__avatar" src="${escapeHtml(avatarUrl)}" alt="" />`
+            : `<span class="dash-head__avatar dash-head__avatar--fallback" aria-hidden="true">${safeDisplayName.slice(0, 1).toUpperCase()}</span>`
+        }
+        <p class="eyebrow">Dashboard</p>
+        <h1 class="page-head__title">Hola, <span class="gradient-text">${safeDisplayName}</span></h1>
+        <p class="page-head__copy">Conectado como @${safeUsername}. Estos son los servidores que puedes gestionar.</p>
+      </section>
+
+      <div class="page-body">
+        <section class="stat-grid" aria-label="Resumen">
+          <article class="surface-card">
+            <p class="card-label">Servidores gestionables</p>
+            <p class="stat-value">${numberFormat.format(totalGuilds)}</p>
+          </article>
+          ${
+            apiAvailable
+              ? `<article class="surface-card">
+            <p class="card-label">Con Drew</p>
+            <p class="stat-value stat-value--accent">${numberFormat.format(withDrew)}</p>
+          </article>
+          <article class="surface-card">
+            <p class="card-label">Con anti-nuke o anti-raid</p>
+            <p class="stat-value">${numberFormat.format(protectedGuilds)}</p>
+          </article>`
+              : ""
+          }
+        </section>
+
+        <section aria-labelledby="guilds-title">
+          <div class="dash-section-head">
             <div>
-              <h2>${safeDisplayName}</h2>
-              <p>@${safeUsername}</p>
-              <p>${safeEmail}</p>
+              <p class="card-label">Tus servidores</p>
+              <h2 id="guilds-title" class="card-title">Servidores gestionables</h2>
             </div>
+            <p class="stat-note">${totalGuilds} encontrados</p>
           </div>
-        </article>
-      </section>
-
-
-
-      <section class="oauth-stats" aria-label="Resumen">
-        <article class="dashboard-card oauth-stat">
-          <h3>Servidores gestionables</h3>
-          <p>${numberFormat.format(totalGuilds)}</p>
-        </article>
-        ${
-          apiAvailable
-            ? `<article class="dashboard-card oauth-stat">
-          <h3>Con Drew</h3>
-          <p>${numberFormat.format(withDrew)}</p>
-        </article>
-        <article class="dashboard-card oauth-stat">
-          <h3>Con anti-nuke o anti-raid</h3>
-          <p>${numberFormat.format(protectedGuilds)}</p>
-        </article>`
-            : ""
-        }
-      </section>
-
-      <section class="dashboard-card oauth-guilds">
-        <div class="oauth-guilds__header">
-          <h2>Servidores gestionables</h2>
-          <p>${totalGuilds} encontrados</p>
-        </div>
-        ${
-          apiAvailable
-            ? ""
-            : '<p class="oauth-notice">No se pudo obtener el estado de Drew en tus servidores. Inténtalo de nuevo en unos minutos.</p>'
-        }
-        ${
-          totalGuilds === 0
-            ? '<p class="oauth-empty">No administras ningún servidor.</p>'
-            : `<div class="oauth-guilds-list">
-          ${manageableGuilds
-            .map((guild) => renderGuildCard(guild, installedGuilds.get(guild.id), apiAvailable))
-            .join("")}
-        </div>`
-        }
-      </section>
+          ${
+            apiAvailable
+              ? ""
+              : '<p class="dash-notice">No se pudo obtener el estado de Drew en tus servidores. Inténtalo de nuevo en unos minutos.</p>'
+          }
+          ${
+            totalGuilds === 0
+              ? '<p class="dash-notice">No administras ningún servidor.</p>'
+              : `<div class="dash-guilds">
+            ${manageableGuilds
+              .map((guild) => renderGuildCard(guild, installedGuilds.get(guild.id), apiAvailable))
+              .join("")}
+          </div>`
+          }
+        </section>
+      </div>
     </main>
 
     <footer class="footer">
@@ -437,16 +239,14 @@ const renderAuthPage = (user, guilds, installedGuilds, apiAvailable) => {
         <ul>
           <li><a href="/premium.html">Premium</a></li>
           <li><a href="/api/auth/discord">Dashboard</a></li>
-          <li>
-            <a href="https://discord.com/oauth2/authorize?client_id=1441457111409103010&permissions=8&integration_type=0&scope=bot+applications.commands">Invite</a>
-          </li>
+          <li><a href="https://discord.com/oauth2/authorize?client_id=1441457111409103010&amp;permissions=8&amp;integration_type=0&amp;scope=bot+applications.commands">Invite</a></li>
         </ul>
       </div>
       <div>
         <h4>Resources</h4>
         <ul>
           <li><a href="/status.html">Status</a></li>
-          <li><a href="https://docs.neevets.website">Docs</a></li>
+          <li><a href="https://docs.drewbot.xyz">Docs</a></li>
           <li><a href="https://discord.gg/5e2jm7QDSS" target="_blank" rel="noreferrer">Support</a></li>
         </ul>
       </div>
@@ -454,8 +254,8 @@ const renderAuthPage = (user, guilds, installedGuilds, apiAvailable) => {
         <h4>Legal</h4>
         <p>© 2025 Drew. All rights reserved.</p>
         <ul>
-          <li><a href="https://docs.neevets.website/legal/privacy/">Privacy Policy</a></li>
-          <li><a href="https://docs.neevets.website/legal/terms/">Terms of Service</a></li>
+          <li><a href="https://drewbot.xyz/privacy/">Privacy Policy</a></li>
+          <li><a href="https://drewbot.xyz/tos/">Terms of Service</a></li>
         </ul>
       </div>
     </footer>

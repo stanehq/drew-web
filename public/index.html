@@ -81,31 +81,33 @@
       </section>
 
       <section id="stats" class="section live-stats" aria-labelledby="live-stats-title" data-live-stats hidden>
-        <h2 id="live-stats-title" class="live-stats__title">Drew right now</h2>
-        <div class="live-stats__grid">
-          <article class="dashboard-card live-stats__item">
-            <h3>Servers</h3>
-            <p data-stat="guilds">—</p>
+        <div class="section-title">
+          <p class="eyebrow">Live</p>
+          <h2 id="live-stats-title">Drew <span class="gradient-text">right now</span></h2>
+        </div>
+        <div class="stat-grid">
+          <article class="surface-card">
+            <p class="card-label">Servers</p>
+            <p class="stat-value" data-stat="guilds">—</p>
           </article>
-          <article class="dashboard-card live-stats__item">
-            <h3>Members protected</h3>
-            <p data-stat="users">—</p>
+          <article class="surface-card">
+            <p class="card-label">Members</p>
+            <p class="stat-value stat-value--accent" data-stat="users">—</p>
           </article>
-          <article class="dashboard-card live-stats__item">
-            <h3>Commands run</h3>
-            <p data-stat="commandsUsed">—</p>
+          <article class="surface-card">
+            <p class="card-label">Commands run</p>
+            <p class="stat-value" data-stat="commandsUsed">—</p>
           </article>
-          <article class="dashboard-card live-stats__item">
-            <h3>Uptime</h3>
-            <p data-stat="uptimeSeconds">—</p>
+          <article class="surface-card">
+            <p class="card-label">Uptime</p>
+            <p class="stat-value" data-stat="uptimeSeconds">—</p>
           </article>
         </div>
-        <p class="live-stats__meta">
-          <a class="live-stats__link" href="/status.html">Full status &amp; shards -&gt;</a>
-        </p>
-        <p class="live-stats__meta">
-          <span class="live-stats__dot" data-stat-status aria-hidden="true"></span>
+        <p class="live-stats__footer">
+          <span class="dot" data-stat-status aria-hidden="true"></span>
           <span data-stat="latencyMs">—</span>
+          <span aria-hidden="true">·</span>
+          <a class="text-link" href="/status.html">View full status</a>
         </p>
       </section>
 
@@ -135,12 +137,7 @@
         <ul>
           <li><a href="/premium.html">Premium</a></li>
           <li><a href="/api/auth/discord">Dashboard</a></li>
-          <li>
-            <a
-              href="https://discord.com/oauth2/authorize?client_id=1441457111409103010&permissions=8&integration_type=0&scope=bot+applications.commands"
-              >Invite</a
-            >
-          </li>
+          <li><a href="https://discord.com/oauth2/authorize?client_id=1441457111409103010&amp;permissions=8&amp;integration_type=0&amp;scope=bot+applications.commands">Invite</a></li>
         </ul>
       </div>
       <div>
@@ -148,7 +145,7 @@
         <ul>
           <li><a href="/status.html">Status</a></li>
           <li><a href="https://docs.drewbot.xyz">Docs</a></li>
-          <li><a href="https://discord.gg/stane" target="_blank" rel="noreferrer">Support</a></li>
+          <li><a href="https://discord.gg/5e2jm7QDSS" target="_blank" rel="noreferrer">Support</a></li>
         </ul>
       </div>
       <div>
