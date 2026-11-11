@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { formatCompact, formatUptime } from "@/lib/format";
+import { useI18n } from "@/lib/i18n";
 
 type Stats = { available: boolean; ready: boolean; guilds: number; users: number; commandsUsed: number; uptimeSeconds: number; latencyMs: number };
 
 export function LiveStats() {
+  const { t } = useI18n();
   const [stats, setStats] = useState<Stats | null>(null);
 
   useEffect(() => {
@@ -36,7 +38,7 @@ export function LiveStats() {
         {items.map((it) => (
           <div key={it.label} className="bg-ink px-6 py-7 text-left">
             <p className="font-display text-3xl font-semibold tabular-nums tracking-[-0.02em] text-fg sm:text-4xl">{it.value}</p>
-            <p className="mt-1.5 text-sm text-mute">{it.label}</p>
+            <p className="mt-1.5 text-sm text-mute">{t(it.label)}</p>
           </div>
         ))}
       </div>
