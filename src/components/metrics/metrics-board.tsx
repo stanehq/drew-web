@@ -228,7 +228,6 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
         <div className="animate-fade-up flex flex-col gap-6 px-4 pb-10 pt-16 sm:flex-row sm:items-end sm:justify-between sm:px-8">
           <div>
             <h1 className="mt-3 text-5xl font-semibold tracking-[-0.02em] sm:text-6xl">{t("Drew in numbers")}</h1>
-            <p className="mt-3 max-w-xl text-soft">{t("Public, aggregate figures sampled every five minutes, no server or user data")}</p>
           </div>
           <div role="tablist" aria-label="Time range" className="flex w-fit border border-line bg-night p-1">
             {RANGES.map((r) => (
