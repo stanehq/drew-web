@@ -19,6 +19,7 @@ const fmtFull = (t: number) =>
   new Date(t * 1000).toLocaleString("en", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
 
 function Chart({ points, series, range }: { points: PublicMetricPoint[]; series: Series; range: Range }) {
+  const { t } = useI18n();
   const id = useId().replace(/:/g, "");
   const [hover, setHover] = useState<number | null>(null);
   const W = 640;
@@ -112,6 +113,7 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
 }
 
 function Delta({ now, before, invert }: { now: number; before: number; invert?: boolean }) {
+  const { t } = useI18n();
   if (!before) return null;
   const d = now - before;
   if (d === 0) return <span className="text-xs text-mute">{t("no change")}</span>;
