@@ -182,6 +182,7 @@ export type MetricPoint = {
   t: number;
   guilds: number;
   users: number;
+  channels?: number;
   shards_online: number;
   shards_total: number;
   latency_ms: number;
@@ -194,7 +195,16 @@ export type BotMetrics = {
   to: number;
   step_seconds: number;
   points: MetricPoint[];
-  current: { guilds: number; users: number; shards_online: number; shards_total: number; latency_ms: number; commands_used: number };
+  current: {
+    guilds: number;
+    users: number;
+    channels?: number;
+    shards_online: number;
+    shards_total: number;
+    latency_ms: number;
+    commands_used: number;
+    uptime_seconds?: number;
+  };
 };
 
 export const METRIC_RANGES = ["24h", "7d", "30d", "90d"] as const;
