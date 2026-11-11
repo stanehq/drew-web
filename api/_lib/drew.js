@@ -32,8 +32,8 @@ const buildSignatureHeaders = (apiKey, method, pathWithQuery, body) => {
   const message = `${timestamp}:${nonce}:${method}:${pathWithQuery}:${body}`;
   const signature = crypto.createHmac("sha256", apiKey).update(message).digest("hex");
 
+  // The key itself is never sent: the HMAC signature proves possession.
   return {
-    Authorization: `Bearer ${apiKey}`,
     "X-Timestamp": timestamp,
     "X-Nonce": nonce,
     "X-Signature": signature,
@@ -46,7 +46,7 @@ const buildSignatureHeaders = (apiKey, method, pathWithQuery, body) => {
  */
 const drewRequest = async (
   pathWithQuery,
-  { method = "GET", body, timeoutMs = DEFAULT_TIMEOUT_MS } = {},
+  { method = "GET", body, timeoutMs = DEFAULT_TIMEOUT_MS, actor, allowErrorBody = false } = {},
 ) => {
   const { baseUrl, apiKey, configured } = getConfig();
   if (!configured) {
@@ -57,6 +57,12 @@ const drewRequest = async (
   const headers = buildSignatureHeaders(apiKey, method, pathWithQuery, payload);
   if (payload) {
     headers["Content-Type"] = "application/json";
+  }
+  if (actor) {
+    // The website acts for a Discord user it verified through OAuth; the bot
+    // records this user in the settings audit log.
+    headers["X-Drew-Actor"] = String(actor);
+    headers["X-Drew-Source"] = "dashboard";
   }
 
   let response;
@@ -72,11 +78,37 @@ const drewRequest = async (
   }
 
   if (!response.ok) {
+    if (allowErrorBody && response.status < 500) {
+      const errorBody = await response.json().catch(() => null);
+      return { status: response.status, body: errorBody };
+    }
     throw new DrewApiError(`Drew API responded with ${response.status}`, response.status);
   }
 
-  return response.json();
+  const data = await response.json();
+  return allowErrorBody ? { status: response.status, body: data } : data;
 };
+
+const guildPath = (guildId, suffix = "") => {
+  if (!/^\d{17,20}$/.test(String(guildId))) {
+    throw new DrewApiError("Invalid guild ID", 400);
+  }
+  return `/api/v1/guilds/${guildId}${suffix}`;
+};
+
+// Configuration API (the same public endpoints API tokens use).
+const getSchema = () => drewRequest("/api/v1/schema");
+const getGuild = (guildId, actor) => drewRequest(guildPath(guildId), { actor });
+const getGuildSettings = (guildId, actor) => drewRequest(guildPath(guildId, "/settings"), { actor });
+const getGuildChannels = (guildId, actor) => drewRequest(guildPath(guildId, "/channels"), { actor });
+const getGuildRoles = (guildId, actor) => drewRequest(guildPath(guildId, "/roles"), { actor });
+const patchGuildSettings = (guildId, actor, settings, dryRun) =>
+  drewRequest(guildPath(guildId, "/settings"), {
+    method: "PATCH",
+    body: { settings, dry_run: Boolean(dryRun) },
+    actor,
+    allowErrorBody: true,
+  });
 
 const getBotStatus = () => drewRequest("/api/v1/client/status");
 
@@ -98,6 +130,12 @@ const getInstalledGuilds = async (guildIds) => {
 
 module.exports = {
   DrewApiError,
+  getGuild,
+  getGuildChannels,
+  getGuildRoles,
+  getGuildSettings,
+  getSchema,
+  patchGuildSettings,
   buildSignatureHeaders,
   drewRequest,
   getBotStatus,
