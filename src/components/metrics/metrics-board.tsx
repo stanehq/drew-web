@@ -177,8 +177,6 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
     const healthy = points.filter((p) => p.shardsTotal > 0 && p.shardsOnline >= p.shardsTotal).length;
     const availability = points.length ? (healthy / points.length) * 100 : 0;
     const spanHours = first && last ? Math.max(1, (last.t - first.t) / 3600) : 1;
-    const peakUsers = points.reduce<PublicMetricPoint | null>((m, p) => (!m || p.users > m.users ? p : m), null);
-    const busiest = points.reduce<PublicMetricPoint | null>((m, p) => (!m || p.commands > m.commands ? p : m), null);
     return {
       first,
       last,
@@ -188,13 +186,10 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
       best: latencies.length ? Math.min(...latencies) : 0,
       worst: latencies.length ? Math.max(...latencies) : 0,
       availability,
-      peakUsers,
-      busiest,
     };
   }, [points]);
   const cur = data?.current;
   const { first, last } = stats;
-  const signed = (n: number) => `${n >= 0 ? "+" : "-"}${formatExact(Math.abs(n))}`;
 
   const kpis = [
     { label: "Servers", icon: Server, value: formatExact(cur?.guilds ?? 0), note: first && last && <Delta now={last.guilds} before={first.guilds} /> },
@@ -221,18 +216,6 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
     },
     { label: "Uptime", icon: Clock3, value: cur?.uptimeSeconds ? formatUptime(cur.uptimeSeconds) : "...", note: <Muted>since last restart</Muted> },
   ];
-
-  const highlights =
-    points.length >= 2 && first && last
-      ? [
-          ["Growth", `${signed(last.guilds - first.guilds)} servers, ${signed(last.users - first.users)} members`],
-          ["Peak members", stats.peakUsers ? `${formatExact(stats.peakUsers.users)} on ${fmtFull(stats.peakUsers.t)}` : "..."],
-          [
-            "Busiest period",
-            stats.busiest && stats.busiest.commands > 0 ? `${formatExact(stats.busiest.commands)} commands at ${fmtFull(stats.busiest.t)}` : "No commands yet",
-          ],
-        ]
-      : [];
 
   return (
     <section className="relative isolate overflow-hidden border-b border-line pt-[76px]">
@@ -269,17 +252,6 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
             </div>
           ))}
         </div>
-
-        {highlights.length > 0 && (
-          <div className="grid gap-px border-t border-line bg-line md:grid-cols-3">
-            {highlights.map(([k, v]) => (
-              <div key={k} className="min-w-0 bg-night px-5 py-4 sm:px-6">
-                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-mute">{k}</p>
-                <p className="mt-1 truncate text-sm text-fg">{v}</p>
-              </div>
-            ))}
-          </div>
-        )}
 
         {points.length < 2 ? (
           <div className="flex flex-col items-center gap-3 border-t border-line px-6 py-20 text-center">
