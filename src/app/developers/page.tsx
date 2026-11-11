@@ -17,7 +17,7 @@ const endpoints: [string, string, string, string][] = [
   ["GET", "/guilds/{id}/channels", "read", "Text channels, to pick channel IDs"],
   ["GET", "/guilds/{id}/roles", "read", "Assignable roles, to pick role IDs"],
   ["GET", "/guilds/{id}/settings", "read", "Current settings"],
-  ["PATCH", "/guilds/{id}/settings", "write", "Change settings — atomic, with dry_run"],
+  ["PATCH", "/guilds/{id}/settings", "write", "Change settings (atomic, with dry_run)"],
   ["GET", "/guilds/{id}/audit", "read", "Recent changes and who made them"],
 ];
 
@@ -62,7 +62,7 @@ export default function DevelopersPage() {
   return (
     <>
       <PageHero eyebrow="Developers & AI agents" title={<>Configure Drew <span className="brand-text">with code</span></>}>
-        Per-server tokens, a self-describing schema and dry runs — so scripts and AI assistants can set up your server
+        Per-server tokens, a self-describing schema and dry runs, so scripts and AI assistants can set up your server
         safely, without the dashboard.
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <ButtonLink href="#quickstart">Quick start</ButtonLink>
@@ -145,7 +145,7 @@ export default function DevelopersPage() {
             [KeyRound, "Scoped tokens", "Random 256-bit secrets, stored hashed, one server each, expiring and revocable from Discord."],
             [ShieldCheck, "Validated", "Channels and roles are checked against your server; @everyone and bot roles can't be whitelisted."],
             [FileClock, "Audited", "Every change is attributed in /audit and posted to your log channel."],
-            [Sparkles, "Honest schema", "Settings marked enforced: false are stored but have no effect yet — your AI won't be misled."],
+            [Sparkles, "Honest schema", "Settings marked enforced: false are stored but have no effect yet, so your AI won't be misled."],
             [Bot, "Rate limited", "120 reads and 30 changes per minute per token."],
           ].map(([Icon, title, body]) => {
             const I = Icon as typeof KeyRound;

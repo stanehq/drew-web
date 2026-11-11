@@ -140,7 +140,7 @@ export function SettingsEditor({
       if (!ok) return fail(data);
       const changes = (data.changes ?? {}) as Record<string, Change>;
       if (!Object.keys(changes).length) {
-        setMessage({ tone: "ok", text: "Nothing to change — those values were already set." });
+        setMessage({ tone: "ok", text: "Nothing to change. Those values were already set." });
         return;
       }
       setPreview(changes);
