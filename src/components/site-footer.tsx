@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Copyright } from "lucide-react";
 import { SITE } from "@/lib/site";
 import { Logo } from "./logo";
+import { useI18n } from "@/lib/i18n";
 
 const columns = [
   {
@@ -35,24 +36,25 @@ const columns = [
 ];
 
 export function SiteFooter() {
+  const { t } = useI18n();
   return (
     <footer className="relative border-t border-line">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-[1.4fr_repeat(3,1fr)]">
         <div className="space-y-4">
           <Logo />
           <p className="max-w-xs text-sm leading-relaxed text-mute">
-            Advanced security and automation for Discord communities. Made by Stane.
+            {t("Advanced security and automation for Discord communities. Made by Stane.")}
           </p>
         </div>
         {columns.map((col) => (
           <div key={col.title}>
-            <h3 className="text-sm font-medium text-fg">{col.title}</h3>
+            <h3 className="text-sm font-medium text-fg">{t(col.title)}</h3>
             <ul className="mt-4 space-y-2.5">
               {col.links.map((l) => (
                 <li key={l.label}>
                   {l.href.startsWith("/") ? (
                     <Link href={l.href} className="text-sm text-mute transition-colors hover:text-brand">
-                      {l.label}
+                      {t(l.label)}
                     </Link>
                   ) : (
                     <a href={l.href} className="text-sm text-mute transition-colors hover:text-brand">
@@ -66,7 +68,7 @@ export function SiteFooter() {
         ))}
       </div>
       <div className="border-t border-line">
-        <p className="mx-auto max-w-6xl px-4 py-6 text-xs text-mute sm:px-6"><Copyright className="mr-1 inline size-3 align-[-1px]" aria-label="Copyright" />{new Date().getFullYear()} Drew. All rights reserved.</p>
+        <p className="mx-auto max-w-6xl px-4 py-6 text-xs text-mute sm:px-6"><Copyright className="mr-1 inline size-3 align-[-1px]" aria-label="Copyright" />{new Date().getFullYear()} Drew. {t("All rights reserved.")}</p>
       </div>
     </footer>
   );

@@ -13,14 +13,15 @@ import {
   isApiConfigured,
 } from "@/lib/drew";
 import { canEdit, guildLevel, readSession } from "@/lib/session";
+import { LocalizedText } from "@/components/localized-text";
 
 export const metadata: Metadata = { title: "Configure server", robots: { index: false } };
 
 function Problem({ title, body }: { title: string; body: string }) {
   return (
     <div className="pb-28">
-      <PageHero eyebrow="Dashboard" title={title}>
-        {body}
+      <PageHero eyebrow="Dashboard" title={<LocalizedText text={title} />}>
+        <LocalizedText text={body} />
         <div className="mt-8 flex justify-center">
           <ButtonLink href="/dashboard" variant="secondary">
             Back to your servers

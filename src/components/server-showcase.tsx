@@ -1,62 +1,65 @@
-import Image from "next/image";
-import { BadgeCheck, Users } from "lucide-react";
-import { formatCompact } from "@/lib/format";
-import type { PublicServer, PublicShowcase } from "@/lib/public-showcase";
+import {
+  Activity,
+  DatabaseBackup,
+  KeyRound,
+  ScrollText,
+  ShieldAlert,
+  ShieldCheck,
+  Terminal,
+  UserCheck,
+} from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
-function ServerCard({ s }: { s: PublicServer }) {
+const modules = [
+  { icon: ShieldAlert, title: "Anti-nuke", detail: "Stops destructive admin actions before they spread", tag: "Threat prevention" },
+  { icon: ShieldCheck, title: "Anti-raid", detail: "Detects join floods and applies your response automatically", tag: "Live protection" },
+  { icon: UserCheck, title: "Verification", detail: "Keeps unverified accounts away from protected channels", tag: "Member security" },
+  { icon: ScrollText, title: "Audit logging", detail: "Tracks messages, members, roles, channels and voice events", tag: "Full visibility" },
+  { icon: KeyRound, title: "SUDO mode", detail: "Requires owner authorization for sensitive configuration changes", tag: "Access control" },
+  { icon: DatabaseBackup, title: "Backups", detail: "Snapshot your server security setup and restore it quickly", tag: "Recovery" },
+  { icon: Terminal, title: "Configuration API", detail: "Manage protection through scoped, audited commands and API calls", tag: "Developer tools" },
+  { icon: Activity, title: "Live monitoring", detail: "Watch gateway health, shards and bot activity in real time", tag: "Operations" },
+];
+
+const repeats = [...modules, ...modules];
+
+/** Full-width carousel highlighting Drew's Discord security capabilities. */
+export function ServerShowcase() {
+  const { t } = useI18n();
   return (
-    <li className="flex h-[108px] w-[360px] shrink-0 items-center gap-5 rounded-[24px] border border-white/[0.035] bg-[#151619] px-6 py-5 shadow-[0_8px_24px_rgba(0,0,0,0.16)] sm:w-[396px]">
-      {s.icon ? (
-        <Image src={s.icon} alt="" width={72} height={72} className="size-[72px] shrink-0 rounded-[18px] object-cover" />
-      ) : (
-        <span className="flex size-[72px] shrink-0 items-center justify-center rounded-[18px] bg-white/[0.05] font-display text-xl font-semibold text-soft">
-          {s.name.slice(0, 1).toUpperCase()}
-        </span>
-      )}
-      <div className="min-w-0">
-        <p className="flex items-center gap-1.5 truncate text-[1.05rem] font-semibold text-fg">
-          <span className="truncate">{s.name}</span>
-          {(s.verified || s.partnered) && (
-            <BadgeCheck className="size-4 shrink-0 text-brand" aria-label={s.verified ? "Verified" : "Partnered"} />
-          )}
-        </p>
-        <p className="mt-1 flex items-center gap-1.5 text-sm font-medium text-mute">
-          <Users className="size-3.5" /> {formatCompact(s.members)} Members
-        </p>
+    <section className="w-full overflow-hidden border-b border-line" aria-label="Drew security features">
+      <div className="border-b border-line px-5 py-4 sm:px-8">
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-brand">{t("Drew protection suite")}</p>
+        <h2 className="mt-1 text-lg font-semibold tracking-tight text-fg">{t("One bot. Multiple layers of server security.")}</h2>
       </div>
-    </li>
-  );
-}
-
-const SECONDS_PER_CARD = 4;
-const MIN_CARDS = 8;
-
-/** Full-bleed, seamless server marquee styled like the supplied reference. */
-export function ServerShowcase({ data }: { data: PublicShowcase }) {
-  const { servers } = data;
-  if (servers.length === 0) return null;
-  const repeats = Math.ceil(MIN_CARDS / servers.length);
-  const track = Array.from({ length: repeats }, () => servers).flat();
-  return (
-    <section className="w-full overflow-hidden border-b border-line" aria-label="Servers using Drew">
-      <div className="group relative w-full overflow-hidden py-8 [mask-image:linear-gradient(90deg,transparent,black_3%,black_97%,transparent)]">
-        <div
-          className="flex w-max animate-marquee gap-5 group-hover:[animation-play-state:paused]"
-          style={{ animationDuration: `${track.length * SECONDS_PER_CARD}s` }}
-        >
+      <div className="group relative overflow-hidden py-7 [mask-image:linear-gradient(90deg,transparent,black_3%,black_97%,transparent)]">
+        <div className="flex w-max animate-marquee gap-4 group-hover:[animation-play-state:paused]">
           {[0, 1].map((copy) => (
-            <ul key={copy} className="flex gap-5" aria-hidden={copy === 1 || undefined}>
-              {track.map((s, i) => (
-                <ServerCard key={`${copy}-${i}`} s={s} />
+            <ul key={copy} className="flex gap-4" aria-hidden={copy === 1 || undefined}>
+              {repeats.map(({ icon: Icon, title, detail, tag }, i) => (
+                <li
+                  key={`${copy}-${i}`}
+                  className="relative flex h-[190px] w-[300px] shrink-0 flex-col justify-between overflow-hidden rounded-xl border border-brand/15 bg-[#0c1511] p-5 shadow-[0_12px_32px_rgba(0,0,0,0.22)] transition-colors hover:border-brand/40 hover:bg-[#101d17] sm:w-[340px]"
+                >
+                  <div className="pointer-events-none absolute -right-8 -top-8 size-36 rounded-full bg-brand/[0.07] blur-2xl" />
+                  <div className="relative flex items-start justify-between">
+                    <span className="flex size-11 items-center justify-center rounded-lg border border-brand/20 bg-brand/[0.08] text-brand">
+                      <Icon className="size-5" />
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-brand/20 bg-brand/[0.06] px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-brand-bright">
+                      <span className="size-1.5 rounded-full bg-brand" /> {tag}
+                    </span>
+                  </div>
+                  <div className="relative">
+                    <h3 className="text-lg font-semibold tracking-tight text-fg">{t(title)}</h3>
+                    <p className="mt-1.5 text-sm leading-relaxed text-soft">{t(detail)}</p>
+                  </div>
+                </li>
               ))}
             </ul>
           ))}
         </div>
       </div>
-      <p className="border-t border-line px-4 py-3 text-center text-xs text-mute">
-        Ranked by people, bots excluded. Server owners can hide theirs with{" "}
-        <code className="font-mono text-soft">/opsec servershow off</code> or from the dashboard.
-      </p>
     </section>
   );
 }

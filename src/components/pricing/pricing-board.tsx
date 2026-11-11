@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Check, ChevronDown, Clock3, Minus, ShieldCheck, Sparkles, Zap } from "lucide-react";
 import { buttonClass } from "@/components/button";
 import { SITE } from "@/lib/site";
+import { useI18n } from "@/lib/i18n";
 
 type Billing = "monthly" | "yearly";
 
@@ -69,6 +70,7 @@ const money = (n: number) => `$${n.toFixed(2)}`;
 
 export function PricingBoard() {
   const [billing, setBilling] = useState<Billing>("monthly");
+  const { t } = useI18n();
 
 
   return (
@@ -81,13 +83,13 @@ export function PricingBoard() {
         />
         <div className="mx-auto max-w-6xl border-x border-line px-4 pb-14 pt-20 text-center sm:px-6 sm:pt-24">
           <h1 className="mx-auto mt-4 max-w-3xl text-balance text-5xl font-semibold leading-[1.03] tracking-[-0.02em] sm:text-6xl">
-            Protection for less than a coffee
+            {t("Protection for less than a coffee")}
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-lg text-soft">
             Try every Premium feature free for 5 days. Cancel before it ends and you won&apos;t pay a cent.
           </p>
 
-          <div role="radiogroup" aria-label="Billing period" className="mx-auto mt-10 flex w-fit border border-line bg-night p-1">
+          <div role="radiogroup" aria-label={t("Billing period")} className="mx-auto mt-10 flex w-fit border border-line bg-night p-1">
             {(["monthly", "yearly"] as const).map((b) => (
               <button
                 key={b}
@@ -98,10 +100,10 @@ export function PricingBoard() {
                   billing === b ? "bg-white text-ink" : "text-soft hover:text-fg"
                 }`}
               >
-                {b === "monthly" ? "Monthly" : "Yearly"}
+                {b === "monthly" ? t("Monthly") : t("Yearly")}
                 {b === "yearly" && (
                   <span className={`px-1.5 py-0.5 font-mono text-[0.68rem] ${billing === b ? "bg-brand text-[#03110a]" : "bg-brand/15 text-brand"}`}>
-                    2 MONTHS FREE
+                    {t("2 MONTHS FREE")}
                   </span>
                 )}
               </button>
@@ -122,24 +124,24 @@ export function PricingBoard() {
                   <h2 className="text-2xl font-semibold tracking-tight">{p.name}</h2>
                   {popular && (
                     <span className="inline-flex items-center gap-1.5 bg-brand px-2.5 py-1 text-xs font-semibold text-[#03110a]">
-                      <Sparkles className="size-3.5" /> Most popular
+                      <Sparkles className="size-3.5" /> {t("Most popular")}
                     </span>
                   )}
                 </div>
-                <p className="mt-2 text-soft">{p.blurb}</p>
+                <p className="mt-2 text-soft">{t(p.blurb)}</p>
 
                 <div className="mt-8 flex items-end gap-3">
                   <span className={`font-display text-6xl font-semibold tracking-[-0.02em] tabular-nums ${popular ? "text-brand-bright" : ""}`}>
                     {money(perMonth)}
                   </span>
                   <div className="pb-2 text-sm leading-tight text-mute">
-                    <span>/ month</span>
+                    <span>{t("/ month")}</span>
                   </div>
                 </div>
                 <p className="mt-2 h-5 text-sm text-mute">
                   {billing === "yearly" ? (
                     <>
-                      Billed {money(yearly)} yearly. <span className="text-brand">You save {money(p.monthly * 12 - yearly)}.</span>
+                      {t("Billed ")}{money(yearly)}{t(" yearly. ")} <span className="text-brand">{t("You save ")}{money(p.monthly * 12 - yearly)}.</span>
                     </>
                   ) : (
                     <>That&apos;s just {money(perDay)} a day.</>
@@ -152,9 +154,9 @@ export function PricingBoard() {
                   rel="noreferrer"
                   className={`${buttonClass(popular ? "primary" : "secondary", "lg")} mt-8 w-full`}
                 >
-                  Start 5-day free trial
+                  {t("Start 5-day free trial")}
                 </a>
-                <p className="mt-3 text-center text-xs text-mute">No charge today. Cancel anytime.</p>
+                <p className="mt-3 text-center text-xs text-mute">{t("No charge today. Cancel anytime.")}</p>
 
                 <ul className="mt-8 space-y-3 border-t border-line pt-8 text-[0.95rem]">
                   {p.features.map((f) => (
@@ -180,8 +182,8 @@ export function PricingBoard() {
               <div key={title as string} className="flex items-start gap-3 bg-ink px-6 py-5">
                 <I className="mt-0.5 size-5 shrink-0 text-brand" />
                 <div>
-                  <p className="font-medium">{title as string}</p>
-                  <p className="text-sm text-mute">{body as string}</p>
+                  <p className="font-medium">{t(title as string)}</p>
+                  <p className="text-sm text-mute">{t(body as string)}</p>
                 </div>
               </div>
             );
@@ -192,12 +194,12 @@ export function PricingBoard() {
       {/* Comparison */}
       <section className="border-b border-line">
         <div className="mx-auto max-w-6xl border-x border-line">
-          <h2 className="px-4 pb-8 pt-16 text-3xl font-semibold tracking-[-0.02em] sm:px-8 sm:text-4xl">Compare plans</h2>
+          <h2 className="px-4 pb-8 pt-16 text-3xl font-semibold tracking-[-0.02em] sm:px-8 sm:text-4xl">{t("Compare plans")}</h2>
           <div className="overflow-x-auto border-t border-line">
             <table className="w-full min-w-[520px] text-left text-sm">
               <thead>
                 <tr className="border-b border-line text-mute">
-                  <th className="px-4 py-4 font-medium sm:px-8">Feature</th>
+                  <th className="px-4 py-4 font-medium sm:px-8">{t("Feature")}</th>
                   <th className="w-40 px-4 py-4 font-medium">Standard</th>
                   <th className="w-40 bg-[#08130e] px-4 py-4 font-medium text-brand-bright">Advanced</th>
                 </tr>
@@ -205,13 +207,13 @@ export function PricingBoard() {
               <tbody>
                 {COMPARE.map(([label, a, b]) => (
                   <tr key={label} className="border-b border-line last:border-b-0">
-                    <td className="px-4 py-3.5 text-soft sm:px-8">{label}</td>
+                    <td className="px-4 py-3.5 text-soft sm:px-8">{t(label)}</td>
                     {[a, b].map((v, i) => (
                       <td key={i} className={`px-4 py-3.5 ${i === 1 ? "bg-[#08130e]" : ""}`}>
                         {v === true ? (
-                          <Check className="size-4 text-brand" aria-label="Included" />
+                          <Check className="size-4 text-brand" aria-label={t("Included")} />
                         ) : v === false ? (
-                          <Minus className="size-4 text-white/25" aria-label="Not included" />
+                          <Minus className="size-4 text-white/25" aria-label={t("Not included")} />
                         ) : (
                           <span className="text-fg">{v}</span>
                         )}
@@ -229,23 +231,23 @@ export function PricingBoard() {
       <section className="border-b border-line">
         <div className="mx-auto grid max-w-6xl gap-10 border-x border-line px-4 py-16 sm:px-8 md:grid-cols-[1fr_1.6fr]">
           <div>
-            <h2 className="text-3xl font-semibold tracking-[-0.02em] sm:text-4xl">Questions?</h2>
+            <h2 className="text-3xl font-semibold tracking-[-0.02em] sm:text-4xl">{t("Questions?")}</h2>
             <p className="mt-3 text-soft">
-              Still unsure?{" "}
+              {t("Still unsure?")}{" "}
               <a href={SITE.support} className="text-brand-bright underline decoration-brand/40 underline-offset-4 hover:decoration-brand">
-                Ask us on Discord
+                {t("Ask us on Discord")}
               </a>
               .
             </p>
           </div>
           <div className="border-t border-line">
             {FAQ.map(([q, a]) => (
-              <details key={q} className="group border-b border-line">
+              <details key={t(q)} className="group border-b border-line">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 font-medium [&::-webkit-details-marker]:hidden">
-                  {q}
+                  {t(q)}
                   <ChevronDown className="size-4 shrink-0 text-mute transition-transform group-open:rotate-180" />
                 </summary>
-                <p className="pb-5 text-soft">{a}</p>
+                <p className="pb-5 text-soft">{t(a)}</p>
               </details>
             ))}
           </div>

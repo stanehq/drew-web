@@ -19,6 +19,7 @@ import {
 import type { PublicService, PublicShard, PublicStatus } from "@/lib/public-status";
 import { formatCompact, formatExact, formatUptime } from "@/lib/format";
 import { Aurora } from "@/components/aurora";
+import { useI18n } from "@/lib/i18n";
 
 const REFRESH = 30;
 
@@ -101,6 +102,7 @@ function shardForGuild(id: string, count: number) {
 }
 
 export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicStatus | null; initialQuery?: string }) {
+  const { t } = useI18n();
   const [data, setData] = useState<PublicStatus | null>(initial);
   const [error, setError] = useState(false);
   // Without server-rendered data, the first tick (after 1s) loads it.
@@ -194,9 +196,9 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
         <div className="flex flex-col gap-8 border-b border-line pb-10 md:flex-row md:items-end md:justify-between">
           <div className="animate-fade-up">
             <h1 className="mt-3 text-5xl font-semibold tracking-[-0.02em] sm:text-6xl">
-              Drew <span className="brand-text">status</span>
+              Drew <span className="brand-text">{t("status")}</span>
             </h1>
-            <p className="mt-4 max-w-md text-soft">Live health of every shard and service, and the shard your server runs on</p>
+            <p className="mt-4 max-w-md text-soft">{t("Live health of every shard and service, and the shard your server runs on")}</p>
           </div>
           <div className="w-full md:max-w-sm">
             <div className="surface flex items-center gap-2 px-4 focus-within:border-brand/50">
@@ -205,8 +207,8 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
                 id="server-id"
                 inputMode="numeric"
                 autoComplete="off"
-                placeholder="Paste your server ID to find its shard"
-                aria-label="Server ID"
+                placeholder={t("Paste your server ID to find its shard")}
+                aria-label={t("Server ID")}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 className="h-12 w-full bg-transparent font-mono text-sm text-fg placeholder:text-mute focus:outline-none"
@@ -245,7 +247,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
               </div>
               <div>
                 <h2 id="overall" className="text-2xl font-semibold tracking-tight">
-                  {overallTitle}
+                  {t(overallTitle)}
                 </h2>
               </div>
             </div>
@@ -265,7 +267,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
                   className="transition-[stroke-dashoffset] duration-1000 ease-linear"
                 />
               </svg>
-              Refreshing in {countdown}s
+              {t("Refreshing in ")}{countdown}s
             </div>
           </div>
 
@@ -273,7 +275,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
             {(shards.length ? shards : Array.from({ length: 24 }, (_, i) => ({ id: i, status: "offline" as const, latencyMs: 0, guilds: 0, users: 0 }))).map((s) => (
               <span
                 key={s.id}
-                title={data ? `Shard ${s.id}, ${STATE[s.status].text}${s.status === "online" ? `, ${s.latencyMs}ms` : ""}` : undefined}
+                title={data ? `Shard ${s.id}, ${t(STATE[s.status].text)}${s.status === "online" ? `, ${s.latencyMs}ms` : ""}` : undefined}
                 className={`h-full flex-1 transition-all hover:opacity-80 ${!data ? "bg-white/[0.06]" : s.status === "online" ? (s.latencyMs >= LATENCY_WARN_MS ? "bg-warn" : "bg-brand") : s.status === "connecting" ? "bg-warn" : "bg-bad"} ${target === s.id ?"outline outline-2 outline-offset-2 outline-white":""}`}
               />
             ))}
@@ -283,17 +285,17 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
         {/* KPIs */}
         <section className="mt-5 grid grid-cols-2 gap-4 lg:grid-cols-4" aria-label="Summary">
           {kpis.map(({ icon: Icon, label, value, suffix, note, health }) => {
-            const t = TONE[health?.tone ?? "idle"];
+            const toneStyles = TONE[health?.tone ?? "idle"];
             return (
-              <div key={label} className={`surface relative overflow-hidden p-5 ${health ? t.border : ""}`}>
-                {health && health.tone !== "idle" && <span className={`absolute inset-x-0 top-0 h-0.5 ${t.bar}`} aria-hidden />}
+              <div key={label} className={`surface relative overflow-hidden p-5 ${health ? toneStyles.border : ""}`}>
+                {health && health.tone !== "idle" && <span className={`absolute inset-x-0 top-0 h-0.5 ${toneStyles.bar}`} aria-hidden />}
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2 text-mute">
-                    <Icon className={`size-4 ${health ? t.icon : "text-brand"}`} />
-                    <span className="text-xs">{label}</span>
+                    <Icon className={`size-4 ${health ? toneStyles.icon : "text-brand"}`} />
+                    <span className="text-xs">{t(label)}</span>
                   </div>
                 </div>
-                <p className={`mt-3 text-3xl font-semibold tabular-nums tracking-tight ${health ? t.text : ""}`}>
+                <p className={`mt-3 text-3xl font-semibold tabular-nums tracking-tight ${health ? toneStyles.text : ""}`}>
                   {value}
                   {suffix && <span className="ml-1 text-lg font-medium text-mute">{suffix}</span>}
                 </p>
@@ -324,8 +326,8 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
                       <Icon className="size-4" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium">{meta.label}</p>
-                      <p className="text-xs text-mute">{meta.detail}</p>
+                      <p className="text-sm font-medium">{t(meta.label)}</p>
+                      <p className="text-xs text-mute">{t(meta.detail)}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 text-sm">
@@ -352,9 +354,9 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
               </h2>
             </div>
             <div className="hidden items-center gap-4 text-xs text-mute sm:flex">
-              <span className="inline-flex items-center gap-1.5"><Dot state="online" /> Online</span>
-              <span className="inline-flex items-center gap-1.5"><Dot state="connecting" /> Connecting</span>
-              <span className="inline-flex items-center gap-1.5"><Dot state="offline" /> Offline</span>
+              <span className="inline-flex items-center gap-1.5"><Dot state="online" /> {t("Online")}</span>
+              <span className="inline-flex items-center gap-1.5"><Dot state="connecting" /> {t("Connecting")}</span>
+              <span className="inline-flex items-center gap-1.5"><Dot state="offline" /> {t("Offline")}</span>
             </div>
           </div>
           <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
@@ -362,7 +364,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
               <article
                 key={s.id}
                 className={`surface surface-hover p-4 ${target === s.id ?"border-brand/60 shadow-[0_0_0_1px_var(--color-brand),0_12px_40px_-10px_rgb(65_207_139/0.5)]":""}`}
-                aria-label={`Shard ${s.id}, ${STATE[s.status].text}`}
+                aria-label={`Shard ${s.id}, ${t(STATE[s.status].text)}`}
               >
                 <div className="flex items-center justify-between">
                   <h3 className="font-semibold tracking-tight">Shard {s.id}</h3>

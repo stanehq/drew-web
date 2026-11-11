@@ -3,7 +3,7 @@ export const SITE = {
   url: "https://drewbot.xyz",
   description:
     "Drew is the Discord security bot for modern communities: anti-nuke, anti-raid, verification, logging and a configuration API built for AI agents.",
-  support: "https://discord.gg/5e2jm7QDSS",
+  support: "https://discord.gg/stane",
   docs: "https://docs.drewbot.xyz",
   topgg: "https://top.gg/bot/1441457111409103010",
   api: "https://api.drewbot.xyz/api/v1",

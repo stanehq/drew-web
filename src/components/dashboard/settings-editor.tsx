@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { AlertTriangle, ArrowLeft, ArrowRight, Check, Clock, Globe, Lock, ShieldAlert, ShieldCheck, ScrollText, UserCheck, Users, Loader2 } from "lucide-react";
 import type { Channel, GuildInfo, Role, SchemaField, Settings } from "@/lib/drew";
+import { useI18n } from "@/lib/i18n";
 
 const CATEGORIES: Record<string, { title: string; help: string; icon: typeof ShieldAlert }> = {
   anti_nuke: { title: "Anti-nuke", help: "Punish anyone mass-deleting or creating channels and roles.", icon: ShieldAlert },
@@ -75,6 +76,7 @@ export function SettingsEditor({
   canEdit: boolean;
   csrf: string;
 }) {
+  const { t } = useI18n();
   const [baseline, setBaseline] = useState<Settings>(settings);
   const [values, setValues] = useState<Settings>(settings);
   const [preview, setPreview] = useState<Record<string, Change> | null>(null);
@@ -207,7 +209,7 @@ export function SettingsEditor({
         const current = v ? String(v) : "";
         return (
           <select id={id} value={current} disabled={disabled} onChange={(e) => set(f.key, e.target.value || null)} className={`${inputCls} sm:w-56`}>
-            <option value="">None</option>
+            <option value="">{t("None")}</option>
             {current && !items.some(([i]) => i === current) && <option value={current}>Unknown ({current})</option>}
             {items.map(([i, n]) => (
               <option key={i} value={i}>
@@ -221,7 +223,7 @@ export function SettingsEditor({
         const selected = new Set((v as string[]) ?? []);
         return (
           <div className="flex flex-wrap gap-1.5 sm:max-w-sm sm:justify-end">
-            {roles.length === 0 && <span className="text-xs text-mute">No roles</span>}
+            {roles.length === 0 && <span className="text-xs text-mute">{t("No roles")}</span>}
             {roles.map((r) => {
               const on = selected.has(r.id);
               return (
@@ -251,7 +253,7 @@ export function SettingsEditor({
             id={id}
             rows={3}
             disabled={disabled}
-            placeholder="One user ID per line"
+            placeholder={t("One user ID per line")}
             value={((v as string[]) ?? []).join("\n")}
             onChange={(e) => set(f.key, e.target.value.split(/[\s,]+/).map((x) => x.trim()).filter(Boolean))}
             className={`${inputCls} h-auto py-2 font-mono sm:w-64`}
@@ -346,7 +348,7 @@ export function SettingsEditor({
                         <div>
                           <label htmlFor={`f-${f.key}`} className="flex flex-wrap items-center gap-2 text-sm font-medium">
                             {labelFor(f.key)}
-                            {changed && <span className="size-1.5 rounded-full bg-brand" title="Unsaved" />}
+                            {changed && <span className="size-1.5 rounded-full bg-brand" title={t("Unsaved")} />}
                             {f.privileged && (
                               <span className="inline-flex items-center gap-1 border border-brand/30 px-2 py-0.5 text-[0.65rem] font-normal text-brand">
                                 <Lock className="size-3" /> Privileged
@@ -368,11 +370,11 @@ export function SettingsEditor({
                     <div className="flex items-center gap-3">
                       <Icon className="size-5 text-mute" />
                       <div>
-                        <h2 className="font-semibold tracking-tight">{meta.title}</h2>
-                        <p className="text-xs text-mute">{meta.help}</p>
+                        <h2 className="font-semibold tracking-tight">{t(meta.title)}</h2>
+                        <p className="text-xs text-mute">{t(meta.help)}</p>
                       </div>
                     </div>
-                    <span className="text-xs text-mute group-open:hidden">Show {fields.length}</span>
+                    <span className="text-xs text-mute group-open:hidden">{t("Show ")}{fields.length}</span>
                   </summary>
                   <div className="border-t border-line">{body}</div>
                 </details>

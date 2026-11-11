@@ -3,6 +3,7 @@
 import { useEffect, useId, useMemo, useState } from "react";
 import { Activity, Clock3, Gauge, Hash, Layers, Server, ShieldCheck, Terminal, TrendingUp, Users } from "lucide-react";
 import type { PublicMetricPoint, PublicMetrics } from "@/lib/public-metrics";
+import { useI18n } from "@/lib/i18n";
 import { formatCompact, formatExact, formatUptime } from "@/lib/format";
 
 const RANGES = ["24h", "7d", "30d", "90d"] as const;
@@ -18,6 +19,7 @@ const fmtFull = (t: number) =>
   new Date(t * 1000).toLocaleString("en", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
 
 function Chart({ points, series, range }: { points: PublicMetricPoint[]; series: Series; range: Range }) {
+  const { t } = useI18n();
   const id = useId().replace(/:/g, "");
   const [hover, setHover] = useState<number | null>(null);
   const W = 640;
@@ -45,7 +47,7 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
         viewBox={`0 0 ${W} ${H}`}
         className="h-auto w-full touch-none select-none"
         role="img"
-        aria-label={`${series.label} over the last ${RANGE_LABEL[range]}`}
+        aria-label={`${t(series.label)} · ${t("over the last")} ${t(RANGE_LABEL[range])}`}
         onPointerLeave={() => setHover(null)}
         onPointerMove={(e) => {
           const r = e.currentTarget.getBoundingClientRect();
@@ -111,9 +113,10 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
 }
 
 function Delta({ now, before, invert }: { now: number; before: number; invert?: boolean }) {
+  const { t } = useI18n();
   if (!before) return null;
   const d = now - before;
-  if (d === 0) return <span className="text-xs text-mute">no change</span>;
+  if (d === 0) return <span className="text-xs text-mute">{t("no change")}</span>;
   const good = invert ? d < 0 : d > 0;
   const pct = Math.abs((d / before) * 100);
   return (
@@ -136,6 +139,7 @@ const CHARTS: Series[] = [
 const Muted = ({ children }: { children: React.ReactNode }) => <span className="text-xs text-mute">{children}</span>;
 
 export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics | null; initialRange: Range }) {
+  const { t } = useI18n();
   const [range, setRange] = useState<Range>(initialRange);
   const [data, setData] = useState<PublicMetrics | null>(initial);
   const [failed, setFailed] = useState(false);
@@ -177,8 +181,6 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
     const healthy = points.filter((p) => p.shardsTotal > 0 && p.shardsOnline >= p.shardsTotal).length;
     const availability = points.length ? (healthy / points.length) * 100 : 0;
     const spanHours = first && last ? Math.max(1, (last.t - first.t) / 3600) : 1;
-    const peakUsers = points.reduce<PublicMetricPoint | null>((m, p) => (!m || p.users > m.users ? p : m), null);
-    const busiest = points.reduce<PublicMetricPoint | null>((m, p) => (!m || p.commands > m.commands ? p : m), null);
     return {
       first,
       last,
@@ -188,13 +190,10 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
       best: latencies.length ? Math.min(...latencies) : 0,
       worst: latencies.length ? Math.max(...latencies) : 0,
       availability,
-      peakUsers,
-      busiest,
     };
   }, [points]);
   const cur = data?.current;
   const { first, last } = stats;
-  const signed = (n: number) => `${n >= 0 ? "+" : "-"}${formatExact(Math.abs(n))}`;
 
   const kpis = [
     { label: "Servers", icon: Server, value: formatExact(cur?.guilds ?? 0), note: first && last && <Delta now={last.guilds} before={first.guilds} /> },
@@ -204,9 +203,9 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
       label: "Members per server",
       icon: TrendingUp,
       value: cur?.guilds ? formatExact(Math.round(cur.users / cur.guilds)) : "0",
-      note: <Muted>on average</Muted>,
+      note: <Muted>{t("on average")}</Muted>,
     },
-    { label: `Commands (${range})`, icon: Terminal, value: formatCompact(stats.commands), note: <Muted>{stats.perHour.toFixed(1)} per hour</Muted> },
+    { label: `Commands (${range})`, icon: Terminal, value: formatCompact(stats.commands), note: <Muted>{stats.perHour.toFixed(1)} {t("per hour")}</Muted> },
     {
       label: "Avg latency",
       icon: Gauge,
@@ -219,20 +218,8 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
       value: points.length ? `${stats.availability.toFixed(stats.availability === 100 ? 0 : 2)}%` : "...",
       note: <Muted>{cur ? `${cur.shardsOnline}/${cur.shardsTotal} shards online` : ""}</Muted>,
     },
-    { label: "Uptime", icon: Clock3, value: cur?.uptimeSeconds ? formatUptime(cur.uptimeSeconds) : "...", note: <Muted>since last restart</Muted> },
+    { label: "Uptime", icon: Clock3, value: cur?.uptimeSeconds ? formatUptime(cur.uptimeSeconds) : "...", note: <Muted>{t("since last restart")}</Muted> },
   ];
-
-  const highlights =
-    points.length >= 2 && first && last
-      ? [
-          ["Growth", `${signed(last.guilds - first.guilds)} servers, ${signed(last.users - first.users)} members`],
-          ["Peak members", stats.peakUsers ? `${formatExact(stats.peakUsers.users)} on ${fmtFull(stats.peakUsers.t)}` : "..."],
-          [
-            "Busiest period",
-            stats.busiest && stats.busiest.commands > 0 ? `${formatExact(stats.busiest.commands)} commands at ${fmtFull(stats.busiest.t)}` : "No commands yet",
-          ],
-        ]
-      : [];
 
   return (
     <section className="relative isolate overflow-hidden border-b border-line pt-[76px]">
@@ -240,8 +227,8 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
       <div className="mx-auto max-w-6xl border-x border-line">
         <div className="animate-fade-up flex flex-col gap-6 px-4 pb-10 pt-16 sm:flex-row sm:items-end sm:justify-between sm:px-8">
           <div>
-            <h1 className="mt-3 text-5xl font-semibold tracking-[-0.02em] sm:text-6xl">Drew in numbers</h1>
-            <p className="mt-3 max-w-xl text-soft">Public, aggregate figures sampled every five minutes, no server or user data</p>
+            <h1 className="mt-3 text-5xl font-semibold tracking-[-0.02em] sm:text-6xl">{t("Drew in numbers")}</h1>
+            <p className="mt-3 max-w-xl text-soft">{t("Public, aggregate figures sampled every five minutes, no server or user data")}</p>
           </div>
           <div role="tablist" aria-label="Time range" className="flex w-fit border border-line bg-night p-1">
             {RANGES.map((r) => (
@@ -270,21 +257,10 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
           ))}
         </div>
 
-        {highlights.length > 0 && (
-          <div className="grid gap-px border-t border-line bg-line md:grid-cols-3">
-            {highlights.map(([k, v]) => (
-              <div key={k} className="min-w-0 bg-night px-5 py-4 sm:px-6">
-                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-mute">{k}</p>
-                <p className="mt-1 truncate text-sm text-fg">{v}</p>
-              </div>
-            ))}
-          </div>
-        )}
-
         {points.length < 2 ? (
           <div className="flex flex-col items-center gap-3 border-t border-line px-6 py-20 text-center">
             <Activity className="size-6 text-brand" />
-            <p className="font-medium">{failed || !data ? "Metrics are unavailable right now." : "Collecting data..."}</p>
+            <p className="font-medium">{failed || !data ? t("Metrics are unavailable right now.") : "Collecting data..."}</p>
             <p className="max-w-sm text-sm text-mute">
               {failed || !data
                 ? "We couldn't reach the bot. This page retries automatically."
@@ -299,7 +275,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
                   <h2 className="flex items-center gap-2 text-sm font-medium">
                     <s.icon className="size-4 text-brand" /> {s.label}
                   </h2>
-                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-mute">{RANGE_LABEL[range]}</span>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-mute">{t(RANGE_LABEL[range])}</span>
                 </header>
                 <Chart points={points} series={s} range={range} />
               </article>

@@ -9,6 +9,7 @@ import { avatarUrl, canManage, fetchGuilds, guildIconUrl, inviteUrl, isAdmin, ty
 import { getInstalledGuilds, isApiConfigured, type GuildSummary } from "@/lib/drew";
 import { formatExact } from "@/lib/format";
 import { readSession } from "@/lib/session";
+import { LocalizedText } from "@/components/localized-text";
 
 export const metadata: Metadata = { title: "Dashboard", robots: { index: false } };
 
@@ -22,14 +23,14 @@ const PROTECTIONS: [keyof NonNullable<GuildSummary["settings"]>, string][] = [
 function LoginPrompt({ expired }: { expired?: boolean }) {
   return (
     <div className="pb-28">
-      <PageHero eyebrow="Dashboard" title={<>Manage your <span className="brand-text">servers</span></>}>
-        {expired ? "Your session expired. Log in again to continue." : "Log in with Discord to see the servers you manage and configure Drew."}
+      <PageHero eyebrow="Dashboard" title={<>Manage your <span className="brand-text"><LocalizedText text="servers" /></span></>}>
+        {expired ? <LocalizedText text="Your session expired. Log in again to continue." /> : <LocalizedText text="Log in with Discord to see the servers you manage and configure Drew." />}
         <div className="mt-8 flex justify-center">
           <ButtonLink href="/api/auth/discord" size="lg">
-            <DiscordIcon /> Log in with Discord
+            <DiscordIcon /> <LocalizedText text="Log in with Discord" />
           </ButtonLink>
         </div>
-        <p className="mt-4 text-xs text-mute">We only ask for your profile and server list. Nothing is posted on your behalf.</p>
+        <p className="mt-4 text-xs text-mute"><LocalizedText text="We only ask for your profile and server list. Nothing is posted on your behalf." /></p>
       </PageHero>
     </div>
   );
@@ -52,19 +53,19 @@ function GuildCard({ guild, installed, apiUp }: { guild: DiscordGuild; installed
           <h3 className="truncate font-semibold tracking-tight">{guild.name}</h3>
           <div className="mt-1 flex flex-wrap gap-1.5 text-[0.7rem]">
             {guild.owner ? (
-              <span className="inline-flex items-center gap-1 bg-white/[0.08] px-2 py-0.5 text-fg"><Crown className="size-3" /> Owner</span>
+              <span className="inline-flex items-center gap-1 bg-white/[0.08] px-2 py-0.5 text-fg"><Crown className="size-3" /> <LocalizedText text="Owner" /></span>
             ) : isAdmin(guild) ? (
-              <span className="bg-white/[0.06] px-2 py-0.5 text-soft">Admin</span>
+              <span className="bg-white/[0.06] px-2 py-0.5 text-soft"><LocalizedText text="Admin" /></span>
             ) : (
-              <span className="bg-white/[0.06] px-2 py-0.5 text-soft">Manager</span>
+              <span className="bg-white/[0.06] px-2 py-0.5 text-soft"><LocalizedText text="Manager" /></span>
             )}
-            {installed && <span className="bg-brand/15 px-2 py-0.5 text-brand">Drew active</span>}
+            {installed && <span className="bg-brand/15 px-2 py-0.5 text-brand"><LocalizedText text="Drew active" /></span>}
           </div>
         </div>
       </div>
       {installed ? (
         <>
-          <p className="relative mt-4 text-xs text-mute">{formatExact(installed.member_count)} members</p>
+          <p className="relative mt-4 text-xs text-mute">{formatExact(installed.member_count)} <LocalizedText text="members" /></p>
           {installed.settings && (
             <ul className="relative mt-3 grid grid-cols-2 gap-1.5 text-xs">
               {PROTECTIONS.map(([key, label]) => {
@@ -83,7 +84,7 @@ function GuildCard({ guild, installed, apiUp }: { guild: DiscordGuild; installed
             href={`/dashboard/${guild.id}`}
             className="relative mt-5 inline-flex h-10 items-center justify-center gap-2 bg-white/[0.07] text-sm font-medium ring-1 ring-inset ring-line-strong transition-colors hover:bg-brand hover:text-[#03110a] hover:ring-brand"
           >
-            <Settings2 className="size-4" /> Configure
+            <Settings2 className="size-4" /> <LocalizedText text="Configure" />
           </Link>
         </>
       ) : apiUp ? (
@@ -93,7 +94,7 @@ function GuildCard({ guild, installed, apiUp }: { guild: DiscordGuild; installed
             href={inviteUrl(guild.id)}
             className="relative mt-5 inline-flex h-10 items-center justify-center gap-2 bg-brand text-sm font-medium text-[#03110a] transition-colors hover:bg-brand-bright"
           >
-            <Plus className="size-4" /> Add Drew
+            <Plus className="size-4" /> <LocalizedText text="Add Drew" />
           </a>
         </>
       ) : null}
@@ -143,7 +144,7 @@ export default async function DashboardPage() {
               </div>
             )}
             <div>
-              <h1 className="mt-1 text-3xl font-semibold tracking-tight">Welcome back, {session.name}</h1>
+              <h1 className="mt-1 text-3xl font-semibold tracking-tight"><LocalizedText text="Welcome back, " />{session.name}</h1>
             </div>
           </div>
           <div className="flex gap-2">
@@ -151,7 +152,7 @@ export default async function DashboardPage() {
               API & AI <ArrowRight className="size-3.5" />
             </ButtonLink>
             <a href="/api/auth/logout" className="inline-flex h-9 items-center gap-2 px-3.5 text-sm text-mute hover:bg-white/[0.05] hover:text-fg">
-              <LogOut className="size-4" /> Log out
+              <LogOut className="size-4" /> <LocalizedText text="Log out" />
             </a>
           </div>
         </div>
@@ -163,7 +164,7 @@ export default async function DashboardPage() {
             ["Protected", apiUp ? protectedCount : "..."],
           ].map(([label, value], i) => (
             <div key={label} className="surface p-5">
-              <p className="text-xs text-mute">{label}</p>
+              <p className="text-xs text-mute"><LocalizedText text={label as string} /></p>
               <p className={`mt-2 text-3xl font-semibold tabular-nums ${i === 2 ?"text-brand-bright":""}`}>{value}</p>
             </div>
           ))}
@@ -175,7 +176,7 @@ export default async function DashboardPage() {
           </p>
         )}
 
-        <h2 className="mt-12 text-lg font-semibold tracking-tight">Your servers</h2>
+        <h2 className="mt-12 text-lg font-semibold tracking-tight"><LocalizedText text="Your servers" /></h2>
         {manageable.length === 0 ? (
           <p className="mt-4 text-mute">You don&apos;t manage any servers.</p>
         ) : (
