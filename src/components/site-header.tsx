@@ -45,7 +45,7 @@ export function SiteHeader() {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-ink text-fg shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
       <div className="grid h-[82px] w-full grid-cols-[1fr_auto_1fr] items-center gap-6 px-5 sm:px-8 lg:px-10">
         <BrandLockup />
-        <nav className="hidden h-full items-center justify-center gap-1 lg:flex" aria-label="Main">
+        <nav className="hidden h-full items-center justify-center gap-1 lg:flex" aria-label={t("Main")}>
           {links.map((item) => {
             const internal = item.href.startsWith("/");
             const route = item.href.split("#")[0];
@@ -70,7 +70,7 @@ export function SiteHeader() {
         <button
           type="button"
           className="col-start-3 inline-flex size-11 items-center justify-self-end border border-line text-soft transition-colors hover:border-brand/60 hover:bg-brand/10 hover:text-brand-bright lg:hidden"
-          aria-label={open ? "Close menu" : "Open menu"}
+          aria-label={open ? t("Close menu") : t("Open menu")}
           aria-expanded={open}
           onClick={() => setOpen((value) => !value)}
         >
@@ -79,7 +79,7 @@ export function SiteHeader() {
       </div>
       {open && (
         <div className="border-t border-line bg-ink px-5 pb-6 pt-2 lg:hidden">
-          <nav className="grid" aria-label="Mobile">
+          <nav className="grid" aria-label={t("Mobile")}>
             {links.map((item) => item.href.startsWith("/") ? (
               <Link key={item.href} href={item.href} onClick={() => setOpen(false)} className="border-b border-line px-1 py-4 font-semibold text-soft hover:text-brand-bright">{item.label}</Link>
             ) : (
@@ -88,7 +88,7 @@ export function SiteHeader() {
           </nav>
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
             <LanguageSelector />
-            <a href={DASHBOARD_LOGIN} className={`${buttonClass("outline", "lg")} w-full`}><LayoutDashboard className="size-4" /> Dashboard</a>
+            <a href={DASHBOARD_LOGIN} className={`${buttonClass("outline", "lg")} w-full`}><LayoutDashboard className="size-4" /> {t("Dashboard")}</a>
             <a href={SITE.invite} className={`${buttonClass("primary", "lg")} w-full`}><DiscordIcon /> {t("invite")}</a>
           </div>
         </div>
