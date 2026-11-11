@@ -5,6 +5,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { SITE } from "@/lib/site";
+import { I18nProvider } from "@/lib/i18n";
 import "./globals.css";
 
 const sans = Albert_Sans({ subsets: ["latin"], variable: "--font-albert", display: "swap" });
@@ -39,6 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${sans.variable} ${display.variable} ${mono.variable}`}>
       <body className="min-h-dvh overflow-x-hidden">
+        <I18nProvider>
         <SiteHeader />
         <main className="relative">{children}</main>
         <SiteFooter />
