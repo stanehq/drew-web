@@ -3,6 +3,7 @@
 import { useEffect, useId, useMemo, useState } from "react";
 import { Activity, Clock3, Gauge, Hash, Layers, Server, ShieldCheck, Terminal, TrendingUp, Users } from "lucide-react";
 import type { PublicMetricPoint, PublicMetrics } from "@/lib/public-metrics";
+import { useI18n } from "@/lib/i18n";
 import { formatCompact, formatExact, formatUptime } from "@/lib/format";
 
 const RANGES = ["24h", "7d", "30d", "90d"] as const;
@@ -136,6 +137,7 @@ const CHARTS: Series[] = [
 const Muted = ({ children }: { children: React.ReactNode }) => <span className="text-xs text-mute">{children}</span>;
 
 export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics | null; initialRange: Range }) {
+  const { t } = useI18n();
   const [range, setRange] = useState<Range>(initialRange);
   const [data, setData] = useState<PublicMetrics | null>(initial);
   const [failed, setFailed] = useState(false);
@@ -223,8 +225,8 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
       <div className="mx-auto max-w-6xl border-x border-line">
         <div className="animate-fade-up flex flex-col gap-6 px-4 pb-10 pt-16 sm:flex-row sm:items-end sm:justify-between sm:px-8">
           <div>
-            <h1 className="mt-3 text-5xl font-semibold tracking-[-0.02em] sm:text-6xl">Drew in numbers</h1>
-            <p className="mt-3 max-w-xl text-soft">Public, aggregate figures sampled every five minutes, no server or user data</p>
+            <h1 className="mt-3 text-5xl font-semibold tracking-[-0.02em] sm:text-6xl">{t("Drew in numbers")}</h1>
+            <p className="mt-3 max-w-xl text-soft">{t("Public, aggregate figures sampled every five minutes, no server or user data")}</p>
           </div>
           <div role="tablist" aria-label="Time range" className="flex w-fit border border-line bg-night p-1">
             {RANGES.map((r) => (
@@ -256,7 +258,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
         {points.length < 2 ? (
           <div className="flex flex-col items-center gap-3 border-t border-line px-6 py-20 text-center">
             <Activity className="size-6 text-brand" />
-            <p className="font-medium">{failed || !data ? "Metrics are unavailable right now." : "Collecting data..."}</p>
+            <p className="font-medium">{failed || !data ? t("Metrics are unavailable right now.") : "Collecting data..."}</p>
             <p className="max-w-sm text-sm text-mute">
               {failed || !data
                 ? "We couldn't reach the bot. This page retries automatically."
