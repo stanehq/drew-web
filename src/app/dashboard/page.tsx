@@ -24,7 +24,7 @@ function LoginPrompt({ expired }: { expired?: boolean }) {
   return (
     <div className="pb-28">
       <PageHero eyebrow="Dashboard" title={<>Manage your <span className="brand-text"><LocalizedText text="servers" /></span></>}>
-        {expired ? "<LocalizedText text="Your session expired. Log in again to continue." />" : "<LocalizedText text="Log in with Discord to see the servers you manage and configure Drew." />"}
+        {expired ? <LocalizedText text="Your session expired. Log in again to continue." /> : <LocalizedText text="Log in with Discord to see the servers you manage and configure Drew." />}
         <div className="mt-8 flex justify-center">
           <ButtonLink href="/api/auth/discord" size="lg">
             <DiscordIcon /> <LocalizedText text="Log in with Discord" />
