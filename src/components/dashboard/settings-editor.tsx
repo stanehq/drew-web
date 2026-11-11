@@ -12,7 +12,7 @@ const CATEGORIES: Record<string, { title: string; help: string; icon: typeof Shi
   blacklist: { title: "Blacklist", help: "Remove globally blacklisted users when they join.", icon: ShieldCheck },
   logging: { title: "Logs", help: "Where and what Drew logs.", icon: ScrollText },
   verification: { title: "Verification", help: "Role and channel of the verification panel.", icon: UserCheck },
-  upcoming: { title: "Coming soon", help: "Stored now; they take effect when these modules ship.", icon: Clock },
+  upcoming: { title: "Coming soon", help: "Stored now. They take effect when these modules ship.", icon: Clock },
 };
 const ORDER = ["anti_nuke", "anti_raid", "blacklist", "logging", "verification", "upcoming"];
 
@@ -46,15 +46,15 @@ function Toggle({ checked, onChange, disabled, id }: { checked: boolean; onChang
       aria-checked={checked}
       disabled={disabled}
       onClick={() => onChange(!checked)}
-      className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${checked ? "bg-brand" : "bg-white/15"}`}
+      className={`relative inline-flex h-6 w-11 shrink-0 items-center transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${checked ?"bg-brand":"bg-white/15"}`}
     >
-      <span className={`inline-block size-5 rounded-full bg-white shadow transition-transform ${checked ? "translate-x-[22px]" : "translate-x-0.5"}`} />
+      <span className={`inline-block size-5 bg-white shadow transition-transform ${checked ?"translate-x-[22px]":"translate-x-0.5"}`} />
     </button>
   );
 }
 
 const inputCls =
-  "h-10 w-full rounded-xl border border-line bg-white/[0.03] px-3 text-sm text-fg placeholder:text-mute focus:border-brand/60 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50";
+  "h-10 w-full border border-line bg-white/[0.03] px-3 text-sm text-fg placeholder:text-mute focus:border-brand/60 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50";
 
 export function SettingsEditor({
   guild,
@@ -105,8 +105,8 @@ export function SettingsEditor({
   };
 
   const nameFor = (key: string, v: unknown): string => {
-    if (v === null || v === undefined || v === "") return "—";
-    if (Array.isArray(v)) return v.length ? v.map((x) => nameFor(key, x)).join(", ") : "—";
+    if (v === null || v === undefined || v === "") return "None";
+    if (Array.isArray(v)) return v.length ? v.map((x) => nameFor(key, x)).join(", ") : "None";
     if (typeof v === "boolean") return v ? "on" : "off";
     const s = String(v);
     const ch = channels.find((c) => c.id === s);
@@ -234,7 +234,7 @@ export function SettingsEditor({
                     else next.add(r.id);
                     set(f.key, [...next]);
                   }}
-                  className={`rounded-full border px-2.5 py-1 text-xs transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${on ? "border-brand bg-brand/15 text-brand" : "border-line text-soft hover:border-line-strong"}`}
+                  className={`border px-2.5 py-1 text-xs transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${on ?"border-brand bg-brand/15 text-brand":"border-line text-soft hover:border-line-strong"}`}
                 >
                   @{r.name}
                 </button>
@@ -274,7 +274,7 @@ export function SettingsEditor({
                     const next = on ? base.filter((x) => x !== o) : [...base, o];
                     set(f.key, next.length ? next : ["all"]);
                   }}
-                  className={`rounded-full border px-2.5 py-1 text-xs capitalize transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${on ? "border-brand bg-brand/15 text-brand" : "border-line text-soft hover:border-line-strong"}`}
+                  className={`border px-2.5 py-1 text-xs capitalize transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${on ?"border-brand bg-brand/15 text-brand":"border-line text-soft hover:border-line-strong"}`}
                 >
                   {o === "all" ? "Everything" : o}
                 </button>
@@ -295,9 +295,9 @@ export function SettingsEditor({
         </Link>
         <div className="mt-6 flex flex-wrap items-center gap-4">
           {guild.icon_url ? (
-            <Image src={guild.icon_url} alt="" width={64} height={64} className="size-16 rounded-2xl border border-line" />
+            <Image src={guild.icon_url} alt="" width={64} height={64} className="size-16 border border-line" />
           ) : (
-            <div className="flex size-16 items-center justify-center rounded-2xl border border-line bg-white/[0.05] text-2xl font-semibold">
+            <div className="flex size-16 items-center justify-center border border-line bg-white/[0.05] text-2xl font-semibold">
               {guild.name.slice(0, 1).toUpperCase()}
             </div>
           )}
@@ -308,7 +308,7 @@ export function SettingsEditor({
         </div>
 
         <div
-          className={`mt-6 flex items-start gap-3 rounded-2xl border px-4 py-3 text-sm ${canEdit ? "border-brand/25 bg-brand/[0.06] text-soft" : "border-line bg-white/[0.03] text-soft"}`}
+          className={`mt-6 flex items-start gap-3 border px-4 py-3 text-sm ${canEdit ?"border-brand/25 bg-brand/[0.06] text-soft":"border-line bg-white/[0.03] text-soft"}`}
         >
           {canEdit ? <ShieldCheck className="mt-0.5 size-4 shrink-0 text-brand" /> : <Lock className="mt-0.5 size-4 shrink-0 text-mute" />}
           <p>
@@ -324,7 +324,7 @@ export function SettingsEditor({
               const meta = CATEGORIES[cat] ?? { title: cat, icon: Clock };
               const Icon = meta.icon;
               return (
-                <a key={cat} href={`#s-${cat}`} className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm text-mute transition-colors hover:bg-white/[0.04] hover:text-fg">
+                <a key={cat} href={`#s-${cat}`} className="flex items-center gap-2.5 px-3 py-2 text-sm text-mute transition-colors hover:bg-white/[0.04] hover:text-fg">
                   <Icon className="size-4" /> {meta.title}
                 </a>
               );
@@ -341,13 +341,13 @@ export function SettingsEditor({
                     const err = errors.find((e) => e.key === f.key);
                     const changed = f.key in pending;
                     return (
-                      <li key={f.key} className={`grid gap-3 px-6 py-5 sm:grid-cols-[1fr_auto] sm:items-center ${f.privileged ? "bg-brand/[0.03]" : ""}`}>
+                      <li key={f.key} className={`grid gap-3 px-6 py-5 sm:grid-cols-[1fr_auto] sm:items-center ${f.privileged ?"bg-brand/[0.03]":""}`}>
                         <div>
                           <label htmlFor={`f-${f.key}`} className="flex flex-wrap items-center gap-2 text-sm font-medium">
                             {labelFor(f.key)}
                             {changed && <span className="size-1.5 rounded-full bg-brand" title="Unsaved" />}
                             {f.privileged && (
-                              <span className="inline-flex items-center gap-1 rounded-full border border-brand/30 px-2 py-0.5 text-[0.65rem] font-normal text-brand">
+                              <span className="inline-flex items-center gap-1 border border-brand/30 px-2 py-0.5 text-[0.65rem] font-normal text-brand">
                                 <Lock className="size-3" /> Privileged
                               </span>
                             )}
@@ -378,7 +378,7 @@ export function SettingsEditor({
               ) : (
                 <section key={cat} id={`s-${cat}`} className="surface scroll-mt-24 overflow-hidden" aria-labelledby={`h-${cat}`}>
                   <div className="flex items-center gap-3 border-b border-line px-6 py-5">
-                    <div className="flex size-9 items-center justify-center rounded-xl border border-brand/25 bg-brand/10 text-brand">
+                    <div className="flex size-9 items-center justify-center border border-brand/25 bg-brand/10 text-brand">
                       <Icon className="size-4" />
                     </div>
                     <div>
@@ -398,9 +398,9 @@ export function SettingsEditor({
 
       {canEdit && (dirty > 0 || message) && (
         <div className="fixed inset-x-0 bottom-0 z-40 px-4 pb-4 sm:pb-6">
-          <div className="mx-auto max-w-3xl rounded-2xl border border-line-strong bg-panel/95 p-4 shadow-[0_20px_60px_-15px_rgb(0_0_0/0.8)] backdrop-blur-xl">
+          <div className="mx-auto max-w-3xl border border-line-strong bg-panel/95 p-4 shadow-[0_20px_60px_-15px_rgb(0_0_0/0.8)] backdrop-blur-xl">
             {preview && (
-              <div className="mb-4 max-h-56 space-y-1.5 overflow-y-auto rounded-xl border border-line bg-black/30 p-3 font-mono text-xs">
+              <div className="mb-4 max-h-56 space-y-1.5 overflow-y-auto border border-line bg-black/30 p-3 font-mono text-xs">
                 {Object.entries(preview).map(([k, c]) => (
                   <p key={k} className="flex flex-wrap gap-x-2">
                     <span className="text-fg">{k}</span>
@@ -412,7 +412,7 @@ export function SettingsEditor({
               </div>
             )}
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <p className={`flex items-center gap-2 text-sm ${message?.tone === "error" ? "text-bad" : message?.tone === "ok" ? "text-brand" : "text-soft"}`} aria-live="polite">
+              <p className={`flex items-center gap-2 text-sm ${message?.tone ==="error"?"text-bad": message?.tone ==="ok"?"text-brand":"text-soft"}`} aria-live="polite">
                 {message?.tone === "error" ? <AlertTriangle className="size-4" /> : message?.tone === "ok" ? <Check className="size-4" /> : null}
                 {message?.text ?? (preview ? "Review the changes and apply them." : `${dirty} unsaved change${dirty === 1 ? "" : "s"}`)}
               </p>
@@ -426,7 +426,7 @@ export function SettingsEditor({
                       setErrors([]);
                       setMessage(null);
                     }}
-                    className="h-9 rounded-full px-4 text-sm text-mute hover:bg-white/[0.06] hover:text-fg"
+                    className="h-9 px-4 text-sm text-mute hover:bg-white/[0.06] hover:text-fg"
                   >
                     Discard
                   </button>
@@ -435,7 +435,7 @@ export function SettingsEditor({
                       type="button"
                       onClick={apply}
                       disabled={busy !== null}
-                      className="inline-flex h-9 items-center gap-2 rounded-full bg-brand px-4 text-sm font-medium text-[#03110a] hover:bg-brand-bright disabled:opacity-60"
+                      className="inline-flex h-9 items-center gap-2 bg-brand px-4 text-sm font-medium text-[#03110a] hover:bg-brand-bright disabled:opacity-60"
                     >
                       {busy === "apply" && <Loader2 className="size-4 animate-spin" />} Apply changes
                     </button>
@@ -444,7 +444,7 @@ export function SettingsEditor({
                       type="button"
                       onClick={review}
                       disabled={busy !== null}
-                      className="inline-flex h-9 items-center gap-2 rounded-full bg-white px-4 text-sm font-medium text-black hover:bg-white/90 disabled:opacity-60"
+                      className="inline-flex h-9 items-center gap-2 bg-white px-4 text-sm font-medium text-black hover:bg-white/90 disabled:opacity-60"
                     >
                       {busy === "review" && <Loader2 className="size-4 animate-spin" />} Review changes
                     </button>

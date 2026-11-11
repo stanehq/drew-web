@@ -1,12 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
+import { Inter, Inter_Tight, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { SITE } from "@/lib/site";
 import "./globals.css";
+
+const sans = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+const display = Inter_Tight({ subsets: ["latin"], variable: "--font-inter-tight", display: "swap" });
+const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains", display: "swap" });
 
 // Every page is rendered per request so it carries the CSP nonce set in
 // src/proxy.ts (static HTML could not include it).
@@ -34,7 +37,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
+    <html lang="en" className={`${sans.variable} ${display.variable} ${mono.variable}`}>
       <body className="min-h-dvh overflow-x-hidden">
         <SiteHeader />
         <main className="relative">{children}</main>

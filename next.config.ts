@@ -22,7 +22,8 @@ const nextConfig: NextConfig = {
     return [
       { source: "/index.html", destination: "/", permanent: true },
       { source: "/status.html", destination: "/status", permanent: true },
-      { source: "/premium.html", destination: "/premium", permanent: true },
+      { source: "/premium.html", destination: "/pricing", permanent: true },
+      { source: "/premium", destination: "/pricing", permanent: true },
       { source: "/developers.html", destination: "/developers", permanent: true },
       { source: "/404.html", destination: "/", permanent: true },
       {

@@ -25,25 +25,25 @@ export function LiveStats() {
   }, []);
 
   const items = [
-    { label: "Servers", value: stats ? formatCompact(stats.guilds) : "—" },
-    { label: "Members protected", value: stats ? formatCompact(stats.users) : "—" },
-    { label: "Commands run", value: stats ? formatCompact(stats.commandsUsed) : "—" },
-    { label: "Uptime", value: stats ? formatUptime(stats.uptimeSeconds) : "—" },
+    { label: "Servers", value: stats ? formatCompact(stats.guilds) : "..." },
+    { label: "Members protected", value: stats ? formatCompact(stats.users) : "..." },
+    { label: "Commands run", value: stats ? formatCompact(stats.commandsUsed) : "..." },
+    { label: "Uptime", value: stats ? formatUptime(stats.uptimeSeconds) : "..." },
   ];
 
   return (
-    <div className="surface mx-auto w-full max-w-3xl overflow-hidden">
-      <div className="grid grid-cols-2 divide-line sm:grid-cols-4 sm:divide-x [&>*:nth-child(-n+2)]:border-b [&>*:nth-child(-n+2)]:border-line sm:[&>*]:border-b-0">
+    <div>
+      <div className="grid grid-cols-2 gap-px bg-line sm:grid-cols-4">
         {items.map((it) => (
-          <div key={it.label} className="px-5 py-4 text-center">
-            <p className="text-2xl font-semibold tabular-nums tracking-tight text-fg">{it.value}</p>
-            <p className="mt-1 text-xs text-mute">{it.label}</p>
+          <div key={it.label} className="bg-ink px-6 py-7 text-left">
+            <p className="font-display text-3xl font-semibold tabular-nums tracking-[-0.03em] text-fg sm:text-4xl">{it.value}</p>
+            <p className="mt-1.5 text-sm text-mute">{it.label}</p>
           </div>
         ))}
       </div>
       <Link
         href="/status"
-        className="flex items-center justify-center gap-2 border-t border-line px-4 py-2.5 text-xs text-mute transition-colors hover:text-fg"
+        className="flex items-center justify-center gap-2 border-t border-line px-4 py-3 font-mono text-xs text-mute transition-colors hover:text-fg"
       >
         <span className="relative flex size-2">
           <span className={`absolute inline-flex size-full rounded-full ${stats?.ready ? "animate-pulse-ring bg-brand" : ""}`} />

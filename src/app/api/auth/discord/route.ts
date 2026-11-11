@@ -1,9 +1,15 @@
 import { NextResponse } from "next/server";
-import { createOAuthState } from "@/lib/session";
+import { createOAuthState, readSession } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(request: Request) {
+  // Already signed in: skip Discord and open the dashboard.
+  if (await readSession()) {
+    const res = NextResponse.redirect(new URL("/dashboard", request.url));
+    res.headers.set("Cache-Control", "no-store");
+    return res;
+  }
   const clientId = process.env.DISCORD_CLIENT_ID;
   const redirectUri = process.env.DISCORD_REDIRECT_URI;
   if (!clientId || !redirectUri) {

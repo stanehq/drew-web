@@ -101,7 +101,7 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
         )}
       </svg>
       {h && (
-        <div className="pointer-events-none absolute right-2 top-0 rounded-lg border border-line bg-ink/90 px-2.5 py-1.5 text-right text-xs backdrop-blur">
+        <div className="pointer-events-none absolute right-2 top-0 border border-line bg-ink/90 px-2.5 py-1.5 text-right text-xs backdrop-blur">
           <p className="font-mono text-[10px] text-mute">{fmtFull(h.t)}</p>
           <p className="font-medium text-fg">{fmt(Number(h[series.key]))}</p>
         </div>
@@ -117,7 +117,7 @@ function Delta({ now, before, invert }: { now: number; before: number; invert?: 
   const good = invert ? d < 0 : d > 0;
   const pct = Math.abs((d / before) * 100);
   return (
-    <span className={`text-xs font-medium ${good ? "text-brand" : "text-bad"}`}>
+    <span className={`text-xs font-medium ${good ?"text-brand":"text-bad"}`}>
       {d > 0 ? "+" : "−"}
       {pct < 0.1 ? "<0.1" : pct.toFixed(1)}%
     </span>
@@ -188,14 +188,14 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
             <h1 className="mt-3 text-4xl font-semibold tracking-[-0.03em] sm:text-5xl">Drew in numbers.</h1>
             <p className="mt-3 max-w-xl text-soft">Public, aggregate figures sampled every five minutes. No server or user data is shown.</p>
           </div>
-          <div role="tablist" aria-label="Time range" className="flex w-fit rounded-full border border-line bg-white/[0.03] p-1">
+          <div role="tablist" aria-label="Time range" className="flex w-fit border border-line bg-white/[0.03] p-1">
             {RANGES.map((r) => (
               <button
                 key={r}
                 role="tab"
                 aria-selected={range === r}
                 onClick={() => pick(r)}
-                className={`rounded-full px-4 py-1.5 font-mono text-xs transition-colors ${range === r ? "bg-brand text-[#03110a]" : "text-soft hover:text-fg"}`}
+                className={`px-4 py-1.5 font-mono text-xs transition-colors ${range === r ?"bg-brand text-[#03110a]":"text-soft hover:text-fg"}`}
               >
                 {r}
               </button>
@@ -209,7 +209,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
               <p className="flex items-center gap-2 text-xs text-mute">
                 <Icon className="size-3.5 text-brand" /> {label}
               </p>
-              <p className="mt-3 truncate text-2xl font-semibold tracking-tight sm:text-3xl">{data ? value : "—"}</p>
+              <p className="mt-3 truncate text-2xl font-semibold tracking-tight sm:text-3xl">{data ? value : "..."}</p>
               <div className="mt-1 h-4">{data && delta}</div>
             </div>
           ))}
@@ -240,7 +240,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
             ))}
           </div>
         )}
-        {failed && data && <p className="mt-4 text-center text-xs text-warn">Showing the last data we received; retrying…</p>}
+        {failed && data && <p className="mt-4 text-center text-xs text-warn">Showing the last data we received. Retrying…</p>}
       </div>
     </section>
   );
