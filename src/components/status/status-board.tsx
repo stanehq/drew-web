@@ -106,7 +106,6 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
   // Without server-rendered data, the first tick (after 1s) loads it.
   const [countdown, setCountdown] = useState(initial ? REFRESH : 1);
   const [query, setQuery] = useState(initialQuery);
-  const [now, setNow] = useState(() => Date.now());
 
   const load = useCallback(async () => {
     try {
@@ -122,7 +121,6 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
 
   useEffect(() => {
     const id = setInterval(() => {
-      setNow(Date.now());
       setCountdown((c) => {
         if (c <= 1) {
           void load();
@@ -148,14 +146,13 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
   const overallTitle = !data
     ? error
       ? "Status unavailable"
-      : "Checking status…"
+      : "Checking status"
     : { operational: "All systems operational", degraded: "Partial degradation", down: "Major outage" }[overall];
 
   const trimmed = query.trim();
   const target = trimmed ? shardForGuild(trimmed, data?.shardCount ?? 0) : null;
   const lookupInvalid = trimmed !== "" && target === null;
 
-  const updatedAgo = data ? Math.max(0, Math.round((now - new Date(data.updatedAt).getTime()) / 1000)) : null;
 
   const shardHealth = data ? shardTone(online.length, shards.length) : null;
   const latencyHealth = data ? latencyTone(data.latencyMs) : null;
@@ -182,7 +179,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
       icon: Gauge,
       label: "Gateway latency",
       value: data ? `${data.latencyMs}ms` : "...",
-      note: latencies.length ? `${Math.min(...latencies)}ms fastest · ${Math.max(...latencies)}ms slowest` : "",
+      note: latencies.length ? `${Math.min(...latencies)}ms fastest, ${Math.max(...latencies)}ms slowest` : "",
       health: latencyHealth,
     },
   ];
@@ -196,23 +193,20 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
         {/* Header */}
         <div className="flex flex-col gap-8 border-b border-line pb-10 md:flex-row md:items-end md:justify-between">
           <div className="animate-fade-up">
-            <p className="eyebrow">System status</p>
             <h1 className="mt-3 text-5xl font-semibold tracking-[-0.02em] sm:text-6xl">
               Drew <span className="brand-text">status</span>
             </h1>
-            <p className="mt-4 max-w-md text-soft">Live health of every shard and service, and the shard your server runs on.</p>
+            <p className="mt-4 max-w-md text-soft">Live health of every shard and service, and the shard your server runs on</p>
           </div>
           <div className="w-full md:max-w-sm">
-            <label htmlFor="server-id" className="mb-2 block font-mono text-[0.7rem] uppercase tracking-[0.2em] text-mute">
-              Find your server&apos;s shard
-            </label>
             <div className="surface flex items-center gap-2 px-4 focus-within:border-brand/50">
               <Search className="size-4 text-mute" />
               <input
                 id="server-id"
                 inputMode="numeric"
                 autoComplete="off"
-                placeholder="Paste your server ID"
+                placeholder="Paste your server ID to find its shard"
+                aria-label="Server ID"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 className="h-12 w-full bg-transparent font-mono text-sm text-fg placeholder:text-mute focus:outline-none"
@@ -225,7 +219,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
                   ? (
                     <>
                       Your server is on <span className="font-medium text-brand">shard {target}</span>
-                      {shards[target] ? ` · ${STATE[shards[target].status].text.toLowerCase()}` : ""}
+                      {shards[target] ? `, ${STATE[shards[target].status].text.toLowerCase()}` : ""}
                     </>
                   )
                   : ""}
@@ -253,10 +247,6 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
                 <h2 id="overall" className="text-2xl font-semibold tracking-tight">
                   {overallTitle}
                 </h2>
-                <p className="mt-1 text-sm text-mute">
-                  {updatedAgo === null ? "Waiting for data" : updatedAgo < 5 ? "Updated just now" : `Updated ${updatedAgo}s ago`}
-                  {error && data ? " · showing last known data" : ""}
-                </p>
               </div>
             </div>
             <div className="flex items-center gap-3 text-xs text-mute" aria-live="off">
@@ -283,14 +273,10 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
             {(shards.length ? shards : Array.from({ length: 24 }, (_, i) => ({ id: i, status: "offline" as const, latencyMs: 0, guilds: 0, users: 0 }))).map((s) => (
               <span
                 key={s.id}
-                title={data ? `Shard ${s.id} · ${STATE[s.status].text}${s.status === "online" ? ` · ${s.latencyMs}ms` : ""}` : undefined}
+                title={data ? `Shard ${s.id}, ${STATE[s.status].text}${s.status === "online" ? `, ${s.latencyMs}ms` : ""}` : undefined}
                 className={`h-full flex-1 transition-all hover:opacity-80 ${!data ? "bg-white/[0.06]" : s.status === "online" ? (s.latencyMs >= LATENCY_WARN_MS ? "bg-warn" : "bg-brand") : s.status === "connecting" ? "bg-warn" : "bg-bad"} ${target === s.id ?"outline outline-2 outline-offset-2 outline-white":""}`}
               />
             ))}
-          </div>
-          <div className="relative mt-3 flex justify-between font-mono text-[0.7rem] text-mute">
-            <span>{shards.length ? `Shard ${shards[0].id}` : ""}</span>
-            <span>{shards.length > 1 ? `Shard ${shards[shards.length - 1].id}` : ""}</span>
           </div>
         </section>
 
@@ -306,9 +292,6 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
                     <Icon className={`size-4 ${health ? t.icon : "text-brand"}`} />
                     <span className="text-xs">{label}</span>
                   </div>
-                  {health && (
-                    <span className={`px-1.5 py-0.5 font-mono text-[0.65rem] uppercase tracking-wider ring-1 ring-inset ${t.pill}`}>{health.label}</span>
-                  )}
                 </div>
                 <p className={`mt-3 text-3xl font-semibold tabular-nums tracking-tight ${health ? t.text : ""}`}>
                   {value}
@@ -364,7 +347,6 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
         <section className="mt-12" aria-labelledby="shards">
           <div className="flex items-end justify-between">
             <div>
-              <p className="eyebrow">Gateway</p>
               <h2 id="shards" className="mt-2 text-2xl font-semibold tracking-tight">
                 Shards
               </h2>

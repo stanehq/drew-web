@@ -35,20 +35,14 @@ const MIN_CARDS = 8;
 
 /** Looping marquee of the largest servers using Drew. */
 export function ServerShowcase({ data }: { data: PublicShowcase }) {
-  const { servers, total } = data;
+  const { servers } = data;
   if (servers.length === 0) return null;
   const repeats = Math.ceil(MIN_CARDS / servers.length);
   const track = Array.from({ length: repeats }, () => servers).flat();
   return (
-    <section className="border-b border-line" aria-labelledby="showcase-title">
+    <section className="border-b border-line" aria-label="Servers using Drew">
       <div className="mx-auto max-w-6xl border-x border-line">
-        <div className="flex flex-col gap-2 px-4 pb-8 pt-14 text-center sm:px-8">
-          <p className="eyebrow">Trusted by communities</p>
-          <h2 id="showcase-title" className="text-balance text-3xl font-semibold tracking-[-0.02em] sm:text-4xl">
-            Protecting {total > 0 ? `${formatCompact(total)} servers` : "servers"}, including these.
-          </h2>
-        </div>
-        <div className="group relative overflow-hidden border-t border-line py-8 [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
+        <div className="group relative overflow-hidden py-8 [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
           <div
             className="flex w-max animate-marquee gap-4 group-hover:[animation-play-state:paused]"
             style={{ animationDuration: `${track.length * SECONDS_PER_CARD}s` }}

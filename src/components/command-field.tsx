@@ -7,7 +7,7 @@ import { useEffect, useRef } from "react";
 const WORDS = [
   "/opsec enable nuke", "/sudo enter", "/api token create", "anti-raid", "/verify setup", "audit log",
   "/bkp save full", "join_rate_limit", "whitelist", "/giveaway start", "dry_run: true", "/logs channel",
-  "nuke_punishment: ban", "PATCH /settings", "shard 0 · online", "/api docs", "verification_role_id",
+  "nuke_punishment: ban", "PATCH /settings", "shard 0 online", "/api docs", "verification_role_id",
   "anti_nuke_enabled", "GET /schema", "/music play", "/av scanfile", "log_enabled_events",
 ];
 

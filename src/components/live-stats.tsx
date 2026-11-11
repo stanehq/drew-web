@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { formatCompact, formatUptime } from "@/lib/format";
 
 type Stats = { available: boolean; ready: boolean; guilds: number; users: number; commandsUsed: number; uptimeSeconds: number; latencyMs: number };
@@ -41,17 +40,6 @@ export function LiveStats() {
           </div>
         ))}
       </div>
-      <Link
-        href="/status"
-        className="flex items-center justify-center gap-2 border-t border-line px-4 py-3 font-mono text-xs text-mute transition-colors hover:text-fg"
-      >
-        <span className="relative flex size-2">
-          <span className={`absolute inline-flex size-full rounded-full ${stats?.ready ? "animate-pulse-ring bg-brand" : ""}`} />
-          <span className={`relative inline-flex size-2 rounded-full ${stats ? (stats.ready ? "bg-brand" : "bg-warn") : "bg-mute"}`} />
-        </span>
-        {stats ? (stats.ready ? `All systems operational · ${stats.latencyMs}ms` : "Connecting to Discord") : "Checking status"}
-        <span aria-hidden>→</span>
-      </Link>
     </div>
   );
 }

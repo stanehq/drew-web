@@ -118,7 +118,7 @@ function Delta({ now, before, invert }: { now: number; before: number; invert?: 
   const pct = Math.abs((d / before) * 100);
   return (
     <span className={`text-xs font-medium ${good ?"text-brand":"text-bad"}`}>
-      {d > 0 ? "+" : "−"}
+      {d > 0 ? "+" : "-"}
       {pct < 0.1 ? "<0.1" : pct.toFixed(1)}%
     </span>
   );
@@ -194,7 +194,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
   }, [points]);
   const cur = data?.current;
   const { first, last } = stats;
-  const signed = (n: number) => `${n >= 0 ? "+" : "−"}${formatExact(Math.abs(n))}`;
+  const signed = (n: number) => `${n >= 0 ? "+" : "-"}${formatExact(Math.abs(n))}`;
 
   const kpis = [
     { label: "Servers", icon: Server, value: formatExact(cur?.guilds ?? 0), note: first && last && <Delta now={last.guilds} before={first.guilds} /> },
@@ -206,12 +206,12 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
       value: cur?.guilds ? formatExact(Math.round(cur.users / cur.guilds)) : "0",
       note: <Muted>on average</Muted>,
     },
-    { label: `Commands · ${range}`, icon: Terminal, value: formatCompact(stats.commands), note: <Muted>{stats.perHour.toFixed(1)} per hour</Muted> },
+    { label: `Commands (${range})`, icon: Terminal, value: formatCompact(stats.commands), note: <Muted>{stats.perHour.toFixed(1)} per hour</Muted> },
     {
       label: "Avg latency",
       icon: Gauge,
       value: `${Math.round(stats.avgLatency || cur?.latencyMs || 0)} ms`,
-      note: <Muted>{stats.best ? `${stats.best} best · ${stats.worst} worst` : ""}</Muted>,
+      note: <Muted>{stats.best ? `${stats.best} best, ${stats.worst} worst` : ""}</Muted>,
     },
     {
       label: "Availability",
@@ -240,9 +240,8 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
       <div className="mx-auto max-w-6xl border-x border-line">
         <div className="animate-fade-up flex flex-col gap-6 px-4 pb-10 pt-16 sm:flex-row sm:items-end sm:justify-between sm:px-8">
           <div>
-            <p className="eyebrow">Metrics</p>
-            <h1 className="mt-3 text-5xl font-semibold tracking-[-0.02em] sm:text-6xl">Drew in numbers.</h1>
-            <p className="mt-3 max-w-xl text-soft">Public, aggregate figures sampled every five minutes. No server or user data is shown.</p>
+            <h1 className="mt-3 text-5xl font-semibold tracking-[-0.02em] sm:text-6xl">Drew in numbers</h1>
+            <p className="mt-3 max-w-xl text-soft">Public, aggregate figures sampled every five minutes, no server or user data</p>
           </div>
           <div role="tablist" aria-label="Time range" className="flex w-fit border border-line bg-night p-1">
             {RANGES.map((r) => (
@@ -285,7 +284,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
         {points.length < 2 ? (
           <div className="flex flex-col items-center gap-3 border-t border-line px-6 py-20 text-center">
             <Activity className="size-6 text-brand" />
-            <p className="font-medium">{failed || !data ? "Metrics are unavailable right now." : "Collecting data…"}</p>
+            <p className="font-medium">{failed || !data ? "Metrics are unavailable right now." : "Collecting data..."}</p>
             <p className="max-w-sm text-sm text-mute">
               {failed || !data
                 ? "We couldn't reach the bot. This page retries automatically."
@@ -307,7 +306,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
             ))}
           </div>
         )}
-        {failed && data && <p className="border-t border-line py-3 text-center text-xs text-warn">Showing the last data we received. Retrying…</p>}
+        {failed && data && <p className="border-t border-line py-3 text-center text-xs text-warn">Showing the last data we received. Retrying...</p>}
       </div>
     </section>
   );
