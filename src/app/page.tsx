@@ -17,6 +17,7 @@ import { CommandField } from "@/components/command-field";
 import { DiscordIcon } from "@/components/discord-icon";
 import { LiveStats } from "@/components/live-stats";
 import { ServerShowcase } from "@/components/server-showcase";
+import { ReputationLinks } from "@/components/reputation-links";
 import { SITE } from "@/lib/site";
 
 const features = [
@@ -81,6 +82,7 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <ReputationLinks />
       <ServerShowcase />
 
       {/* Features */}
