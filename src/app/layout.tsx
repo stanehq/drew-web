@@ -46,6 +46,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SiteFooter />
         <Analytics />
         <SpeedInsights />
+        </I18nProvider>
       </body>
     </html>
   );
