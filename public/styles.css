@@ -1127,3 +1127,57 @@ html[data-theme="dark"] .glass-card {
     font-size: 1.9rem;
   }
 }
+
+/* Live bot statistics (landing page) */
+.live-stats {
+  display: grid;
+  gap: 24px;
+}
+
+.live-stats__title {
+  margin: 0;
+}
+
+.live-stats__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+}
+
+.live-stats__item h3 {
+  margin: 0 0 12px;
+  font-size: 0.95rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.live-stats__item p {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.live-stats__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.live-stats__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #9ca3af;
+}
+
+.live-stats__dot--online {
+  background: #1f9d55;
+}
+
+.live-stats__dot--degraded {
+  background: #f2b400;
+}

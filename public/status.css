@@ -1,0 +1,292 @@
+/* Status page */
+:root {
+  --ok: #16a34a;
+  --warn: #d97706;
+  --bad: #dc2626;
+  --idle: #9ca3af;
+}
+
+html[data-theme="dark"] {
+  --ok: #22c55e;
+  --warn: #f59e0b;
+  --bad: #ef4444;
+  --idle: #6b7280;
+}
+
+.status-shell {
+  width: min(1180px, 100% - 32px);
+  margin: 0 auto;
+  padding: 48px 0 80px;
+  display: grid;
+  gap: 24px;
+}
+
+.status-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--stroke);
+}
+
+.status-head h1 {
+  font-size: clamp(2rem, 5vw, 2.6rem);
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+
+.status-muted {
+  color: var(--muted);
+  opacity: 0.8;
+}
+
+.status-small {
+  font-size: 0.72rem;
+}
+
+.status-card {
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+}
+
+.status-section-title {
+  font-size: 1.05rem;
+  margin-bottom: 14px;
+}
+
+/* Server ID lookup */
+.status-lookup {
+  display: grid;
+  gap: 6px;
+  width: min(360px, 100%);
+}
+
+.status-lookup__label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.status-lookup__input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--stroke);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.status-lookup__input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.status-lookup__result {
+  min-height: 1.2em;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.status-lookup__result--error {
+  color: var(--bad);
+}
+
+/* Overall banner + shard bar */
+.status-overall__top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px 16px;
+  margin-bottom: 16px;
+}
+
+.status-overall__top h2 {
+  font-size: 1.15rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status-bar {
+  display: flex;
+  gap: 3px;
+  height: 10px;
+}
+
+.status-bar__segment {
+  flex: 1 1 0;
+  min-width: 2px;
+  border-radius: 3px;
+  background: var(--idle);
+}
+
+.status-bar__legend {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+/* Status dots shared by banner, services and shards */
+.status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--idle);
+}
+
+.is-online,
+.is-operational {
+  background: var(--ok);
+}
+
+.is-connecting,
+.is-degraded {
+  background: var(--warn);
+}
+
+.is-offline,
+.is-down {
+  background: var(--bad);
+}
+
+/* Summary */
+.status-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 16px;
+}
+
+.status-stat h3 {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.status-stat__value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+.status-stat__value small {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+/* Services */
+.status-services {
+  list-style: none;
+  display: grid;
+}
+
+.status-service {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-top: 1px solid var(--stroke);
+  font-size: 0.85rem;
+}
+
+.status-service:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.status-service__name {
+  font-weight: 600;
+}
+
+.status-service__state {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: right;
+}
+
+/* Shards */
+.status-shards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.status-shard {
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: grid;
+  gap: 10px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.status-shard--highlight {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.status-shard__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.status-shard__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.status-shard__meta strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.status-error {
+  color: var(--bad);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 640px) {
+  .status-shell {
+    padding-top: 32px;
+  }
+
+  .status-shards {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+
+  .status-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .status-stat__value {
+    font-size: 1.3rem;
+  }
+
+  .status-shard__meta {
+    flex-direction: column;
+    gap: 2px;
+  }
+}

@@ -32,6 +32,7 @@
     <script defer src="https://va.vercel-scripts.com/v1/script.js"></script>
     <script defer src="/_vercel/speed-insights/script.js"></script>
     <script defer src="/theme.js"></script>
+    <script defer src="/stats.js"></script>
 
     <script type="application/ld+json">
     {
@@ -50,6 +51,7 @@
     <header class="topbar">
       <a class="logo" href="/">Drew</a>
       <nav class="nav">
+        <a href="/status.html">Status</a>
         <a class="nav__premium" href="/premium.html">Premium</a>
         <a href="https://discord.gg/5e2jm7QDSS" target="_blank" rel="noreferrer">Support</a>
       </nav>
@@ -76,6 +78,35 @@
             <a class="ghost" href="/api/auth/discord">Manage my servers -&gt;</a>
           </div>
         </div>
+      </section>
+
+      <section id="stats" class="section live-stats" aria-labelledby="live-stats-title" data-live-stats hidden>
+        <h2 id="live-stats-title" class="live-stats__title">Drew right now</h2>
+        <div class="live-stats__grid">
+          <article class="dashboard-card live-stats__item">
+            <h3>Servers</h3>
+            <p data-stat="guilds">—</p>
+          </article>
+          <article class="dashboard-card live-stats__item">
+            <h3>Members protected</h3>
+            <p data-stat="users">—</p>
+          </article>
+          <article class="dashboard-card live-stats__item">
+            <h3>Commands run</h3>
+            <p data-stat="commandsUsed">—</p>
+          </article>
+          <article class="dashboard-card live-stats__item">
+            <h3>Uptime</h3>
+            <p data-stat="uptimeSeconds">—</p>
+          </article>
+        </div>
+        <p class="live-stats__meta">
+          <a class="live-stats__link" href="/status.html">Full status &amp; shards -&gt;</a>
+        </p>
+        <p class="live-stats__meta">
+          <span class="live-stats__dot" data-stat-status aria-hidden="true"></span>
+          <span data-stat="latencyMs">—</span>
+        </p>
       </section>
 
       <section id="invite" class="section invite">
@@ -115,6 +146,7 @@
       <div>
         <h4>Resources</h4>
         <ul>
+          <li><a href="/status.html">Status</a></li>
           <li><a href="https://docs.drewbot.xyz">Docs</a></li>
           <li><a href="https://discord.gg/stane" target="_blank" rel="noreferrer">Support</a></li>
         </ul>
