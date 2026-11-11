@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { AlertTriangle, ArrowLeft, Check, Clock, Lock, ShieldAlert, ShieldCheck, ScrollText, UserCheck, Users, Loader2 } from "lucide-react";
+import { AlertTriangle, ArrowLeft, Check, Clock, Globe, Lock, ShieldAlert, ShieldCheck, ScrollText, UserCheck, Users, Loader2 } from "lucide-react";
 import type { Channel, GuildInfo, Role, SchemaField, Settings } from "@/lib/drew";
 
 const CATEGORIES: Record<string, { title: string; help: string; icon: typeof ShieldAlert }> = {
@@ -12,9 +12,10 @@ const CATEGORIES: Record<string, { title: string; help: string; icon: typeof Shi
   blacklist: { title: "Blacklist", help: "Remove globally blacklisted users when they join.", icon: ShieldCheck },
   logging: { title: "Logs", help: "Where and what Drew logs.", icon: ScrollText },
   verification: { title: "Verification", help: "Role and channel of the verification panel.", icon: UserCheck },
+  showcase: { title: "Server showcase", help: "Whether this server can appear in the carousel on drewbot.xyz.", icon: Globe },
   upcoming: { title: "Coming soon", help: "Stored now. They take effect when these modules ship.", icon: Clock },
 };
-const ORDER = ["anti_nuke", "anti_raid", "blacklist", "logging", "verification", "upcoming"];
+const ORDER = ["anti_nuke", "anti_raid", "blacklist", "logging", "verification", "showcase", "upcoming"];
 
 const LABELS: Record<string, string> = {
   anti_nuke_enabled: "Enable anti-nuke",
@@ -26,6 +27,7 @@ const LABELS: Record<string, string> = {
   log_enabled_events: "Logged events",
   verification_role_id: "Verification role",
   verification_channel_id: "Verification channel",
+  showcase_enabled: "Show on drewbot.xyz",
 };
 const labelFor = (key: string) =>
   LABELS[key] ??

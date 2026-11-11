@@ -63,6 +63,10 @@ export function ServerShowcase({ data }: { data: PublicShowcase }) {
             ))}
           </div>
         </div>
+        <p className="border-t border-line px-4 py-3 text-center text-xs text-mute">
+          Ranked by people, bots excluded. Server owners can hide theirs with{" "}
+          <code className="font-mono text-soft">/opsec servershow off</code> or from the dashboard.
+        </p>
       </div>
     </section>
   );
