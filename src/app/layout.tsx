@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Inter_Tight, JetBrains_Mono } from "next/font/google";
+import { Albert_Sans, JetBrains_Mono, Unbounded } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { SiteHeader } from "@/components/site-header";
@@ -7,8 +7,8 @@ import { SiteFooter } from "@/components/site-footer";
 import { SITE } from "@/lib/site";
 import "./globals.css";
 
-const sans = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
-const display = Inter_Tight({ subsets: ["latin"], variable: "--font-inter-tight", display: "swap" });
+const sans = Albert_Sans({ subsets: ["latin"], variable: "--font-albert", display: "swap" });
+const display = Unbounded({ subsets: ["latin"], variable: "--font-unbounded", display: "swap" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains", display: "swap" });
 
 // Every page is rendered per request so it carries the CSP nonce set in

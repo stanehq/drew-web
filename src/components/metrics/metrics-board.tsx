@@ -241,7 +241,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
         <div className="animate-fade-up flex flex-col gap-6 px-4 pb-10 pt-16 sm:flex-row sm:items-end sm:justify-between sm:px-8">
           <div>
             <p className="eyebrow">Metrics</p>
-            <h1 className="mt-3 text-5xl font-semibold tracking-[-0.045em] sm:text-6xl">Drew in numbers.</h1>
+            <h1 className="mt-3 text-5xl font-semibold tracking-[-0.02em] sm:text-6xl">Drew in numbers.</h1>
             <p className="mt-3 max-w-xl text-soft">Public, aggregate figures sampled every five minutes. No server or user data is shown.</p>
           </div>
           <div role="tablist" aria-label="Time range" className="flex w-fit border border-line bg-night p-1">
@@ -265,7 +265,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
               <p className="flex items-center gap-2 text-xs text-mute">
                 <Icon className="size-3.5 text-brand" /> {label}
               </p>
-              <p className="mt-3 truncate font-display text-2xl font-semibold tabular-nums tracking-[-0.03em] sm:text-3xl">{data ? value : "..."}</p>
+              <p className="mt-3 truncate font-display text-2xl font-semibold tabular-nums tracking-[-0.02em] sm:text-3xl">{data ? value : "..."}</p>
               <div className="mt-1.5 min-h-5 truncate leading-5">{data && note}</div>
             </div>
           ))}

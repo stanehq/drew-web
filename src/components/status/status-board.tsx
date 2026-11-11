@@ -197,7 +197,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
         <div className="flex flex-col gap-8 border-b border-line pb-10 md:flex-row md:items-end md:justify-between">
           <div className="animate-fade-up">
             <p className="eyebrow">System status</p>
-            <h1 className="mt-3 text-5xl font-semibold tracking-[-0.04em] sm:text-6xl">
+            <h1 className="mt-3 text-5xl font-semibold tracking-[-0.02em] sm:text-6xl">
               Drew <span className="brand-text">status</span>
             </h1>
             <p className="mt-4 max-w-md text-soft">Live health of every shard and service, and the shard your server runs on.</p>
