@@ -30,7 +30,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     const supported = LOCALES.some((item) => item.code === saved);
     const detected = LOCALES.some((item) => item.code === browser) ? browser as Locale : "en";
     const next = supported ? saved as Locale : detected;
-    setLocaleState(next);
+    Promise.resolve().then(() => setLocaleState(next));
     document.documentElement.lang = next;
   }, []);
   const setLocale = (next: Locale) => {
