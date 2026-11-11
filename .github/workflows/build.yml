@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   build:
-    name: Build NestJS application
+    name: Build Next.js application
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
