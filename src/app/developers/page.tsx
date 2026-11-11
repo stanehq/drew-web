@@ -1,17 +1,11 @@
 "use client";
 
-import type { Metadata } from "next";
 import { Bot, FileClock, KeyRound, ShieldCheck, Sparkles } from "lucide-react";
 import { ButtonLink } from "@/components/button";
 import { CodeBlock } from "@/components/code-block";
 import { PageHero } from "@/components/page-hero";
 import { SITE } from "@/lib/site";
 import { useI18n } from "@/lib/i18n";
-
-export const metadata: Metadata = {
-  title: "API for developers & AI agents",
-  description: "Configure Drew from code or let an AI set up your server with per-server API tokens. Schema, endpoints and examples.",
-};
 
 const endpoints: [string, string, string, string][] = [
   ["GET", "/schema", "none", "Every setting: type, options, range, description, enforced, privileged"],
