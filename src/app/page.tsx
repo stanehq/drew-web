@@ -24,7 +24,7 @@ const features = [
   {
     icon: ShieldAlert,
     title: "Anti-nuke",
-    body: "Watches the audit log in real time and punishes anyone mass-deleting or creating channels and roles — before the damage spreads.",
+    body: "Watches the audit log in real time and punishes anyone mass-deleting or creating channels and roles, before the damage spreads.",
     className: "md:col-span-2",
     highlight: true,
   },
@@ -41,7 +41,7 @@ const features = [
   {
     icon: ScrollText,
     title: "Logging",
-    body: "Messages, members, roles, channels and voice — logged where you want, without spam.",
+    body: "Messages, members, roles, channels and voice, logged where you want without spam.",
   },
   {
     icon: KeyRound,
@@ -93,7 +93,7 @@ export default function HomePage() {
           <div className="animate-fade-up mx-auto mb-8 flex w-fit items-center justify-center">
             <div className="relative">
               <div className="absolute inset-[-30%] rounded-full bg-brand/25 blur-3xl" aria-hidden />
-              <Image src="/brand/drew-icon-512.png" alt="Drew" width={112} height={112} priority className="animate-float relative" />
+              <Image src="/brand/drew-icon.svg" unoptimized alt="Drew" width={112} height={112} priority className="animate-float relative" />
             </div>
           </div>
           <Link
@@ -109,7 +109,7 @@ export default function HomePage() {
             <span className="brand-text">that never sleeps.</span>
           </h1>
           <p className="animate-fade-up mx-auto mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-soft [animation-delay:80ms]">
-            Anti-nuke, anti-raid, verification and logging in one bot — configurable from Discord, the dashboard, or straight
+            Anti-nuke, anti-raid, verification and logging in one bot. Configure it from Discord, the dashboard, or straight
             from your AI agent.
           </p>
           <div className="animate-fade-up mt-9 flex flex-wrap items-center justify-center gap-3 [animation-delay:140ms]">
@@ -166,13 +166,13 @@ export default function HomePage() {
             </h2>
             <p className="mt-5 text-lg leading-relaxed text-soft">
               Create a scoped token with <code className="rounded bg-white/[0.06] px-1.5 py-0.5 font-mono text-sm text-fg">/api token create</code>, hand it
-              to your assistant, and let it read the schema, preview changes with a dry run and apply them — every step
+              to your assistant, and let it read the schema, preview changes with a dry run and apply them, with every step
               validated and audited.
             </p>
             <ul className="mt-8 space-y-3 text-sm text-soft">
               {[
                 [Sparkles, "Self-describing schema with types, ranges and descriptions"],
-                [ShieldCheck, "Per-server tokens: read, write or admin — expiring and revocable"],
+                [ShieldCheck, "Per-server tokens: read, write or admin, expiring and revocable"],
                 [Bot, "Dry runs, atomic changes and a full audit trail"],
               ].map(([Icon, text]) => {
                 const I = Icon as typeof Sparkles;
@@ -216,7 +216,7 @@ export default function HomePage() {
         <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[2rem] border border-brand/30 bg-[linear-gradient(110deg,#41cf8b_0%,#2fae72_38%,#0e2a1d_78%,#07100c_100%)] px-8 py-16 sm:px-14">
           <div className="dot-grid absolute inset-0 opacity-40 [mask-image:linear-gradient(90deg,transparent,black)]" aria-hidden />
           <Image
-            src="/brand/drew-icon-512.png"
+            src="/brand/drew-icon.svg" unoptimized
             alt=""
             width={340}
             height={340}

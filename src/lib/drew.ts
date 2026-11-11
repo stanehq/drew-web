@@ -175,3 +175,30 @@ export const patchGuildSettings = (id: string, actor: string, settings: Settings
     actor,
     allowErrorBody: true,
   });
+
+// ---- Public metrics (aggregates only) -------------------------------------
+
+export type MetricPoint = {
+  t: number;
+  guilds: number;
+  users: number;
+  shards_online: number;
+  shards_total: number;
+  latency_ms: number;
+  commands: number;
+};
+
+export type BotMetrics = {
+  range: string;
+  from: number;
+  to: number;
+  step_seconds: number;
+  points: MetricPoint[];
+  current: { guilds: number; users: number; shards_online: number; shards_total: number; latency_ms: number; commands_used: number };
+};
+
+export const METRIC_RANGES = ["24h", "7d", "30d", "90d"] as const;
+export type MetricRange = (typeof METRIC_RANGES)[number];
+
+export const getBotMetrics = (range: MetricRange) =>
+  request<BotMetrics>(`/api/v1/client/metrics?range=${range}`, { timeoutMs: 8000 });

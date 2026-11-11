@@ -14,13 +14,13 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
-  title: { default: "Drew — Discord security, done right", template: "%s · Drew" },
+  title: { default: "Drew Bot: Discord security, done right", template: "Drew Bot: %s" },
   description: SITE.description,
   openGraph: {
     type: "website",
     siteName: "Drew",
     url: SITE.url,
-    title: "Drew — Discord security, done right",
+    title: "Drew Bot: Discord security, done right",
     description: SITE.description,
     images: [{ url: "/og.png", width: 1200, height: 630, alt: "Drew" }],
   },
