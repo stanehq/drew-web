@@ -12,6 +12,7 @@ export const LOCALES = [
 export type Locale = (typeof LOCALES)[number]["code"];
 
 // Keys are stable English source strings. Unknown keys deliberately fall back to English.
+// CI validation checkpoint for the six-locale translation pass.
 const messages: Record<Locale, Record<string, string>> = {
 en: {},
 es: {
