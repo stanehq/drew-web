@@ -1,9 +1,12 @@
+"use client";
+
 import type { Metadata } from "next";
 import { Bot, FileClock, KeyRound, ShieldCheck, Sparkles } from "lucide-react";
 import { ButtonLink } from "@/components/button";
 import { CodeBlock } from "@/components/code-block";
 import { PageHero } from "@/components/page-hero";
 import { SITE } from "@/lib/site";
+import { useI18n } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "API for developers & AI agents",
@@ -59,13 +62,14 @@ const steps = [
 ];
 
 export default function DevelopersPage() {
+  const { t } = useI18n();
   return (
     <>
-      <PageHero eyebrow="Developers & AI agents" title={<>Configure Drew <span className="brand-text">with code</span></>}>
+      <PageHero eyebrow={t("Developers & AI agents")} title={<>{t("Configure Drew ")}<span className="brand-text">{t("with code")}</span></>}>
         Per-server tokens, a self-describing schema and dry runs, so scripts and AI assistants can set up your server
         safely, without the dashboard.
         <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <ButtonLink href="#quickstart">Quick start</ButtonLink>
+          <ButtonLink href="#quickstart">{t("Quick start")}</ButtonLink>
           <ButtonLink href={`${SITE.api}/schema`} external variant="secondary">
             View the schema
           </ButtonLink>
@@ -77,8 +81,8 @@ export default function DevelopersPage() {
           {steps.map((s) => (
             <article key={s.n} className="surface flex flex-col p-6">
               <p className="font-mono text-sm text-brand">{s.n}</p>
-              <h2 className="mt-3 text-lg font-semibold tracking-tight">{s.title}</h2>
-              <p className="mt-2 flex-1 text-sm leading-relaxed text-mute">{s.body}</p>
+              <h2 className="mt-3 text-lg font-semibold tracking-tight">{t(s.title)}</h2>
+              <p className="mt-2 flex-1 text-sm leading-relaxed text-mute">{t(s.body)}</p>
               <code className="mt-5 block overflow-x-auto border border-line bg-[#030605] px-3 py-2 font-mono text-xs text-soft">{s.code}</code>
             </article>
           ))}
@@ -86,7 +90,7 @@ export default function DevelopersPage() {
 
         <section className="surface grid gap-6 p-6 sm:p-8 lg:grid-cols-2">
           <div className="lg:col-span-2">
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight">Preview, then apply a change</h2>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight">{t("Preview, then apply a change")}</h2>
             <p className="mt-2 text-sm text-mute">Send the same request with <code className="font-mono text-soft">&quot;dry_run&quot;: false</code> to apply it. Discord IDs are always strings.</p>
           </div>
           <CodeBlock label="Request" code={curl} />
@@ -95,7 +99,7 @@ export default function DevelopersPage() {
 
         <section className="surface overflow-hidden">
           <div className="border-b border-line p-6 sm:p-8">
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight">Endpoints</h2>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight">{t("Endpoints")}</h2>
             <p className="mt-2 text-sm text-mute">
               Base URL <code className="font-mono text-soft">{SITE.api}</code>, header{" "}
               <code className="font-mono text-soft">Authorization: Bearer drew_...</code>
@@ -105,10 +109,10 @@ export default function DevelopersPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left font-mono text-[0.68rem] uppercase tracking-[0.18em] text-mute">
-                  <th className="px-6 py-3 font-normal">Method</th>
-                  <th className="px-6 py-3 font-normal">Path</th>
-                  <th className="px-6 py-3 font-normal">Scope</th>
-                  <th className="px-6 py-3 font-normal">Description</th>
+                  <th className="px-6 py-3 font-normal">{t("Method")}</th>
+                  <th className="px-6 py-3 font-normal">{t("Path")}</th>
+                  <th className="px-6 py-3 font-normal">{t("Scope")}</th>
+                  <th className="px-6 py-3 font-normal">{t("Description")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-line">
@@ -119,7 +123,7 @@ export default function DevelopersPage() {
                     </td>
                     <td className="whitespace-nowrap px-6 py-3.5 font-mono text-xs text-fg">{p}</td>
                     <td className="px-6 py-3.5 text-xs text-mute">{s}</td>
-                    <td className="px-6 py-3.5 text-xs text-soft">{d}</td>
+                    <td className="px-6 py-3.5 text-xs text-soft">{t(d)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -130,7 +134,7 @@ export default function DevelopersPage() {
         <section className="surface relative overflow-hidden border-brand/30 p-6 sm:p-8">
           <div className="absolute -right-24 -top-24 size-72 rounded-full bg-brand/15 blur-3xl" aria-hidden />
           <div className="relative">
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight">Paste this into your assistant</h2>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight">{t("Paste this into your assistant")}</h2>
             <div className="mt-5">
               <CodeBlock code={prompt} />
             </div>
