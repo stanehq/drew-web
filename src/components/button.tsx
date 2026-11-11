@@ -3,15 +3,19 @@ import type { ComponentProps, ReactNode } from "react";
 
 type Variant = "primary" | "secondary" | "ghost" | "outline";
 const styles: Record<Variant, string> = {
-  primary: "bg-brand text-[#03110a] hover:bg-brand-bright",
-  secondary: "bg-transparent text-fg ring-1 ring-inset ring-white/20 hover:bg-white/[0.06] hover:ring-white/35",
-  ghost: "text-soft hover:text-fg hover:bg-white/[0.05]",
-  outline: "bg-brand/[0.08] text-brand-bright ring-1 ring-inset ring-brand/50 hover:bg-brand/[0.16] hover:ring-brand",
+  primary: "border border-brand bg-brand text-[#03110a] shadow-[0_5px_18px_rgba(65,207,139,0.16)] hover:border-brand-bright hover:bg-brand-bright hover:shadow-[0_7px_22px_rgba(65,207,139,0.24)]",
+  secondary: "border border-line-strong bg-white/[0.06] text-fg hover:border-white/30 hover:bg-white/[0.1]",
+  ghost: "border border-transparent text-soft hover:border-line hover:bg-white/[0.05] hover:text-fg",
+  outline: "border border-brand/55 bg-brand/[0.07] text-brand-bright hover:border-brand hover:bg-brand/[0.14]",
 };
 
 export function buttonClass(variant: Variant = "primary", size: "sm" | "md" | "lg" = "md") {
-  const sizes = { sm: "h-9 px-3.5 text-sm", md: "h-10 px-4 text-[0.92rem]", lg: "h-12 px-6 text-[0.98rem]" };
-  return `inline-flex items-center justify-center gap-2 font-medium transition-all duration-200 disabled:pointer-events-none disabled:opacity-40 ${sizes[size]} ${styles[variant]}`;
+  const sizes = {
+    sm: "h-10 rounded-md px-4 text-sm",
+    md: "h-11 rounded-md px-5 text-[0.94rem]",
+    lg: "h-12 rounded-md px-6 text-[0.98rem]",
+  };
+  return `inline-flex items-center justify-center gap-2 font-semibold tracking-[-0.01em] transition-all duration-200 disabled:pointer-events-none disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand ${sizes[size]} ${styles[variant]}`;
 }
 
 export function ButtonLink({

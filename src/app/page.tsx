@@ -140,7 +140,7 @@ export default async function HomePage() {
 
       {/* CTA */}
       <section className="border-b border-line">
-        <div className="relative mx-auto max-w-6xl overflow-hidden border-x border-line bg-brand bg-no-repeat bg-origin-border md:bg-[linear-gradient(110deg,#41cf8b_0%,#2fae72_38%,#0e2a1d_78%,#07100c_100%)]">
+        <div className="relative w-full overflow-hidden border-y border-line bg-brand bg-no-repeat bg-origin-border md:bg-[linear-gradient(110deg,#41cf8b_0%,#2fae72_38%,#0e2a1d_78%,#07100c_100%)]">
           <div className="dot-grid absolute inset-0 opacity-40 [mask-image:linear-gradient(90deg,transparent,black)]" aria-hidden />
           <Image
             src="/brand/drew-icon.svg"
@@ -150,7 +150,7 @@ export default async function HomePage() {
             height={340}
             className="pointer-events-none absolute -bottom-20 right-[-40px] opacity-25 sm:right-10 sm:opacity-40"
           />
-          <div className="relative max-w-xl px-8 py-16 sm:px-14">
+          <div className="relative mx-auto max-w-7xl px-6 py-16 sm:px-10 sm:py-20 lg:px-12">
             <h2 className="text-balance text-4xl font-semibold tracking-[-0.02em] text-[#03110a] sm:text-5xl">
               Protect your server in under a minute
             </h2>
@@ -158,13 +158,13 @@ export default async function HomePage() {
             <div className="mt-8 flex flex-wrap gap-3">
               <a
                 href={SITE.invite}
-                className="inline-flex h-12 items-center gap-2 bg-[#03110a] px-6 text-[0.98rem] font-medium text-white transition-colors hover:bg-black"
+                className="inline-flex h-12 items-center gap-2 rounded-md border border-[#03110a] bg-[#03110a] px-6 text-[0.98rem] font-semibold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:bg-black"
               >
                 <DiscordIcon /> Add to Discord
               </a>
               <a
                 href={SITE.support}
-                className="inline-flex h-12 items-center gap-2 bg-white/25 px-6 text-[0.98rem] font-medium text-[#03110a] ring-1 ring-inset ring-black/10 transition-colors hover:bg-white/35"
+                className="inline-flex h-12 items-center gap-2 rounded-md border border-black/15 bg-white/30 px-6 text-[0.98rem] font-semibold text-[#03110a] transition-all hover:-translate-y-0.5 hover:bg-white/45"
               >
                 Join support
               </a>
