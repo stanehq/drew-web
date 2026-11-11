@@ -8,6 +8,7 @@ import {
   Terminal,
   UserCheck,
 } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 const modules = [
   { icon: ShieldAlert, title: "Anti-nuke", detail: "Stops destructive admin actions before they spread", tag: "Threat prevention" },
@@ -24,11 +25,12 @@ const repeats = [...modules, ...modules];
 
 /** Full-width carousel highlighting Drew's Discord security capabilities. */
 export function ServerShowcase() {
+  const { t } = useI18n();
   return (
     <section className="w-full overflow-hidden border-b border-line" aria-label="Drew security features">
       <div className="border-b border-line px-5 py-4 sm:px-8">
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-brand">Drew protection suite</p>
-        <h2 className="mt-1 text-lg font-semibold tracking-tight text-fg">One bot. Multiple layers of server security.</h2>
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-brand">{t("Drew protection suite")}</p>
+        <h2 className="mt-1 text-lg font-semibold tracking-tight text-fg">{t("One bot. Multiple layers of server security.")}</h2>
       </div>
       <div className="group relative overflow-hidden py-7 [mask-image:linear-gradient(90deg,transparent,black_3%,black_97%,transparent)]">
         <div className="flex w-max animate-marquee gap-4 group-hover:[animation-play-state:paused]">
@@ -49,8 +51,8 @@ export function ServerShowcase() {
                     </span>
                   </div>
                   <div className="relative">
-                    <h3 className="text-lg font-semibold tracking-tight text-fg">{title}</h3>
-                    <p className="mt-1.5 text-sm leading-relaxed text-soft">{detail}</p>
+                    <h3 className="text-lg font-semibold tracking-tight text-fg">{t(title)}</h3>
+                    <p className="mt-1.5 text-sm leading-relaxed text-soft">{t(detail)}</p>
                   </div>
                 </li>
               ))}
