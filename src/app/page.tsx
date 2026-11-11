@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -50,7 +53,8 @@ const steps = [
   { n: "03", title: "Relax", body: "Drew watches every change, 24/7, and reacts in milliseconds." },
 ];
 
-export default async function HomePage() {
+export default function HomePage() {
+  const { t } = useI18n();
   return (
     <>
       {/* Hero */}
@@ -63,17 +67,17 @@ export default async function HomePage() {
         <div className="mx-auto max-w-6xl border-x border-line px-4 pb-20 pt-20 text-center sm:px-6 sm:pt-28">
           <Image src="/brand/drew-icon.svg" unoptimized alt="" width={88} height={88} priority className="animate-fade-up mx-auto" />
           <h1 className="animate-fade-up mx-auto mt-8 max-w-4xl text-balance text-[2.3rem] font-semibold leading-[1.05] tracking-[-0.02em] sm:text-6xl">
-            Discord security <span className="text-brand">that never sleeps</span>
+            {t("Discord security ")}<span className="text-brand">{t("that never sleeps")}</span>
           </h1>
           <p className="animate-fade-up mx-auto mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-soft [animation-delay:80ms]">
-            Anti-nuke, anti-raid, verification and logging in one bot. Set it up in a minute and let Drew do the watching
+            {t("Anti-nuke, anti-raid, verification and logging in one bot. Set it up in a minute and let Drew do the watching")}
           </p>
           <div className="animate-fade-up mt-10 flex flex-wrap items-center justify-center gap-3 [animation-delay:140ms]">
             <ButtonLink href={SITE.invite} external size="lg">
-              <DiscordIcon /> Add to Discord
+              <DiscordIcon /> {t("Add to Discord")}
             </ButtonLink>
             <ButtonLink href="/api/auth/discord" variant="outline" size="lg">
-              <LayoutDashboard className="size-4" /> Open dashboard
+              <LayoutDashboard className="size-4" /> {t("Open dashboard")}
             </ButtonLink>
           </div>
         </div>
@@ -91,21 +95,21 @@ export default async function HomePage() {
           <div className="grid gap-6 px-4 py-16 sm:px-8 md:grid-cols-2 md:items-end">
             <div>
               <h2 className="mt-3 text-balance text-4xl font-semibold tracking-[-0.02em] sm:text-5xl">
-                Everything your server needs to stay standing
+                {t("Everything your server needs to stay standing")}
               </h2>
             </div>
-            <p className="text-lg text-soft md:justify-self-end md:text-right">Set it up in minutes, Drew does the watching 24/7</p>
+            <p className="text-lg text-soft md:justify-self-end md:text-right">{t("Set it up in minutes, Drew does the watching 24/7")}</p>
           </div>
           <div className="grid gap-px border-t border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
             {features.map(({ icon: Icon, title, body, href }) => {
               const inner = (
                 <>
                   <Icon className="size-5 text-brand" />
-                  <h3 className="mt-6 text-[1.05rem] font-semibold tracking-tight">{title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-mute">{body}</p>
+                  <h3 className="mt-6 text-[1.05rem] font-semibold tracking-tight">{t(title)}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-mute">{t(body)}</p>
                   {href && (
                     <span className="mt-4 inline-flex items-center gap-1.5 text-sm text-brand-bright">
-                      Read more <ArrowRight className="size-3.5" />
+                      {t("Read more")} <ArrowRight className="size-3.5" />
                     </span>
                   )}
                 </>
@@ -131,8 +135,8 @@ export default async function HomePage() {
           {steps.map((s) => (
             <div key={s.n} className="bg-ink p-8 sm:p-10">
               <p className="font-mono text-sm text-brand">{s.n}</p>
-              <h3 className="mt-4 text-2xl font-semibold tracking-tight">{s.title}</h3>
-              <p className="mt-2 text-soft">{s.body}</p>
+              <h3 className="mt-4 text-2xl font-semibold tracking-tight">{t(s.title)}</h3>
+              <p className="mt-2 text-soft">{t(s.body)}</p>
             </div>
           ))}
         </div>
@@ -152,9 +156,9 @@ export default async function HomePage() {
           />
           <div className="relative mx-auto max-w-7xl px-6 py-16 sm:px-10 sm:py-20 lg:px-12">
             <h2 className="text-balance text-4xl font-semibold tracking-[-0.02em] text-white sm:text-5xl">
-              Protect your server in under a minute
+              {t("Protect your server in under a minute")}
             </h2>
-            <p className="mt-4 text-lg text-white/90">Invite Drew, run /opsec setup and sleep well tonight</p>
+            <p className="mt-4 text-lg text-white/90">{t("Invite Drew, run /opsec setup and sleep well tonight")}</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a
                 href={SITE.invite}
