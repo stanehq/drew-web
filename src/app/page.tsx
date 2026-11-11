@@ -17,7 +17,6 @@ import { CommandField } from "@/components/command-field";
 import { DiscordIcon } from "@/components/discord-icon";
 import { LiveStats } from "@/components/live-stats";
 import { ServerShowcase } from "@/components/server-showcase";
-import { getPublicShowcase } from "@/lib/public-showcase";
 import { SITE } from "@/lib/site";
 
 const features = [
@@ -51,7 +50,6 @@ const steps = [
 ];
 
 export default async function HomePage() {
-  const showcase = await getPublicShowcase();
   return (
     <>
       {/* Hero */}
@@ -83,7 +81,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {showcase && <ServerShowcase data={showcase} />}
+      <ServerShowcase />
 
       {/* Features */}
       <section id="features" className="scroll-mt-20 border-b border-line">
