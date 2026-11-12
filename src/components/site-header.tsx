@@ -2,9 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { ChevronDown, Crown, ExternalLink, Menu, Search, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ChevronDown, Crown, ExternalLink, Menu, X } from "lucide-react";
 import { SITE } from "@/lib/site";
 import { DiscordIcon } from "./discord-icon";
 import { LanguageSelector } from "./language-selector";
@@ -14,12 +13,9 @@ const LOGIN = "/api/auth/discord";
 
 // Header copy with its translations (falls back to English).
 const COPY: Record<string, Partial<Record<Locale, string>>> = {
-  More: { es: "Más", pt: "Mais", fr: "Plus", de: "Mehr", ru: "Ещё" },
-  Search: { es: "Buscar", pt: "Pesquisar", fr: "Rechercher", de: "Suchen", ru: "Поиск" },
   "Log in": { es: "Iniciar sesión", pt: "Iniciar sessão", fr: "Se connecter", de: "Anmelden", ru: "Войти" },
   "Get Premium": { es: "Conseguir Premium", pt: "Obter Premium", fr: "Obtenir Premium", de: "Premium holen", ru: "Получить Premium" },
   "Add to Discord": { es: "Añadir a Discord", pt: "Adicionar ao Discord", fr: "Ajouter à Discord", de: "Zu Discord hinzufügen", ru: "Добавить в Discord" },
-  "No results": { es: "Sin resultados", pt: "Sem resultados", fr: "Aucun résultat", de: "Keine Ergebnisse", ru: "Ничего не найдено" },
   "Stane products": { es: "Productos de Stane", pt: "Produtos Stane", fr: "Produits Stane", de: "Stane-Produkte", ru: "Продукты Stane" },
 };
 
@@ -35,22 +31,6 @@ const MORE: Item[] = [
   { label: "Support", href: SITE.support },
 ];
 
-// What the header search can find: site pages and the main docs pages.
-const INDEX: Item[] = [
-  ...MORE,
-  { label: "Dashboard", href: LOGIN, keywords: "settings configure manage servers" },
-  { label: "Anti-nuke", href: `${SITE.docs}/features/antinuke/`, hint: "Docs", keywords: "nuke protection channels roles" },
-  { label: "Anti-raid", href: `${SITE.docs}/features/antiraid/`, hint: "Docs", keywords: "raid joins flood" },
-  { label: "Verification", href: `${SITE.docs}/features/verification/`, hint: "Docs", keywords: "verify role panel" },
-  { label: "Logging", href: `${SITE.docs}/features/logging/`, hint: "Docs", keywords: "logs channel events" },
-  { label: "SUDO mode", href: `${SITE.docs}/features/sudo/`, hint: "Docs", keywords: "password owner" },
-  { label: "Backups", href: `${SITE.docs}/features/backups/`, hint: "Docs", keywords: "bkp restore save" },
-  { label: "Setup guide", href: `${SITE.docs}/getting_started/setup/`, hint: "Docs", keywords: "install start opsec setup" },
-  { label: "Commands", href: `${SITE.docs}/commands/overview/`, hint: "Docs", keywords: "opsec mod sudo slash" },
-  { label: "FAQ", href: `${SITE.docs}/guides/faq/`, hint: "Docs", keywords: "questions help" },
-  { label: "Terms of Service", href: "/terms", hint: "Legal", keywords: "tos" },
-  { label: "Privacy Policy", href: "/privacy", hint: "Legal", keywords: "data gdpr" },
-];
 
 const isExternal = (href: string) => /^https?:\/\//.test(href);
 
@@ -104,58 +84,6 @@ function Dropdown({ label, children, className = "" }: { label: React.ReactNode;
   );
 }
 
-function SearchBox({ tr, className = "" }: { tr: (k: string) => string; className?: string }) {
-  const { t } = useI18n();
-  const router = useRouter();
-  const [q, setQ] = useState("");
-  const [open, setOpen] = useState(false);
-  const ref = useOutside(open, () => setOpen(false));
-  const results = useMemo(() => {
-    const s = q.trim().toLowerCase();
-    if (!s) return [];
-    return INDEX.filter((i) => `${i.label} ${t(i.label.toLowerCase())} ${i.keywords ?? ""}`.toLowerCase().includes(s)).slice(0, 7);
-  }, [q, t]);
-  const go = (item: Item) => {
-    setOpen(false);
-    setQ("");
-    if (isExternal(item.href) || item.href.startsWith("/api/")) window.location.href = item.href;
-    else router.push(item.href);
-  };
-  return (
-    <div ref={ref} className={`relative ${className}`}>
-      <Search className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-mute" strokeWidth={1.75} />
-      <input
-        type="search"
-        value={q}
-        onChange={(e) => {
-          setQ(e.target.value);
-          setOpen(true);
-        }}
-        onFocus={() => setOpen(true)}
-        onKeyDown={(e) => e.key === "Enter" && results[0] && go(results[0])}
-        placeholder={tr("Search")}
-        aria-label={tr("Search")}
-        className="h-12 w-full rounded-full border border-line bg-[#1a1b1e] pl-12 pr-4 text-[0.95rem] text-fg placeholder:text-mute focus:border-brand/50 focus:outline-none"
-      />
-      {open && q.trim() && (
-        <ul className="absolute inset-x-0 z-50 mt-2 overflow-hidden rounded-xl border border-line bg-[#0d1311] p-1 shadow-[0_16px_40px_rgba(0,0,0,0.45)]">
-          {results.length === 0 ? (
-            <li className="px-3 py-2.5 text-sm text-mute">{tr("No results")}</li>
-          ) : (
-            results.map((r) => (
-              <li key={r.href}>
-                <button type="button" onClick={() => go(r)} className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm text-soft hover:bg-white/[0.06] hover:text-fg">
-                  <span>{t(r.label.toLowerCase()) === r.label.toLowerCase() ? r.label : t(r.label.toLowerCase())}</span>
-                  {r.hint && <span className="font-mono text-[10px] uppercase tracking-wider text-mute">{r.hint}</span>}
-                </button>
-              </li>
-            ))
-          )}
-        </ul>
-      )}
-    </div>
-  );
-}
 
 export function SiteHeader() {
   const { t, locale } = useI18n();
@@ -167,14 +95,14 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const closeOnResize = () => window.innerWidth >= 1024 && setOpen(false);
+    const closeOnResize = () => window.innerWidth >= 1280 && setOpen(false);
     window.addEventListener("resize", closeOnResize);
     return () => window.removeEventListener("resize", closeOnResize);
   }, []);
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-[#101113] text-fg">
-      <div className="flex h-[76px] w-full items-center gap-5 px-4 sm:px-6 lg:gap-8 lg:px-8">
+      <div className="flex h-[76px] w-full items-center gap-5 px-4 sm:px-6 xl:gap-6 lg:px-8">
         {/* Stane mark with a products menu, then the Drew wordmark */}
         <Dropdown
           className="inline-flex items-center gap-1.5 text-soft hover:text-fg"
@@ -197,28 +125,36 @@ export function SiteHeader() {
           <span className="font-display text-[1.45rem] font-bold uppercase tracking-tight">Drew</span>
         </Link>
 
-        <Dropdown className="hidden items-center gap-1.5 text-[1.02rem] font-medium text-soft hover:text-fg lg:inline-flex" label={tr("More")}>
-          {(close) => MORE.map((item) => <MenuLink key={item.href} item={item} label={label(item.label)} onPick={close} />)}
-        </Dropdown>
+        <nav className="hidden items-center gap-0.5 xl:flex" aria-label={t("Main")}>
+          {MORE.map((item) =>
+            isExternal(item.href) ? (
+              <a key={item.href} href={item.href} className="whitespace-nowrap rounded-lg px-2.5 py-2 text-[1rem] font-medium text-fg/85 transition-colors hover:bg-white/[0.06] hover:text-fg">
+                {label(item.label)}
+              </a>
+            ) : (
+              <Link key={item.href} href={item.href} className="whitespace-nowrap rounded-lg px-2.5 py-2 text-[1rem] font-medium text-fg/85 transition-colors hover:bg-white/[0.06] hover:text-fg">
+                {label(item.label)}
+              </Link>
+            ),
+          )}
+        </nav>
 
-        <SearchBox tr={tr} className="hidden max-w-xl flex-1 md:block" />
-
-        <div className="ml-auto hidden items-center gap-2.5 lg:flex">
+        <div className="ml-auto hidden items-center gap-2.5 xl:flex">
           <LanguageSelector compact />
-          <a href={LOGIN} className="inline-flex h-11 items-center rounded-lg bg-[#2a2b2f] px-4 text-[0.95rem] font-semibold text-fg transition-colors hover:bg-[#35363b]">
+          <a href={LOGIN} className="inline-flex h-11 items-center whitespace-nowrap rounded-lg bg-[#2a2b2f] px-4 text-[0.95rem] font-semibold text-fg transition-colors hover:bg-[#35363b]">
             {tr("Log in")}
           </a>
-          <Link href="/pricing" className="inline-flex h-11 items-center gap-2 rounded-lg bg-brand-deep px-4 text-[0.95rem] font-semibold text-white transition-colors hover:bg-[#238a5c]">
+          <Link href="/pricing" className="inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-lg bg-brand-deep px-4 text-[0.95rem] font-semibold text-white transition-colors hover:bg-[#238a5c]">
             <Crown className="size-4" /> {tr("Get Premium")}
           </Link>
-          <a href={SITE.invite} className="inline-flex h-11 items-center gap-2 rounded-lg bg-brand px-4 text-[0.95rem] font-semibold text-[#03110a] transition-colors hover:bg-brand-bright">
+          <a href={SITE.invite} className="inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-lg bg-brand px-4 text-[0.95rem] font-semibold text-[#03110a] transition-colors hover:bg-brand-bright">
             {tr("Add to Discord")} <DiscordIcon />
           </a>
         </div>
 
         <button
           type="button"
-          className="ml-auto inline-flex size-11 items-center justify-center rounded-lg text-soft hover:bg-white/[0.06] lg:hidden"
+          className="ml-auto inline-flex size-11 items-center justify-center rounded-lg text-soft hover:bg-white/[0.06] xl:hidden"
           aria-label={open ? t("Close menu") : t("Open menu")}
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
@@ -228,9 +164,8 @@ export function SiteHeader() {
       </div>
 
       {open && (
-        <div className="border-t border-line bg-[#101113] px-4 pb-6 pt-4 lg:hidden">
-          <SearchBox tr={tr} className="md:hidden" />
-          <nav className="mt-3 grid" aria-label={t("Mobile")}>
+        <div className="border-t border-line bg-[#101113] px-4 pb-6 pt-4 xl:hidden">
+          <nav className="grid" aria-label={t("Mobile")}>
             {MORE.map((item) => (
               <MenuLink key={item.href} item={item} label={label(item.label)} onPick={() => setOpen(false)} />
             ))}
