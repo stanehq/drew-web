@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Crown, LogOut, Plus, Settings2, Shield } from "lucide-react";
 import { ButtonLink } from "@/components/button";
-import { DiscordIcon } from "@/components/discord-icon";
-import { PageHero } from "@/components/page-hero";
 import { avatarUrl, canManage, fetchGuilds, guildIconUrl, inviteUrl, isAdmin, type DiscordGuild } from "@/lib/discord";
 import { getInstalledGuilds, isApiConfigured, type GuildSummary } from "@/lib/drew";
 import { formatExact } from "@/lib/format";
@@ -20,21 +19,6 @@ const PROTECTIONS: [keyof NonNullable<GuildSummary["settings"]>, string][] = [
   ["logging_enabled", "Logs"],
 ];
 
-function LoginPrompt({ expired }: { expired?: boolean }) {
-  return (
-    <div className="pb-28">
-      <PageHero eyebrow="Dashboard" title={<>Manage your <span className="brand-text"><LocalizedText text="servers" /></span></>}>
-        {expired ? <LocalizedText text="Your session expired. Log in again to continue." /> : <LocalizedText text="Log in with Discord to see the servers you manage and configure Drew." />}
-        <div className="mt-8 flex justify-center">
-          <ButtonLink href="/api/auth/discord" size="lg">
-            <DiscordIcon /> <LocalizedText text="Log in with Discord" />
-          </ButtonLink>
-        </div>
-        <p className="mt-4 text-xs text-mute"><LocalizedText text="We only ask for your profile and server list. Nothing is posted on your behalf." /></p>
-      </PageHero>
-    </div>
-  );
-}
 
 function GuildCard({ guild, installed, apiUp }: { guild: DiscordGuild; installed?: GuildSummary; apiUp: boolean }) {
   const icon = guildIconUrl(guild);
@@ -104,10 +88,13 @@ function GuildCard({ guild, installed, apiUp }: { guild: DiscordGuild; installed
 
 export default async function DashboardPage() {
   const session = await readSession();
-  if (!session) return <LoginPrompt />;
+  // No dashboard landing page: go straight to Discord login.
+  if (!session) redirect("/api/auth/discord");
 
   const guilds = await fetchGuilds(session.token).catch(() => null);
-  if (!guilds) return <LoginPrompt expired />;
+  // Discord token expired or revoked: log in again (reauth skips the
+  // "already signed in" shortcut, which would loop back here).
+  if (!guilds) redirect("/api/auth/discord?reauth=1");
 
   const manageable = guilds.filter(canManage);
   let installed = new Map<string, GuildSummary>();

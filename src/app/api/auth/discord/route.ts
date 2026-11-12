@@ -5,7 +5,8 @@ export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
   // Already signed in: skip Discord and open the dashboard.
-  if (await readSession()) {
+  const reauth = new URL(request.url).searchParams.get("reauth") === "1";
+  if (!reauth && (await readSession())) {
     const res = NextResponse.redirect(new URL("/dashboard", request.url));
     res.headers.set("Cache-Control", "no-store");
     return res;
