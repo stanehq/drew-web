@@ -2,94 +2,191 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import { LayoutDashboard, Menu, X } from "lucide-react";
-import { NAV, SITE } from "@/lib/site";
-import { buttonClass } from "./button";
+import { useEffect, useRef, useState } from "react";
+import { ChevronDown, Crown, ExternalLink, LayoutDashboard, Menu, X } from "lucide-react";
+import { SITE } from "@/lib/site";
 import { DiscordIcon } from "./discord-icon";
 import { LanguageSelector } from "./language-selector";
-import { useI18n } from "@/lib/i18n";
+import { useI18n, type Locale } from "@/lib/i18n";
 
-const DASHBOARD_LOGIN = "/api/auth/discord";
+const LOGIN = "/api/auth/discord";
 
-function BrandLockup() {
+const DASHBOARD_BTN =
+  "inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-lg border border-brand/50 bg-brand/[0.08] px-4 text-[0.95rem] font-semibold text-brand-bright transition-colors hover:border-brand hover:bg-brand/[0.16]";
+// Gold, glowing and with a slow shine so Premium stands out from the green buttons.
+const PREMIUM_BTN =
+  "premium-btn relative inline-flex h-11 items-center gap-2 overflow-hidden whitespace-nowrap rounded-lg bg-[linear-gradient(135deg,#ffe08a_0%,#f5b84b_45%,#e08a1e_100%)] px-4 text-[0.95rem] font-bold text-[#2b1600] shadow-[0_0_0_1px_rgba(255,214,120,0.55),0_8px_28px_-6px_rgba(245,184,75,0.65)] transition-transform hover:-translate-y-px hover:shadow-[0_0_0_1px_rgba(255,224,138,0.8),0_10px_34px_-6px_rgba(245,184,75,0.85)]";
+
+// Header copy with its translations (falls back to English).
+const COPY: Record<string, Partial<Record<Locale, string>>> = {
+  "Get Premium": { es: "Conseguir Premium", pt: "Obter Premium", fr: "Obtenir Premium", de: "Premium holen", ru: "Получить Premium" },
+  "Add to Discord": { es: "Añadir a Discord", pt: "Adicionar ao Discord", fr: "Ajouter à Discord", de: "Zu Discord hinzufügen", ru: "Добавить в Discord" },
+  "Stane products": { es: "Productos de Stane", pt: "Produtos Stane", fr: "Produits Stane", de: "Stane-Produkte", ru: "Продукты Stane" },
+};
+
+type Item = { label: string; href: string; hint?: string; keywords?: string };
+
+const MORE: Item[] = [
+  { label: "Features", href: "/#features" },
+  { label: "Pricing", href: "/pricing" },
+  { label: "Status", href: "/status" },
+  { label: "Metrics", href: "/metrics" },
+  { label: "API", href: "/developers" },
+  { label: "Docs", href: SITE.docs },
+  { label: "Support", href: SITE.support },
+];
+
+
+const isExternal = (href: string) => /^https?:\/\//.test(href);
+
+function useOutside(open: boolean, close: () => void) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: PointerEvent) => !ref.current?.contains(e.target as Node) && close();
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
+    document.addEventListener("pointerdown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open, close]);
+  return ref;
+}
+
+function MenuLink({ item, onPick, label }: { item: Item; onPick: () => void; label: string }) {
+  const cls = "flex items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-sm text-soft transition-colors hover:bg-white/[0.06] hover:text-fg";
+  const body = (
+    <>
+      <span>{label}</span>
+      {item.hint ? <span className="font-mono text-[10px] uppercase tracking-wider text-mute">{item.hint}</span> : isExternal(item.href) ? <ExternalLink className="size-3.5 text-mute" /> : null}
+    </>
+  );
+  return isExternal(item.href) || item.href.startsWith("/api/") ? (
+    <a href={item.href} onClick={onPick} className={cls}>{body}</a>
+  ) : (
+    <Link href={item.href} onClick={onPick} className={cls}>{body}</Link>
+  );
+}
+
+function Dropdown({ label, children, className = "" }: { label: React.ReactNode; children: (close: () => void) => React.ReactNode; className?: string }) {
+  const [open, setOpen] = useState(false);
+  const close = () => setOpen(false);
+  const ref = useOutside(open, close);
   return (
-    <div className="inline-flex shrink-0 items-center gap-3">
-      <a href="https://stanelabs.com" target="_blank" rel="noreferrer" aria-label="StaneLabs" className="inline-flex size-12 items-center justify-center overflow-hidden rounded-lg bg-white">
-        <Image src="/brand/stane-mark.webp" alt="Stane" width={48} height={48} priority className="size-12 object-cover" />
-      </a>
-      <span aria-hidden className="text-2xl font-light text-white/55">×</span>
-      <Link href="/" aria-label="Drew home" className="inline-flex shrink-0 items-center">
-        <Image src="/brand/drew-icon.svg" alt="Drew" width={43} height={43} priority />
-      </Link>
+    <div ref={ref} className="relative">
+      <button type="button" aria-expanded={open} onClick={() => setOpen((v) => !v)} className={className}>
+        {label}
+        <ChevronDown className={`size-4 transition-transform ${open ? "rotate-180" : ""}`} strokeWidth={1.75} />
+      </button>
+      {open && (
+        <div className="absolute left-0 z-50 mt-2 w-56 overflow-hidden rounded-xl border border-line bg-[#0d1311] p-1 shadow-[0_16px_40px_rgba(0,0,0,0.45)]">
+          {children(close)}
+        </div>
+      )}
     </div>
   );
 }
 
+
 export function SiteHeader() {
-  const pathname = usePathname();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const tr = (k: string) => COPY[k]?.[locale] ?? k;
+  const label = (k: string) => {
+    const v = t(k.toLowerCase());
+    return v === k.toLowerCase() ? k : v;
+  };
   const [open, setOpen] = useState(false);
-  const links = [...NAV.map((item) => ({ ...item, label: t(item.label.toLowerCase()) })), { href: SITE.docs, label: t("docs") }];
 
   useEffect(() => {
-    const closeOnResize = () => {
-      if (window.innerWidth >= 1024) setOpen(false);
-    };
+    const closeOnResize = () => window.innerWidth >= 1280 && setOpen(false);
     window.addEventListener("resize", closeOnResize);
     return () => window.removeEventListener("resize", closeOnResize);
   }, []);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-ink text-fg shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
-      <div className="grid h-[82px] w-full grid-cols-[1fr_auto_1fr] items-center gap-6 px-5 sm:px-8 lg:px-10">
-        <BrandLockup />
-        <nav className="hidden h-full items-center justify-center gap-1 lg:flex" aria-label={t("Main")}>
-          {links.map((item) => {
-            const internal = item.href.startsWith("/");
-            const route = item.href.split("#")[0];
-            const active = internal && route.length > 1 && pathname === route;
-            const cls = `relative inline-flex h-full items-center px-4 text-[0.98rem] font-semibold transition-colors hover:text-brand-bright after:absolute after:inset-x-4 after:bottom-0 after:h-[2px] after:bg-brand after:transition-transform ${active ? "text-brand-bright after:scale-x-100" : "text-soft after:scale-x-0"}`;
-            return internal ? (
-              <Link key={item.href} href={item.href} aria-current={active ? "page" : undefined} className={cls}>{item.label}</Link>
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-[#101113] text-fg">
+      <div className="flex h-[76px] w-full items-center gap-5 px-4 sm:px-6 xl:gap-6 lg:px-8">
+        {/* Stane mark with a products menu, then the Drew wordmark */}
+        <Dropdown
+          className="inline-flex items-center gap-1.5 text-soft hover:text-fg"
+          label={
+            <span className="inline-flex size-10 items-center justify-center overflow-hidden rounded-md bg-white">
+              <Image src="/brand/stane-mark.webp" alt="Stane" width={40} height={40} priority className="size-10 object-cover" />
+            </span>
+          }
+        >
+          {(close) => (
+            <>
+              <p className="px-3 pb-1 pt-2 font-mono text-[10px] uppercase tracking-wider text-mute">{tr("Stane products")}</p>
+              <MenuLink item={{ label: "StaneLabs", href: "https://stanelabs.com" }} label="StaneLabs" onPick={close} />
+              <MenuLink item={{ label: "Drew", href: "/" }} label="Drew" onPick={close} />
+            </>
+          )}
+        </Dropdown>
+        <Link href="/" aria-label="Drew home" className="inline-flex shrink-0 items-center gap-2">
+          <Image src="/brand/drew-icon.svg" unoptimized alt="Drew" width={38} height={38} priority />
+        </Link>
+
+        <nav className="hidden items-center gap-0.5 xl:flex" aria-label={t("Main")}>
+          {MORE.map((item) =>
+            isExternal(item.href) ? (
+              <a key={item.href} href={item.href} className="whitespace-nowrap rounded-lg px-2.5 py-2 text-[1rem] font-medium text-fg/85 transition-colors hover:bg-white/[0.06] hover:text-fg">
+                {label(item.label)}
+              </a>
             ) : (
-              <a key={item.href} href={item.href} className={cls}>{item.label}</a>
-            );
-          })}
+              <Link key={item.href} href={item.href} className="whitespace-nowrap rounded-lg px-2.5 py-2 text-[1rem] font-medium text-fg/85 transition-colors hover:bg-white/[0.06] hover:text-fg">
+                {label(item.label)}
+              </Link>
+            ),
+          )}
         </nav>
-        <div className="hidden shrink-0 items-center justify-self-end gap-3 lg:flex">
-          <LanguageSelector />
-          <a href={DASHBOARD_LOGIN} className={buttonClass("outline", "md")}>
-            <LayoutDashboard className="size-4" /> Dashboard
+
+        <div className="ml-auto hidden items-center gap-2.5 xl:flex">
+          <LanguageSelector compact />
+          <a href={LOGIN} className={DASHBOARD_BTN}>
+            <LayoutDashboard className="size-4" /> {label("Dashboard")}
           </a>
-          <a href={SITE.invite} className={buttonClass("primary", "md")}>
-            <DiscordIcon /> Add to Discord
+          <Link href="/pricing" className={PREMIUM_BTN}>
+            <Crown className="size-4" fill="currentColor" /> {tr("Get Premium")}
+          </Link>
+          <a href={SITE.invite} className="inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-lg bg-brand px-4 text-[0.95rem] font-semibold text-[#03110a] transition-colors hover:bg-brand-bright">
+            {tr("Add to Discord")} <DiscordIcon />
           </a>
         </div>
+
         <button
           type="button"
-          className="col-start-3 inline-flex size-11 items-center justify-self-end border border-line text-soft transition-colors hover:border-brand/60 hover:bg-brand/10 hover:text-brand-bright lg:hidden"
+          className="ml-auto inline-flex size-11 items-center justify-center rounded-lg text-soft hover:bg-white/[0.06] xl:hidden"
           aria-label={open ? t("Close menu") : t("Open menu")}
           aria-expanded={open}
-          onClick={() => setOpen((value) => !value)}
+          onClick={() => setOpen((v) => !v)}
         >
           {open ? <X className="size-5" /> : <Menu className="size-5" />}
         </button>
       </div>
+
       {open && (
-        <div className="border-t border-line bg-ink px-5 pb-6 pt-2 lg:hidden">
+        <div className="border-t border-line bg-[#101113] px-4 pb-6 pt-4 xl:hidden">
           <nav className="grid" aria-label={t("Mobile")}>
-            {links.map((item) => item.href.startsWith("/") ? (
-              <Link key={item.href} href={item.href} onClick={() => setOpen(false)} className="border-b border-line px-1 py-4 font-semibold text-soft hover:text-brand-bright">{item.label}</Link>
-            ) : (
-              <a key={item.href} href={item.href} className="border-b border-line px-1 py-4 font-semibold text-soft hover:text-brand-bright">{item.label}</a>
+            {MORE.map((item) => (
+              <MenuLink key={item.href} item={item} label={label(item.label)} onPick={() => setOpen(false)} />
             ))}
           </nav>
-          <div className="mt-5 grid gap-3 sm:grid-cols-2">
-            <LanguageSelector />
-            <a href={DASHBOARD_LOGIN} className={`${buttonClass("outline", "lg")} w-full`}><LayoutDashboard className="size-4" /> {t("Dashboard")}</a>
-            <a href={SITE.invite} className={`${buttonClass("primary", "lg")} w-full`}><DiscordIcon /> {t("invite")}</a>
+          <div className="mt-4 grid gap-2.5">
+            <a href={LOGIN} className={`${DASHBOARD_BTN} h-12 justify-center`}>
+              <LayoutDashboard className="size-4" /> {label("Dashboard")}
+            </a>
+            <Link href="/pricing" onClick={() => setOpen(false)} className={`${PREMIUM_BTN} h-12 justify-center`}>
+              <Crown className="size-4" fill="currentColor" /> {tr("Get Premium")}
+            </Link>
+            <a href={SITE.invite} className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-brand font-semibold text-[#03110a]">
+              {tr("Add to Discord")} <DiscordIcon />
+            </a>
+            <div className="flex justify-center">
+              <LanguageSelector />
+            </div>
           </div>
         </div>
       )}

@@ -8,7 +8,7 @@ import { useI18n } from "@/lib/i18n";
 
 type Server = { name: string; icon: string | null; members: number; verified: boolean; partnered: boolean };
 
-const SECONDS_PER_CARD = 4;
+const SECONDS_PER_CARD = 2.6;
 const MIN_CARDS = 8;
 
 function ServerCard({ s, members }: { s: Server; members: string }) {
@@ -55,8 +55,8 @@ export function ServerShowcase() {
   const members = t("members");
   return (
     <section className="w-full overflow-hidden border-b border-line" aria-label="Servers using Drew">
-      <div className="group relative w-full overflow-hidden py-8 [mask-image:linear-gradient(90deg,transparent,black_3%,black_97%,transparent)]">
-        <div className="flex w-max animate-marquee gap-5 group-hover:[animation-play-state:paused]" style={{ animationDuration: `${track.length * SECONDS_PER_CARD}s` }}>
+      <div className="relative w-full overflow-hidden py-8 [mask-image:linear-gradient(90deg,transparent,black_3%,black_97%,transparent)]">
+        <div className="flex w-max animate-marquee gap-5" style={{ animationDuration: `${track.length * SECONDS_PER_CARD}s` }}>
           {[0, 1].map((copy) => (
             <ul key={copy} className="flex gap-5" aria-hidden={copy === 1 || undefined}>
               {track.map((s, i) => (
