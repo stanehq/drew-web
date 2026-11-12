@@ -26,13 +26,13 @@ export const metadata: Metadata = {
     url: SITE.url,
     title: "Drew Bot: Discord security, done right",
     description: SITE.description,
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Drew" }],
   },
-  twitter: { card: "summary_large_image", images: ["/og.png"] },
+  twitter: { card: "summary" },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#050807",
+  // Discord and other embeds use this as the accent color.
+  themeColor: "#41cf8b",
   colorScheme: "dark",
 };
 
