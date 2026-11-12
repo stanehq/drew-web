@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Braces, DatabaseBackup, FileClock, KeyRound, LayoutDashboard, ScrollText, ShieldAlert, Star, UserCheck, Users } from "lucide-react";
+import { ArrowRight, Braces, DatabaseBackup, FileClock, KeyRound, LayoutDashboard, PlusCircle, ScrollText, ShieldAlert, UserCheck, Users } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { DiscordIcon } from "@/components/discord-icon";
 import { LiveStats } from "@/components/live-stats";
@@ -158,20 +158,27 @@ export default function HomePage() {
         </ol>
       </section>
 
-      {/* Closing CTA: centered, same soft glow as the hero */}
-      <section className="relative isolate overflow-hidden border-t border-white/10 px-5 py-28 text-center">
-        <div className="absolute inset-x-0 top-0 -z-10 h-80 bg-[radial-gradient(50%_80%_at_50%_0%,rgb(65_207_139/0.14),transparent_70%)]" aria-hidden />
-        <Image src="/brand/drew-icon.svg" unoptimized alt="" width={64} height={64} className="mx-auto" />
-        <h2 className="mx-auto mt-8 max-w-3xl text-balance text-3xl font-semibold tracking-[-0.02em] sm:text-5xl">
-          {t("Invite Drew, run /opsec setup and sleep well tonight")}
-        </h2>
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-          <a href={SITE.invite} className={primary}>
-            <DiscordIcon /> {t("Add to Discord")}
-          </a>
-          <a href={SITE.topgg} target="_blank" rel="noreferrer" className={secondary}>
-            <Star className="size-4" /> {t("Vote for Drew on Top.gg")}
-          </a>
+      {/* Closing CTA card, Wick/Kena style: centered, vivid multi-color gradient, joined buttons */}
+      <section className="relative px-5 pb-28">
+        <div className="pointer-events-none absolute inset-x-0 top-10 -z-10 mx-auto h-72 max-w-4xl bg-[radial-gradient(closest-side,rgb(65_207_139/0.35),transparent)] blur-3xl" aria-hidden />
+        <div className="cta-gradient relative mx-auto max-w-4xl overflow-hidden rounded-2xl px-6 py-16 text-center shadow-[0_40px_100px_-40px_rgba(65,207,139,0.7)] sm:px-12 sm:py-20">
+          <Image src="/brand/drew-icon.svg" unoptimized alt="" width={56} height={56} className="mx-auto drop-shadow-[0_8px_20px_rgba(0,0,0,0.35)]" />
+          <h2 className="mt-6 text-balance text-3xl font-semibold tracking-[-0.02em] text-white sm:text-5xl">{t("Protect your server in under a minute")}</h2>
+          <p className="mx-auto mt-5 max-w-xl text-pretty text-lg leading-relaxed text-white/90">{t("Invite Drew, run /opsec setup and sleep well tonight")}</p>
+          <div className="mx-auto mt-10 inline-flex overflow-hidden rounded-xl border border-white/70 text-white backdrop-blur-sm">
+            <a href={SITE.invite} className="inline-flex h-14 items-center gap-2.5 px-6 text-sm font-bold uppercase tracking-wider transition-colors hover:bg-white/15 sm:px-8">
+              <PlusCircle className="size-5" strokeWidth={1.75} /> {t("Invite")}
+            </a>
+            <span className="w-px bg-white/70" aria-hidden />
+            <a href="/api/auth/discord" className="inline-flex h-14 items-center gap-2.5 px-6 text-sm font-bold uppercase tracking-wider transition-colors hover:bg-white/15 sm:px-8">
+              <LayoutDashboard className="size-5" strokeWidth={1.75} /> {t("Dashboard")}
+            </a>
+          </div>
+          <p className="mt-6 text-sm text-white/80">
+            <a href={SITE.support} className="underline decoration-white/40 underline-offset-4 hover:decoration-white">
+              {t("Join support")}
+            </a>
+          </p>
         </div>
       </section>
     </>
