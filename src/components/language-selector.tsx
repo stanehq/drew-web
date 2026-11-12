@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Check, ChevronDown, Globe } from "lucide-react";
 import { LOCALES, useI18n } from "@/lib/i18n";
 
-export function LanguageSelector() {
+export function LanguageSelector({ compact = false }: { compact?: boolean }) {
   const { locale, setLocale, t } = useI18n();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -32,11 +32,15 @@ export function LanguageSelector() {
         aria-expanded={open}
         aria-label={t("language")}
         onClick={() => setOpen((v) => !v)}
-        className="inline-flex h-10 items-center gap-1.5 rounded-lg px-2.5 text-sm font-normal text-soft transition-colors hover:bg-white/[0.06] hover:text-fg"
+        className={`inline-flex h-10 items-center gap-1.5 rounded-lg text-sm font-normal text-soft transition-colors hover:bg-white/[0.06] hover:text-fg ${compact ? "w-10 justify-center" : "px-2.5"}`}
       >
-        <Globe className="size-4" strokeWidth={1.75} />
-        <span className="uppercase tracking-wide">{selected.code}</span>
-        <ChevronDown className={`size-3.5 transition-transform ${open ? "rotate-180" : ""}`} strokeWidth={1.75} />
+        <Globe className={compact ? "size-[22px]" : "size-4"} strokeWidth={1.6} />
+        {!compact && (
+          <>
+            <span className="uppercase tracking-wide">{selected.code}</span>
+            <ChevronDown className={`size-3.5 transition-transform ${open ? "rotate-180" : ""}`} strokeWidth={1.75} />
+          </>
+        )}
       </button>
       {open && (
         <ul

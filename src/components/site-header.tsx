@@ -2,94 +2,250 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import { LayoutDashboard, Menu, X } from "lucide-react";
-import { NAV, SITE } from "@/lib/site";
-import { buttonClass } from "./button";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ChevronDown, Crown, ExternalLink, Menu, Search, X } from "lucide-react";
+import { SITE } from "@/lib/site";
 import { DiscordIcon } from "./discord-icon";
 import { LanguageSelector } from "./language-selector";
-import { useI18n } from "@/lib/i18n";
+import { useI18n, type Locale } from "@/lib/i18n";
 
-const DASHBOARD_LOGIN = "/api/auth/discord";
+const LOGIN = "/api/auth/discord";
 
-function BrandLockup() {
+// Header copy with its translations (falls back to English).
+const COPY: Record<string, Partial<Record<Locale, string>>> = {
+  More: { es: "Más", pt: "Mais", fr: "Plus", de: "Mehr", ru: "Ещё" },
+  Search: { es: "Buscar", pt: "Pesquisar", fr: "Rechercher", de: "Suchen", ru: "Поиск" },
+  "Log in": { es: "Iniciar sesión", pt: "Iniciar sessão", fr: "Se connecter", de: "Anmelden", ru: "Войти" },
+  "Get Premium": { es: "Conseguir Premium", pt: "Obter Premium", fr: "Obtenir Premium", de: "Premium holen", ru: "Получить Premium" },
+  "Add to Discord": { es: "Añadir a Discord", pt: "Adicionar ao Discord", fr: "Ajouter à Discord", de: "Zu Discord hinzufügen", ru: "Добавить в Discord" },
+  "No results": { es: "Sin resultados", pt: "Sem resultados", fr: "Aucun résultat", de: "Keine Ergebnisse", ru: "Ничего не найдено" },
+  "Stane products": { es: "Productos de Stane", pt: "Produtos Stane", fr: "Produits Stane", de: "Stane-Produkte", ru: "Продукты Stane" },
+};
+
+type Item = { label: string; href: string; hint?: string; keywords?: string };
+
+const MORE: Item[] = [
+  { label: "Features", href: "/#features" },
+  { label: "Pricing", href: "/pricing" },
+  { label: "Status", href: "/status" },
+  { label: "Metrics", href: "/metrics" },
+  { label: "API", href: "/developers" },
+  { label: "Docs", href: SITE.docs },
+  { label: "Support", href: SITE.support },
+];
+
+// What the header search can find: site pages and the main docs pages.
+const INDEX: Item[] = [
+  ...MORE,
+  { label: "Dashboard", href: LOGIN, keywords: "settings configure manage servers" },
+  { label: "Anti-nuke", href: `${SITE.docs}/features/antinuke/`, hint: "Docs", keywords: "nuke protection channels roles" },
+  { label: "Anti-raid", href: `${SITE.docs}/features/antiraid/`, hint: "Docs", keywords: "raid joins flood" },
+  { label: "Verification", href: `${SITE.docs}/features/verification/`, hint: "Docs", keywords: "verify role panel" },
+  { label: "Logging", href: `${SITE.docs}/features/logging/`, hint: "Docs", keywords: "logs channel events" },
+  { label: "SUDO mode", href: `${SITE.docs}/features/sudo/`, hint: "Docs", keywords: "password owner" },
+  { label: "Backups", href: `${SITE.docs}/features/backups/`, hint: "Docs", keywords: "bkp restore save" },
+  { label: "Setup guide", href: `${SITE.docs}/getting_started/setup/`, hint: "Docs", keywords: "install start opsec setup" },
+  { label: "Commands", href: `${SITE.docs}/commands/overview/`, hint: "Docs", keywords: "opsec mod sudo slash" },
+  { label: "FAQ", href: `${SITE.docs}/guides/faq/`, hint: "Docs", keywords: "questions help" },
+  { label: "Terms of Service", href: "/terms", hint: "Legal", keywords: "tos" },
+  { label: "Privacy Policy", href: "/privacy", hint: "Legal", keywords: "data gdpr" },
+];
+
+const isExternal = (href: string) => /^https?:\/\//.test(href);
+
+function useOutside(open: boolean, close: () => void) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: PointerEvent) => !ref.current?.contains(e.target as Node) && close();
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
+    document.addEventListener("pointerdown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open, close]);
+  return ref;
+}
+
+function MenuLink({ item, onPick, label }: { item: Item; onPick: () => void; label: string }) {
+  const cls = "flex items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-sm text-soft transition-colors hover:bg-white/[0.06] hover:text-fg";
+  const body = (
+    <>
+      <span>{label}</span>
+      {item.hint ? <span className="font-mono text-[10px] uppercase tracking-wider text-mute">{item.hint}</span> : isExternal(item.href) ? <ExternalLink className="size-3.5 text-mute" /> : null}
+    </>
+  );
+  return isExternal(item.href) || item.href.startsWith("/api/") ? (
+    <a href={item.href} onClick={onPick} className={cls}>{body}</a>
+  ) : (
+    <Link href={item.href} onClick={onPick} className={cls}>{body}</Link>
+  );
+}
+
+function Dropdown({ label, children, className = "" }: { label: React.ReactNode; children: (close: () => void) => React.ReactNode; className?: string }) {
+  const [open, setOpen] = useState(false);
+  const close = () => setOpen(false);
+  const ref = useOutside(open, close);
   return (
-    <div className="inline-flex shrink-0 items-center gap-3">
-      <a href="https://stanelabs.com" target="_blank" rel="noreferrer" aria-label="StaneLabs" className="inline-flex size-12 items-center justify-center overflow-hidden rounded-lg bg-white">
-        <Image src="/brand/stane-mark.webp" alt="Stane" width={48} height={48} priority className="size-12 object-cover" />
-      </a>
-      <span aria-hidden className="text-2xl font-light text-white/55">×</span>
-      <Link href="/" aria-label="Drew home" className="inline-flex shrink-0 items-center">
-        <Image src="/brand/drew-icon.svg" alt="Drew" width={43} height={43} priority />
-      </Link>
+    <div ref={ref} className="relative">
+      <button type="button" aria-expanded={open} onClick={() => setOpen((v) => !v)} className={className}>
+        {label}
+        <ChevronDown className={`size-4 transition-transform ${open ? "rotate-180" : ""}`} strokeWidth={1.75} />
+      </button>
+      {open && (
+        <div className="absolute left-0 z-50 mt-2 w-56 overflow-hidden rounded-xl border border-line bg-[#0d1311] p-1 shadow-[0_16px_40px_rgba(0,0,0,0.45)]">
+          {children(close)}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SearchBox({ tr, className = "" }: { tr: (k: string) => string; className?: string }) {
+  const { t } = useI18n();
+  const router = useRouter();
+  const [q, setQ] = useState("");
+  const [open, setOpen] = useState(false);
+  const ref = useOutside(open, () => setOpen(false));
+  const results = useMemo(() => {
+    const s = q.trim().toLowerCase();
+    if (!s) return [];
+    return INDEX.filter((i) => `${i.label} ${t(i.label.toLowerCase())} ${i.keywords ?? ""}`.toLowerCase().includes(s)).slice(0, 7);
+  }, [q, t]);
+  const go = (item: Item) => {
+    setOpen(false);
+    setQ("");
+    if (isExternal(item.href) || item.href.startsWith("/api/")) window.location.href = item.href;
+    else router.push(item.href);
+  };
+  return (
+    <div ref={ref} className={`relative ${className}`}>
+      <Search className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-mute" strokeWidth={1.75} />
+      <input
+        type="search"
+        value={q}
+        onChange={(e) => {
+          setQ(e.target.value);
+          setOpen(true);
+        }}
+        onFocus={() => setOpen(true)}
+        onKeyDown={(e) => e.key === "Enter" && results[0] && go(results[0])}
+        placeholder={tr("Search")}
+        aria-label={tr("Search")}
+        className="h-12 w-full rounded-full border border-line bg-[#1a1b1e] pl-12 pr-4 text-[0.95rem] text-fg placeholder:text-mute focus:border-brand/50 focus:outline-none"
+      />
+      {open && q.trim() && (
+        <ul className="absolute inset-x-0 z-50 mt-2 overflow-hidden rounded-xl border border-line bg-[#0d1311] p-1 shadow-[0_16px_40px_rgba(0,0,0,0.45)]">
+          {results.length === 0 ? (
+            <li className="px-3 py-2.5 text-sm text-mute">{tr("No results")}</li>
+          ) : (
+            results.map((r) => (
+              <li key={r.href}>
+                <button type="button" onClick={() => go(r)} className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm text-soft hover:bg-white/[0.06] hover:text-fg">
+                  <span>{t(r.label.toLowerCase()) === r.label.toLowerCase() ? r.label : t(r.label.toLowerCase())}</span>
+                  {r.hint && <span className="font-mono text-[10px] uppercase tracking-wider text-mute">{r.hint}</span>}
+                </button>
+              </li>
+            ))
+          )}
+        </ul>
+      )}
     </div>
   );
 }
 
 export function SiteHeader() {
-  const pathname = usePathname();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const tr = (k: string) => COPY[k]?.[locale] ?? k;
+  const label = (k: string) => {
+    const v = t(k.toLowerCase());
+    return v === k.toLowerCase() ? k : v;
+  };
   const [open, setOpen] = useState(false);
-  const links = [...NAV.map((item) => ({ ...item, label: t(item.label.toLowerCase()) })), { href: SITE.docs, label: t("docs") }];
 
   useEffect(() => {
-    const closeOnResize = () => {
-      if (window.innerWidth >= 1024) setOpen(false);
-    };
+    const closeOnResize = () => window.innerWidth >= 1024 && setOpen(false);
     window.addEventListener("resize", closeOnResize);
     return () => window.removeEventListener("resize", closeOnResize);
   }, []);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-ink text-fg shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
-      <div className="grid h-[82px] w-full grid-cols-[1fr_auto_1fr] items-center gap-6 px-5 sm:px-8 lg:px-10">
-        <BrandLockup />
-        <nav className="hidden h-full items-center justify-center gap-1 lg:flex" aria-label={t("Main")}>
-          {links.map((item) => {
-            const internal = item.href.startsWith("/");
-            const route = item.href.split("#")[0];
-            const active = internal && route.length > 1 && pathname === route;
-            const cls = `relative inline-flex h-full items-center px-4 text-[0.98rem] font-semibold transition-colors hover:text-brand-bright after:absolute after:inset-x-4 after:bottom-0 after:h-[2px] after:bg-brand after:transition-transform ${active ? "text-brand-bright after:scale-x-100" : "text-soft after:scale-x-0"}`;
-            return internal ? (
-              <Link key={item.href} href={item.href} aria-current={active ? "page" : undefined} className={cls}>{item.label}</Link>
-            ) : (
-              <a key={item.href} href={item.href} className={cls}>{item.label}</a>
-            );
-          })}
-        </nav>
-        <div className="hidden shrink-0 items-center justify-self-end gap-3 lg:flex">
-          <LanguageSelector />
-          <a href={DASHBOARD_LOGIN} className={buttonClass("outline", "md")}>
-            <LayoutDashboard className="size-4" /> Dashboard
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-[#101113] text-fg">
+      <div className="flex h-[76px] w-full items-center gap-5 px-4 sm:px-6 lg:gap-8 lg:px-8">
+        {/* Stane mark with a products menu, then the Drew wordmark */}
+        <Dropdown
+          className="inline-flex items-center gap-1.5 text-soft hover:text-fg"
+          label={
+            <span className="inline-flex size-10 items-center justify-center overflow-hidden rounded-md bg-white">
+              <Image src="/brand/stane-mark.webp" alt="Stane" width={40} height={40} priority className="size-10 object-cover" />
+            </span>
+          }
+        >
+          {(close) => (
+            <>
+              <p className="px-3 pb-1 pt-2 font-mono text-[10px] uppercase tracking-wider text-mute">{tr("Stane products")}</p>
+              <MenuLink item={{ label: "StaneLabs", href: "https://stanelabs.com" }} label="StaneLabs" onPick={close} />
+              <MenuLink item={{ label: "Drew", href: "/" }} label="Drew" onPick={close} />
+            </>
+          )}
+        </Dropdown>
+        <Link href="/" aria-label="Drew home" className="inline-flex shrink-0 items-center gap-2">
+          <Image src="/brand/drew-icon.svg" unoptimized alt="" width={34} height={34} priority />
+          <span className="font-display text-[1.45rem] font-bold uppercase tracking-tight">Drew</span>
+        </Link>
+
+        <Dropdown className="hidden items-center gap-1.5 text-[1.02rem] font-medium text-soft hover:text-fg lg:inline-flex" label={tr("More")}>
+          {(close) => MORE.map((item) => <MenuLink key={item.href} item={item} label={label(item.label)} onPick={close} />)}
+        </Dropdown>
+
+        <SearchBox tr={tr} className="hidden max-w-xl flex-1 md:block" />
+
+        <div className="ml-auto hidden items-center gap-2.5 lg:flex">
+          <LanguageSelector compact />
+          <a href={LOGIN} className="inline-flex h-11 items-center rounded-lg bg-[#2a2b2f] px-4 text-[0.95rem] font-semibold text-fg transition-colors hover:bg-[#35363b]">
+            {tr("Log in")}
           </a>
-          <a href={SITE.invite} className={buttonClass("primary", "md")}>
-            <DiscordIcon /> Add to Discord
+          <Link href="/pricing" className="inline-flex h-11 items-center gap-2 rounded-lg bg-brand-deep px-4 text-[0.95rem] font-semibold text-white transition-colors hover:bg-[#238a5c]">
+            <Crown className="size-4" /> {tr("Get Premium")}
+          </Link>
+          <a href={SITE.invite} className="inline-flex h-11 items-center gap-2 rounded-lg bg-brand px-4 text-[0.95rem] font-semibold text-[#03110a] transition-colors hover:bg-brand-bright">
+            {tr("Add to Discord")} <DiscordIcon />
           </a>
         </div>
+
         <button
           type="button"
-          className="col-start-3 inline-flex size-11 items-center justify-self-end border border-line text-soft transition-colors hover:border-brand/60 hover:bg-brand/10 hover:text-brand-bright lg:hidden"
+          className="ml-auto inline-flex size-11 items-center justify-center rounded-lg text-soft hover:bg-white/[0.06] lg:hidden"
           aria-label={open ? t("Close menu") : t("Open menu")}
           aria-expanded={open}
-          onClick={() => setOpen((value) => !value)}
+          onClick={() => setOpen((v) => !v)}
         >
           {open ? <X className="size-5" /> : <Menu className="size-5" />}
         </button>
       </div>
+
       {open && (
-        <div className="border-t border-line bg-ink px-5 pb-6 pt-2 lg:hidden">
-          <nav className="grid" aria-label={t("Mobile")}>
-            {links.map((item) => item.href.startsWith("/") ? (
-              <Link key={item.href} href={item.href} onClick={() => setOpen(false)} className="border-b border-line px-1 py-4 font-semibold text-soft hover:text-brand-bright">{item.label}</Link>
-            ) : (
-              <a key={item.href} href={item.href} className="border-b border-line px-1 py-4 font-semibold text-soft hover:text-brand-bright">{item.label}</a>
+        <div className="border-t border-line bg-[#101113] px-4 pb-6 pt-4 lg:hidden">
+          <SearchBox tr={tr} className="md:hidden" />
+          <nav className="mt-3 grid" aria-label={t("Mobile")}>
+            {MORE.map((item) => (
+              <MenuLink key={item.href} item={item} label={label(item.label)} onPick={() => setOpen(false)} />
             ))}
           </nav>
-          <div className="mt-5 grid gap-3 sm:grid-cols-2">
-            <LanguageSelector />
-            <a href={DASHBOARD_LOGIN} className={`${buttonClass("outline", "lg")} w-full`}><LayoutDashboard className="size-4" /> {t("Dashboard")}</a>
-            <a href={SITE.invite} className={`${buttonClass("primary", "lg")} w-full`}><DiscordIcon /> {t("invite")}</a>
+          <div className="mt-4 grid gap-2.5">
+            <a href={LOGIN} className="inline-flex h-12 items-center justify-center rounded-lg bg-[#2a2b2f] font-semibold">{tr("Log in")}</a>
+            <Link href="/pricing" onClick={() => setOpen(false)} className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-brand-deep font-semibold text-white">
+              <Crown className="size-4" /> {tr("Get Premium")}
+            </Link>
+            <a href={SITE.invite} className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-brand font-semibold text-[#03110a]">
+              {tr("Add to Discord")} <DiscordIcon />
+            </a>
+            <div className="flex justify-center">
+              <LanguageSelector />
+            </div>
           </div>
         </div>
       )}

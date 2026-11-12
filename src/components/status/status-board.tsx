@@ -136,7 +136,6 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
 
   const shards = useMemo(() => data?.shards ?? [], [data]);
   const online = shards.filter((s) => s.status === "online");
-  const latencies = online.map((s) => s.latencyMs);
   const servicesDown = Object.values(data?.services ?? {}).filter((s) => s.status === "down").length;
 
   const overall: "operational" | "degraded" | "down" =
@@ -181,7 +180,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
       icon: Gauge,
       label: "Gateway latency",
       value: data ? `${data.latencyMs}ms` : "...",
-      note: latencies.length ? `${Math.min(...latencies)}ms fastest, ${Math.max(...latencies)}ms slowest` : "",
+      note: "",
       health: latencyHealth,
     },
   ];
