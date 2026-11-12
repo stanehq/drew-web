@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, Crown, ExternalLink, Menu, X } from "lucide-react";
+import { ChevronDown, Crown, ExternalLink, LayoutDashboard, Menu, X } from "lucide-react";
 import { SITE } from "@/lib/site";
 import { DiscordIcon } from "./discord-icon";
 import { LanguageSelector } from "./language-selector";
@@ -11,9 +11,14 @@ import { useI18n, type Locale } from "@/lib/i18n";
 
 const LOGIN = "/api/auth/discord";
 
+const DASHBOARD_BTN =
+  "inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-lg border border-brand/50 bg-brand/[0.08] px-4 text-[0.95rem] font-semibold text-brand-bright transition-colors hover:border-brand hover:bg-brand/[0.16]";
+// Gold, glowing and with a slow shine so Premium stands out from the green buttons.
+const PREMIUM_BTN =
+  "premium-btn relative inline-flex h-11 items-center gap-2 overflow-hidden whitespace-nowrap rounded-lg bg-[linear-gradient(135deg,#ffe08a_0%,#f5b84b_45%,#e08a1e_100%)] px-4 text-[0.95rem] font-bold text-[#2b1600] shadow-[0_0_0_1px_rgba(255,214,120,0.55),0_8px_28px_-6px_rgba(245,184,75,0.65)] transition-transform hover:-translate-y-px hover:shadow-[0_0_0_1px_rgba(255,224,138,0.8),0_10px_34px_-6px_rgba(245,184,75,0.85)]";
+
 // Header copy with its translations (falls back to English).
 const COPY: Record<string, Partial<Record<Locale, string>>> = {
-  "Log in": { es: "Iniciar sesión", pt: "Iniciar sessão", fr: "Se connecter", de: "Anmelden", ru: "Войти" },
   "Get Premium": { es: "Conseguir Premium", pt: "Obter Premium", fr: "Obtenir Premium", de: "Premium holen", ru: "Получить Premium" },
   "Add to Discord": { es: "Añadir a Discord", pt: "Adicionar ao Discord", fr: "Ajouter à Discord", de: "Zu Discord hinzufügen", ru: "Добавить в Discord" },
   "Stane products": { es: "Productos de Stane", pt: "Produtos Stane", fr: "Produits Stane", de: "Stane-Produkte", ru: "Продукты Stane" },
@@ -121,8 +126,7 @@ export function SiteHeader() {
           )}
         </Dropdown>
         <Link href="/" aria-label="Drew home" className="inline-flex shrink-0 items-center gap-2">
-          <Image src="/brand/drew-icon.svg" unoptimized alt="" width={34} height={34} priority />
-          <span className="font-display text-[1.45rem] font-bold uppercase tracking-tight">Drew</span>
+          <Image src="/brand/drew-icon.svg" unoptimized alt="Drew" width={38} height={38} priority />
         </Link>
 
         <nav className="hidden items-center gap-0.5 xl:flex" aria-label={t("Main")}>
@@ -141,11 +145,11 @@ export function SiteHeader() {
 
         <div className="ml-auto hidden items-center gap-2.5 xl:flex">
           <LanguageSelector compact />
-          <a href={LOGIN} className="inline-flex h-11 items-center whitespace-nowrap rounded-lg bg-[#2a2b2f] px-4 text-[0.95rem] font-semibold text-fg transition-colors hover:bg-[#35363b]">
-            {tr("Log in")}
+          <a href={LOGIN} className={DASHBOARD_BTN}>
+            <LayoutDashboard className="size-4" /> {label("Dashboard")}
           </a>
-          <Link href="/pricing" className="inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-lg bg-brand-deep px-4 text-[0.95rem] font-semibold text-white transition-colors hover:bg-[#238a5c]">
-            <Crown className="size-4" /> {tr("Get Premium")}
+          <Link href="/pricing" className={PREMIUM_BTN}>
+            <Crown className="size-4" fill="currentColor" /> {tr("Get Premium")}
           </Link>
           <a href={SITE.invite} className="inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-lg bg-brand px-4 text-[0.95rem] font-semibold text-[#03110a] transition-colors hover:bg-brand-bright">
             {tr("Add to Discord")} <DiscordIcon />
@@ -171,9 +175,11 @@ export function SiteHeader() {
             ))}
           </nav>
           <div className="mt-4 grid gap-2.5">
-            <a href={LOGIN} className="inline-flex h-12 items-center justify-center rounded-lg bg-[#2a2b2f] font-semibold">{tr("Log in")}</a>
-            <Link href="/pricing" onClick={() => setOpen(false)} className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-brand-deep font-semibold text-white">
-              <Crown className="size-4" /> {tr("Get Premium")}
+            <a href={LOGIN} className={`${DASHBOARD_BTN} h-12 justify-center`}>
+              <LayoutDashboard className="size-4" /> {label("Dashboard")}
+            </a>
+            <Link href="/pricing" onClick={() => setOpen(false)} className={`${PREMIUM_BTN} h-12 justify-center`}>
+              <Crown className="size-4" fill="currentColor" /> {tr("Get Premium")}
             </Link>
             <a href={SITE.invite} className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-brand font-semibold text-[#03110a]">
               {tr("Add to Discord")} <DiscordIcon />
