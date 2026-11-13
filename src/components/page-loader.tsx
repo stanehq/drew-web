@@ -12,10 +12,9 @@ const MAX_MS = 8000;
 export function PageLoader() {
   const pathname = usePathname();
   const [state, setState] = useState<"show" | "fade" | "gone">("show");
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(() => pathname === "/");
   const [nav, setNav] = useState(false);
   const shownAt = useRef(0);
-  const first = useRef(true);
   const localeChange = useRef(false);
   const timers = useRef<number[]>([]);
 
@@ -38,7 +37,6 @@ export function PageLoader() {
 
   useEffect(() => {
     if (pathname !== "/") {
-      first.current = false;
       setVisible(false);
       setState("gone");
       return;
@@ -50,7 +48,6 @@ export function PageLoader() {
     const finish = () => {
       if (done) return;
       done = true;
-      first.current = false;
       hide(FIRST_MS);
     };
     const loaded = document.readyState === "complete"
