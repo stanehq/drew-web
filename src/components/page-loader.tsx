@@ -87,7 +87,7 @@ export function PageLoader() {
       aria-hidden={state === "fade"}
     >
       <div className="page-loader-mark">
-        <Loader size={150} />
+        <Loader />
       </div>
     </div>
   );
