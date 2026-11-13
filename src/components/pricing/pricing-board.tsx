@@ -86,7 +86,7 @@ export function PricingBoard() {
           aria-hidden
         />
         <div className="mx-auto max-w-6xl px-5 pb-12 pt-20 text-center">
-          <h1 className="mx-auto max-w-3xl text-balance text-4xl font-semibold tracking-[-0.025em] sm:text-6xl"><TwoTone text={t("Protection for less than a coffee")} /></h1>
+          <h1 className="mx-auto max-w-3xl text-balance text-4xl font-semibold tracking-[-0.025em] sm:text-6xl"><TwoTone text={t("Protection for less than a coffee")} greenWords={2} /></h1>
           <p className="mx-auto mt-4 max-w-lg text-balance text-soft">
             <Highlight text={t("Try every Premium feature free for 5 days. Cancel before it ends and you won't pay a cent.")} />
           </p>
@@ -183,6 +183,26 @@ export function PricingBoard() {
               </article>
             );
           })}
+        </div>
+
+        <div className="mx-auto mt-10 max-w-5xl px-5">
+          <div className="border-t border-white/10 pt-7">
+            <h2 className="text-center text-sm font-semibold text-white">{t("Payment platforms")}</h2>
+            <div className="mt-5 grid grid-cols-2 items-center gap-3 sm:grid-cols-4">
+              <div className="flex min-h-16 items-center justify-center rounded-xl border border-white/10 bg-white/[0.025] px-3">
+                <span className="text-lg font-extrabold tracking-tight text-[#ff424d]">Patreon</span>
+              </div>
+              <div className="flex min-h-16 items-center justify-center rounded-xl border border-white/10 bg-white/[0.025] px-3">
+                <span className="text-base font-extrabold tracking-[-0.045em] text-[#ffc233]">Lemon Squeezy</span>
+              </div>
+              <div className="flex min-h-16 items-center justify-center rounded-xl border border-white/10 bg-white/[0.025] px-3">
+                <span className="text-sm font-semibold text-white">Apple App Store</span>
+              </div>
+              <div className="flex min-h-16 items-center justify-center rounded-xl border border-white/10 bg-white/[0.025] px-3">
+                <span className="bg-gradient-to-r from-[#34a853] via-[#4285f4] to-[#fbbc04] bg-clip-text text-sm font-bold text-transparent">Google Play</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="mx-auto mt-10 grid max-w-5xl gap-4 px-5 sm:grid-cols-3">
