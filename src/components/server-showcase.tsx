@@ -68,7 +68,16 @@ export function ServerShowcase() {
       .then((d: { servers?: Server[]; total?: number; totalMembers?: number } | null) => {
         if (!alive || !Array.isArray(d?.servers)) return;
         setServers(d.servers);
-        setTotals({ servers: Number(d.total) || 0, people: Number(d.totalMembers) || 0 });
+        const totals = { servers: Number(d.total) || 0, people: Number(d.totalMembers) || 0 };
+        setTotals(totals);
+        // Older bot builds don't send totalMembers: fall back to the live stats.
+        if (!totals.people)
+          fetch("/api/stats")
+            .then((r) => (r.ok ? r.json() : null))
+            .then((st: { available?: boolean; users?: number; guilds?: number } | null) => {
+              if (alive && st?.available) setTotals({ servers: totals.servers || Number(st.guilds) || 0, people: Number(st.users) || 0 });
+            })
+            .catch(() => {});
       })
       .catch(() => {});
     return () => {
