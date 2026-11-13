@@ -2,7 +2,7 @@ import { Badge as BadgeShape, Check, Compass, House, Infinity } from "lucide-rea
 import type { Badge } from "@/lib/public-showcase";
 
 // Discord-style server badges: a filled rosette with a white glyph.
-const BADGE: Record<Badge, { color: string; Icon: typeof Check; label: string }> = {
+export const BADGE: Record<Badge, { color: string; Icon: typeof Check; label: string }> = {
   verified: { color: "#23a55a", Icon: Check, label: "Verified" },
   partnered: { color: "#5865f2", Icon: Infinity, label: "Discord Partner" },
   discoverable: { color: "#eb459e", Icon: Compass, label: "Discoverable" },

@@ -81,7 +81,7 @@ export function ServerShowcase() {
   const rows = servers.length >= TWO_ROWS_FROM ? [servers.filter((_, i) => i % 2 === 0), servers.filter((_, i) => i % 2 === 1)] : [servers];
   const members = (n: number) => (n === 1 ? t("member") : t("members"));
   return (
-    <div className="w-full overflow-hidden pb-24 pt-12" aria-label="Servers using Drew">
+    <div className="w-full overflow-hidden pb-4 pt-12" aria-label="Servers using Drew">
       {totals.servers > 0 && totals.people > 0 && (
         <p className="mb-8 px-5 text-center text-lg text-mute sm:text-xl">
           {t("Protecting")} <strong className="font-semibold tabular-nums text-fg">{formatExact(totals.people)}</strong> {t("people across")}{" "}
