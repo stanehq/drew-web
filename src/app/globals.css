@@ -248,20 +248,30 @@
   position: relative;
   display: block;
   flex: 0 0 auto;
-  background: radial-gradient(19px, currentColor 94%, transparent);
+  background: linear-gradient(180deg, #35c98d 0%, #5bd4a6 48%, #ddf8ea 78%, #ffffff 100%);
+  -webkit-mask: radial-gradient(19px, #000 94%, transparent);
+  mask: radial-gradient(19px, #000 94%, transparent);
 }
 .loader::before {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background:
-    radial-gradient(17.1px at bottom right, transparent 94%, currentColor) top left,
-    radial-gradient(17.1px at bottom left, transparent 94%, currentColor) top right,
-    radial-gradient(17.1px at top right, transparent 94%, currentColor) bottom left,
-    radial-gradient(17.1px at top left, transparent 94%, currentColor) bottom right;
-  background-size: 38px 38px;
-  background-repeat: no-repeat;
+  background: linear-gradient(180deg, #35c98d 0%, #5bd4a6 48%, #ddf8ea 78%, #ffffff 100%);
+  -webkit-mask:
+    radial-gradient(17.1px at bottom right, transparent 94%, #000) top left,
+    radial-gradient(17.1px at bottom left, transparent 94%, #000) top right,
+    radial-gradient(17.1px at top right, transparent 94%, #000) bottom left,
+    radial-gradient(17.1px at top left, transparent 94%, #000) bottom right;
+  mask:
+    radial-gradient(17.1px at bottom right, transparent 94%, #000) top left,
+    radial-gradient(17.1px at bottom left, transparent 94%, #000) top right,
+    radial-gradient(17.1px at top right, transparent 94%, #000) bottom left,
+    radial-gradient(17.1px at top left, transparent 94%, #000) bottom right;
+  -webkit-mask-size: 38px 38px;
+  mask-size: 38px 38px;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
   animation: loader 1.5s infinite cubic-bezier(0.3, 1, 0, 1);
 }
 @keyframes loader {
