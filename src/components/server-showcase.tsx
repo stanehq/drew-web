@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { formatExact } from "@/lib/format";
 import { useI18n } from "@/lib/i18n";
+import { CountUp } from "@/components/count-up";
 import { ServerBadge } from "@/components/server-badge";
 import type { Badge } from "@/lib/public-showcase";
 
@@ -92,10 +93,19 @@ export function ServerShowcase() {
   return (
     <div className="w-full overflow-hidden pb-4 pt-12" aria-label="Servers using Drew">
       {totals.servers > 0 && totals.people > 0 && (
-        <p className="mb-8 px-5 text-center text-lg text-mute sm:text-xl">
-          {t("Protecting")} <strong className="font-semibold tabular-nums text-fg">{formatExact(totals.people)}</strong> {t("people across")}{" "}
-          <strong className="font-semibold tabular-nums text-fg">{formatExact(totals.servers)}</strong> {t("communities")}
-        </p>
+        <div className="mb-12 px-5 text-center">
+          <p className="inline-flex items-center gap-2 rounded-full border border-brand/25 bg-brand/[0.06] px-3 py-1 text-xs font-medium text-brand-bright">
+            <span className="relative flex size-2">
+              <span className="animate-pulse-ring absolute inline-flex size-full rounded-full bg-brand" />
+              <span className="relative inline-flex size-2 rounded-full bg-brand" />
+            </span>
+            {t("Live")}
+          </p>
+          <h2 className="mx-auto mt-5 max-w-4xl text-balance text-3xl font-semibold leading-[1.15] tracking-[-0.025em] text-fg sm:text-5xl">
+            {t("Protecting")} <span className="drew-wordmark"><CountUp value={totals.people} /></span> {t("people across")}{" "}
+            <span className="drew-wordmark"><CountUp value={totals.servers} ms={900} /></span> {t("communities")}
+          </h2>
+        </div>
       )}
       <div className="mx-auto flex max-w-[1600px] flex-col gap-8 py-2 [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
         {rows.map((list, i) => (

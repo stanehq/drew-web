@@ -265,8 +265,8 @@
   50% { opacity: 1; transform: scale(1); }
 }
 /* If JavaScript never runs, the full-screen loader still gets out of the way. */
-.page-loader {
-  animation: page-loader-out 0.3s 5s forwards;
+.page-loader:not(.page-loader-nav) {
+  animation: page-loader-out 0.3s 9s forwards;
 }
 @keyframes page-loader-out {
   to { opacity: 0; visibility: hidden; }
