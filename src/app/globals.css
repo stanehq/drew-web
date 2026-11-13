@@ -19,32 +19,17 @@
   --font-display: var(--font-unbounded), var(--font-albert), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, monospace;
 
-  --animate-aurora: aurora 18s ease-in-out infinite alternate;
-  --animate-float: float 7s ease-in-out infinite;
   --animate-pulse-ring: pulse-ring 2.4s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
-  --animate-shine: shine 6s linear infinite;
   --animate-fade-up: fade-up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
   --animate-marquee: marquee 50s linear infinite;
 
-  @keyframes aurora {
-    0% { transform: translate3d(-8%, -4%, 0) scale(1); }
-    100% { transform: translate3d(8%, 6%, 0) scale(1.15); }
-  }
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-  }
   @keyframes pulse-ring {
     0% { transform: scale(0.6); opacity: 0.7; }
     100% { transform: scale(2.4); opacity: 0; }
   }
-  @keyframes shine {
-    from { background-position: 200% 0; }
-    to { background-position: -200% 0; }
-  }
   @keyframes marquee {
     from { transform: translateX(0); }
-    to { transform: translateX(calc(-50% - 0.375rem)); }
+    to { transform: translateX(calc(-50% - 0.5rem)); }
   }
   @keyframes fade-up {
     from { opacity: 0; transform: translateY(14px); }
@@ -94,44 +79,6 @@
     border-color: rgb(65 207 139 / 0.35);
     background: #0c1210;
   }
-  /* Vercel-style line grid used behind heroes. */
-  .line-grid {
-    background-image:
-      linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
-    background-size: 64px 64px;
-  }
-  /* Small "+" markers on the corners of a framed block. */
-  .corners {
-    position: relative;
-  }
-  .corners::before,
-  .corners::after {
-    content: "";
-    position: absolute;
-    width: 11px;
-    height: 11px;
-    pointer-events: none;
-    background:
-      linear-gradient(var(--color-soft), var(--color-soft)) center / 1px 100% no-repeat,
-      linear-gradient(var(--color-soft), var(--color-soft)) center / 100% 1px no-repeat;
-    opacity: 0.6;
-  }
-  .corners::before {
-    left: -6px;
-    top: -6px;
-  }
-  .corners::after {
-    right: -6px;
-    bottom: -6px;
-  }
-  .brand-text {
-    background: linear-gradient(100deg, #ffffff 0%, var(--color-brand-bright) 40%, var(--color-brand) 70%, #ffffff 100%);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
   /* Same vertical gradient as the Drew logo (public/brand/drew-icon.svg). */
   .drew-wordmark {
     background: linear-gradient(180deg, #35c98d 0%, #5bd4a6 48%, #ddf8ea 78%, #ffffff 100%);
@@ -146,18 +93,7 @@
     text-transform: uppercase;
     color: var(--color-brand);
   }
-  .dot-grid {
-    background-image: radial-gradient(rgb(255 255 255 / 0.07) 1px, transparent 1px);
-    background-size: 22px 22px;
-  }
-  .noise::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    opacity: 0.035;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
+
 }
 
 /* Long-form legal text rendered from content/legal. */
@@ -290,11 +226,30 @@
 /* Reduced motion (e.g. Windows "Animation effects" off): stop decorative motion,
    but keep the server carousel and loading indicators working. */
 @media (prefers-reduced-motion: reduce) {
-  *:not(.animate-marquee, .animate-spin, .animate-pulse),
+  *:not(.animate-marquee, .animate-spin, .animate-pulse, .slime, .slime-ring),
   *::before,
   *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
+}
+
+/* Server carousel "slime" cards: the outline is the server icon (or a soft light),
+   blurred and spinning behind a 2px gap, while the corners wobble like jelly. */
+.slime {
+  border-radius: 26px 34px 28px 38px / 34px 26px 38px 28px;
+  animation: slime-wobble 7s ease-in-out infinite;
+}
+@keyframes slime-wobble {
+  0%, 100% { border-radius: 26px 34px 28px 38px / 34px 26px 38px 28px; }
+  25% { border-radius: 38px 24px 36px 26px / 26px 38px 26px 36px; }
+  50% { border-radius: 30px 40px 24px 34px / 40px 28px 34px 24px; }
+  75% { border-radius: 24px 30px 40px 28px / 30px 40px 24px 38px; }
+}
+.slime-ring {
+  animation: slime-spin 6s linear infinite;
+}
+@keyframes slime-spin {
+  to { transform: rotate(360deg); }
 }

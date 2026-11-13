@@ -8,7 +8,6 @@ import { DiscordIcon } from "@/components/discord-icon";
 import { LiveStats } from "@/components/live-stats";
 import { ServerShowcase } from "@/components/server-showcase";
 import { SITE } from "@/lib/site";
-import { TwoTone } from "@/components/two-tone";
 
 // Two highlighted protections, then the rest in a quieter grid (GitHub-style).
 const highlights = [
@@ -47,7 +46,7 @@ const secondary =
 function SectionTitle({ title, children }: { title: string; children?: React.ReactNode }) {
   return (
     <div className="mx-auto max-w-3xl text-center">
-      <h2 className="text-balance text-4xl font-semibold tracking-[-0.025em] sm:text-6xl"><TwoTone text={title} /></h2>
+      <h2 className="text-balance text-4xl font-semibold tracking-[-0.025em] sm:text-6xl">{title}</h2>
       {children && <p className="mx-auto mt-5 max-w-2xl text-pretty text-lg leading-relaxed text-soft">{children}</p>}
     </div>
   );
@@ -110,11 +109,11 @@ export default function HomePage() {
           {features.map(({ icon: Icon, title, body, href }) => {
             const inner = (
               <>
-                <Icon className="size-5 text-brand" strokeWidth={1.75} />
+                <Icon className="size-5 text-soft" strokeWidth={1.75} />
                 <h3 className="mt-5 text-lg font-semibold tracking-tight">{t(title)}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-mute">{t(body)}</p>
                 {href && (
-                  <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand-bright">
+                  <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-fg">
                     {t("Read more")} <ArrowRight className="size-3.5" />
                   </span>
                 )}
@@ -136,11 +135,11 @@ export default function HomePage() {
 
       {/* How it works */}
       <section className="px-5 pb-28">
-        <SectionTitle title={t("Protect your server in under a minute")} />
+        <SectionTitle title={t("Up and running in three steps")} />
         <ol className="mx-auto mt-14 grid max-w-5xl gap-10 md:grid-cols-3">
           {steps.map((s) => (
             <li key={s.n} className="text-center md:text-left">
-              <span className="inline-flex size-9 items-center justify-center rounded-full border border-white/15 text-sm font-semibold text-brand-bright">
+              <span className="inline-flex size-9 items-center justify-center rounded-full border border-white/15 text-sm font-semibold text-soft">
                 {s.n}
               </span>
               <h3 className="mt-5 text-xl font-semibold tracking-tight">{t(s.title)}</h3>

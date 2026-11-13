@@ -7,19 +7,14 @@ import { ExternalLink, LayoutDashboard, Menu, X } from "lucide-react";
 import { SITE } from "@/lib/site";
 import { DiscordIcon } from "./discord-icon";
 import { LanguageSelector } from "./language-selector";
-import { useI18n, type Locale } from "@/lib/i18n";
+import { useI18n } from "@/lib/i18n";
 
 const LOGIN = "/api/auth/discord";
 
 const DASHBOARD_BTN =
   "inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-lg border border-brand/50 bg-brand/[0.08] px-4 text-[0.95rem] font-semibold text-brand-bright transition-colors hover:border-brand hover:bg-brand/[0.16]";
 
-// Header copy with its translations (falls back to English).
-const COPY: Record<string, Partial<Record<Locale, string>>> = {
-  "Add to Discord": { es: "Añadir a Discord", pt: "Adicionar ao Discord", fr: "Ajouter à Discord", de: "Zu Discord hinzufügen", ru: "Добавить в Discord" },
-};
-
-type Item = { label: string; href: string; hint?: string; keywords?: string };
+type Item = { label: string; href: string };
 
 const MORE: Item[] = [
   { label: "Features", href: "/#features" },
@@ -41,7 +36,7 @@ function MenuLink({ item, onPick, label }: { item: Item; onPick: () => void; lab
   const body = (
     <>
       <span>{label}</span>
-      {item.hint ? <span className="font-mono text-[10px] uppercase tracking-wider text-mute">{item.hint}</span> : isExternal(item.href) ? <ExternalLink className="size-3.5 text-mute" /> : null}
+      {isExternal(item.href) && <ExternalLink className="size-3.5 text-mute" />}
     </>
   );
   return isExternal(item.href) || item.href.startsWith("/api/") ? (
@@ -54,8 +49,7 @@ function MenuLink({ item, onPick, label }: { item: Item; onPick: () => void; lab
 
 
 export function SiteHeader() {
-  const { t, locale } = useI18n();
-  const tr = (k: string) => COPY[k]?.[locale] ?? k;
+  const { t } = useI18n();
   const label = (k: string) => t(k);
   const [open, setOpen] = useState(false);
 
@@ -99,7 +93,7 @@ export function SiteHeader() {
             <LayoutDashboard className="size-4" /> {label("Dashboard")}
           </a>
           <a href={SITE.invite} className="inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-lg bg-brand px-4 text-[0.95rem] font-semibold text-white transition-colors hover:bg-brand-bright">
-            {tr("Add to Discord")} <DiscordIcon />
+            {t("Add to Discord")} <DiscordIcon />
           </a>
         </div>
 
@@ -126,7 +120,7 @@ export function SiteHeader() {
               <LayoutDashboard className="size-4" /> {label("Dashboard")}
             </a>
             <a href={SITE.invite} className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-brand font-semibold text-white">
-              {tr("Add to Discord")} <DiscordIcon />
+              {t("Add to Discord")} <DiscordIcon />
             </a>
             <div className="flex justify-center">
               <LanguageSelector />

@@ -207,7 +207,7 @@ export function PricingBoard() {
       {/* Comparison */}
       <section>
         <div className="mx-auto max-w-5xl px-5">
-          <h2 className="pb-10 pt-24 text-center text-4xl font-semibold tracking-[-0.025em] sm:text-6xl"><TwoTone text={t("Compare plans")} /></h2>
+          <h2 className="pb-10 pt-24 text-center text-4xl font-semibold tracking-[-0.025em] sm:text-6xl">{t("Compare plans")}</h2>
           <div className="surface overflow-x-auto">
             <table className="w-full min-w-[560px] text-left text-[0.95rem]">
               <thead>
@@ -267,7 +267,7 @@ export function PricingBoard() {
       <section>
         <div className="mx-auto grid max-w-5xl gap-10 px-5 pb-28 pt-24 md:grid-cols-[1fr_1.7fr]">
           <div>
-            <h2 className="text-4xl font-semibold tracking-[-0.025em] sm:text-6xl"><TwoTone text={t("Questions?")} /></h2>
+            <h2 className="text-4xl font-semibold tracking-[-0.025em] sm:text-6xl">{t("Questions?")}</h2>
             <p className="mt-4 text-lg text-soft">
               {t("Still unsure?")}{" "}
               <a href={SITE.support} target="_blank" rel="noreferrer" className="text-brand-bright underline decoration-brand/40 underline-offset-4 hover:decoration-brand">
