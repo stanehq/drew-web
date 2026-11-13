@@ -190,14 +190,17 @@ export function PricingBoard() {
             <h2 className="text-center text-2xl font-semibold tracking-tight text-white sm:text-3xl">{t("Accepted Payments")}</h2>
             <div className="mt-7 grid grid-cols-2 items-center gap-6 sm:grid-cols-4 sm:gap-8">
               <div className="flex min-h-16 items-center justify-center gap-3">
-                <svg viewBox="0 0 24 24" role="img" aria-label="Patreon" className="size-9 shrink-0" fill="#FF424D">
-                  <path d="M22.957 7.21c-.004-3.064-2.391-5.576-5.191-6.482-3.478-1.125-8.064-.962-11.384.604C2.357 3.231 1.093 7.391 1.046 11.54c-.039 3.411.302 12.396 5.369 12.46 3.765.047 4.326-4.804 6.068-7.141 1.24-1.662 2.836-2.132 4.801-2.618 3.376-.836 5.678-3.501 5.673-7.031Z" />
+                <svg viewBox="0 0 48 48" role="img" aria-label="Patreon" className="size-9 shrink-0" fill="#FF424D">
+                  <path d="M8 7h7v34H8z" />
+                  <circle cx="31" cy="17" r="10" />
                 </svg>
                 <span className="text-lg font-bold tracking-tight text-white">Patreon</span>
               </div>
               <div className="flex min-h-16 items-center justify-center gap-3">
-                <svg viewBox="0 0 24 24" role="img" aria-label="Lemon Squeezy" className="size-9 shrink-0" fill="#FFC233">
-                  <path d="m7.4916 10.835 2.3748-6.5114a3.1497 3.1497 0 0 0-.065-2.3418C9.0315.183 6.9427-.398 5.2928.265 3.643.929 2.71 2.4348 3.512 4.3046l2.8197 6.5615c.219.509.97.489 1.16-.03m1.6798 1.0969 6.5334-2.7758c2.1699-.9219 2.7218-3.6907 1.022-5.2905l-.068-.063c-1.6669-1.5469-4.4217-1.002-5.3706 1.0359L8.3566 11.135c-.234.503.295 1.0199.8159.7979m.373.87 6.6454-2.5119c2.2078-.8349 4.6206.745 4.5886 3.0398l-.002.09c-.048 2.2358-2.3938 3.7376-4.5536 2.9467l-6.6724-2.4418a.595.595 0 0 1-.006-1.1229m-.386 1.9269 6.4375 2.9767a3.2997 3.2997 0 0 1 1.6658 1.6989c.769 1.7998-.283 3.6396-1.9328 4.3016-1.6499.662-3.4097.235-4.2097-1.6359l-2.8027-6.5694c-.217-.509.328-1.009.8419-.772" />
+                <svg viewBox="0 0 48 48" role="img" aria-label="Lemon Squeezy" className="size-9 shrink-0" fill="none">
+                  <path d="M10.1 29.8C7.8 21.7 14.2 12.2 25 8.9c7.1-2.2 13.1-.3 14.4 4.9 2.1 8.3-4.2 18.3-14.4 21.6-7.2 2.3-13.3-.1-14.9-5.6Z" fill="#FFC233" />
+                  <path d="M16.2 29.5c4.2-6.8 10.1-11.6 17.1-14.3" stroke="#FFF8E5" strokeWidth="3" strokeLinecap="round" />
+                  <path d="M25.4 8.8c.4-3 2.6-5.3 5.8-6.1" stroke="#FFC233" strokeWidth="2.6" strokeLinecap="round" />
                 </svg>
                 <span className="text-base font-bold tracking-tight text-white">Lemon Squeezy</span>
               </div>
