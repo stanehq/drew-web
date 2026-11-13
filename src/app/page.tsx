@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "@/components/locale-link";
-import { ArrowRight, Braces, DatabaseBackup, FileClock, KeyRound, LayoutDashboard, ScrollText, ShieldAlert, UserCheck, Users } from "lucide-react";
+import { ArrowRight, Braces, DatabaseBackup, FileClock, KeyRound, LayoutDashboard, PlusCircle, ScrollText, ShieldAlert, UserCheck, Users } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { DiscordIcon } from "@/components/discord-icon";
 import { LiveStats } from "@/components/live-stats";
@@ -150,33 +150,34 @@ export default function HomePage() {
         </ol>
       </section>
 
-      {/* Closing CTA: brand green fading into the dark page, Drew mark faded on the right */}
-      <section className="px-5 pb-28">
-        <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[0.875rem] border border-white/10 bg-brand md:bg-[linear-gradient(110deg,#41cf8b_0%,#2fae72_38%,#0f3424_72%,#0a120e_100%)]">
+      {/* Closing CTA card, Wick/Kena style: centered, vivid multi-color gradient, joined buttons */}
+      <section className="relative px-5 pb-28">
+        <div className="cta-gradient relative mx-auto max-w-4xl overflow-hidden rounded-2xl px-6 py-16 text-center shadow-[0_40px_100px_-40px_rgba(65,207,139,0.7)] sm:px-12 sm:py-20">
           <Image
             src="/brand/drew-icon.svg"
             unoptimized
             alt=""
-            width={420}
-            height={420}
-            className="pointer-events-none absolute -bottom-16 -right-16 size-[260px] opacity-20 [mask-image:radial-gradient(closest-side,black_30%,transparent)] md:bottom-auto md:right-0 md:top-1/2 md:size-[360px] md:-translate-y-1/2 md:opacity-60 lg:right-10"
             aria-hidden
+            width={340}
+            height={340}
+            className="pointer-events-none absolute -right-20 top-1/2 size-[220px] -translate-y-1/2 opacity-25 [mask-image:radial-gradient(closest-side,black_30%,transparent)] sm:-right-12 sm:size-[340px] sm:opacity-35"
           />
-          <div className="relative max-w-2xl px-7 py-14 sm:px-12 sm:py-16">
-            <h2 className="text-balance text-4xl font-semibold tracking-[-0.025em] text-[#03110a] sm:text-5xl">{t("Protect your server in under a minute")}</h2>
-            <p className="mt-4 text-lg text-[#06301c]">{t("Invite Drew, run /opsec setup and sleep well tonight")}</p>
-            <div className="mt-9 flex flex-wrap items-center gap-3">
-              <a href={SITE.invite} className="inline-flex h-12 items-center gap-2 rounded-lg bg-[#03110a] px-6 text-[0.98rem] font-semibold text-white transition-colors hover:bg-black">
-                <DiscordIcon /> {t("Add to Discord")}
-              </a>
-              <a href="/api/auth/discord" className="inline-flex h-12 items-center gap-2 rounded-lg px-6 text-[0.98rem] font-semibold text-[#03110a] ring-1 ring-inset ring-[#03110a]/35 transition-colors hover:bg-white/20">
-                <LayoutDashboard className="size-4" /> {t("Open dashboard")}
-              </a>
-            </div>
-            <a href={SITE.support} className="mt-6 inline-block text-sm font-medium text-[#06301c] underline decoration-[#06301c]/40 underline-offset-4 hover:decoration-[#06301c]">
-              {t("Join support")}
+          <h2 className="relative text-balance text-4xl font-semibold tracking-[-0.025em] text-white sm:text-6xl">{t("Protect your server in under a minute")}</h2>
+          <p className="relative mx-auto mt-5 max-w-xl text-pretty text-lg leading-relaxed text-white/90">{t("Invite Drew, run /opsec setup and sleep well tonight")}</p>
+          <div className="relative mx-auto mt-10 inline-flex overflow-hidden rounded-xl border border-white/70 text-white">
+            <a href={SITE.invite} className="inline-flex h-14 items-center gap-2.5 px-6 text-sm font-bold uppercase tracking-wider transition-colors hover:bg-white/15 sm:px-8">
+              <PlusCircle className="size-5" strokeWidth={1.75} /> {t("Invite")}
+            </a>
+            <span className="w-px bg-white/70" aria-hidden />
+            <a href="/api/auth/discord" className="inline-flex h-14 items-center gap-2.5 px-6 text-sm font-bold uppercase tracking-wider transition-colors hover:bg-white/15 sm:px-8">
+              <LayoutDashboard className="size-5" strokeWidth={1.75} /> {t("Dashboard")}
             </a>
           </div>
+          <p className="relative mt-6 text-sm text-white/85">
+            <a href={SITE.support} className="underline decoration-white/50 underline-offset-4 hover:decoration-white">
+              {t("Join support")}
+            </a>
+          </p>
         </div>
       </section>
     </>

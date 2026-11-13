@@ -16,9 +16,9 @@ const TWO_ROWS_FROM = 14;
 
 function ServerCard({ s, members }: { s: Server; members: (n: number) => string }) {
   return (
-    <li className="flex h-[72px] w-[248px] shrink-0 items-center gap-3 rounded-[0.875rem] border border-white/10 bg-[#0b0d0c] px-3.5 transition-colors hover:border-white/20 sm:w-[272px]">
+    <li className="flex h-[76px] w-[256px] shrink-0 items-center gap-3.5 rounded-[0.875rem] border border-brand/20 bg-[linear-gradient(135deg,rgb(65_207_139/0.10),rgb(65_207_139/0.02)_60%)] px-4 transition-colors hover:border-brand/50 sm:w-[280px]">
       {s.icon ? (
-        <Image src={s.icon} alt="" width={44} height={44} className="size-11 shrink-0 rounded-[0.625rem] object-cover" />
+        <Image src={s.icon} alt="" width={44} height={44} className="size-11 shrink-0 rounded-[0.625rem] object-cover ring-1 ring-brand/30" />
       ) : (
         <span className="flex size-11 shrink-0 items-center justify-center rounded-[0.625rem] bg-white/[0.06] text-base font-semibold text-soft">
           {s.name.slice(0, 1).toUpperCase()}
@@ -30,7 +30,7 @@ function ServerCard({ s, members }: { s: Server; members: (n: number) => string 
           {(s.verified || s.partnered) && <BadgeCheck className="size-4 shrink-0 text-brand" aria-label={s.verified ? "Verified" : "Partnered"} />}
         </p>
         <p className="mt-0.5 flex items-center gap-1.5 text-[0.8rem] text-mute">
-          <span className="size-1.5 rounded-full bg-brand" aria-hidden /> {formatCompact(s.members)} {members(s.members)}
+          <span className="font-semibold text-brand-bright">{formatCompact(s.members)}</span> {members(s.members)}
         </p>
       </div>
     </li>
