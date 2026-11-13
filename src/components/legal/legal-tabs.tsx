@@ -36,15 +36,21 @@ export function LegalTabs({ tabs, active }: { tabs: Tab[]; active: string }) {
     }
 
     const start = previous && previous !== active ? measure(previous) : null;
-    setAnimate(false);
-    setBox(start ?? measure(active));
 
-    // Start the transition only after the previous position has been painted.
-    const frame = requestAnimationFrame(() => {
-      setBox(measure(active));
-      setAnimate(true);
+    // Defer both state updates until after the layout effect has completed.
+    let secondFrame = 0;
+    const firstFrame = requestAnimationFrame(() => {
+      setAnimate(false);
+      setBox(start ?? measure(active));
+      secondFrame = requestAnimationFrame(() => {
+        setBox(measure(active));
+        setAnimate(true);
+      });
     });
-    return () => cancelAnimationFrame(frame);
+    return () => {
+      cancelAnimationFrame(firstFrame);
+      cancelAnimationFrame(secondFrame);
+    };
   }, [active]);
 
   useEffect(() => {
