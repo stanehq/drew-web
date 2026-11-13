@@ -187,39 +187,38 @@ export function PricingBoard() {
 
         <div className="mx-auto mt-10 max-w-5xl px-5">
           <div className="rounded-2xl border border-white/10 bg-white/[0.025] px-5 py-7 sm:px-8">
-            <h2 className="text-center text-2xl font-semibold tracking-tight sm:text-3xl">
-              <TwoTone text={t("Accepted Payments")} greenWords={1} />
-            </h2>
+            <h2 className="text-center text-2xl font-semibold tracking-tight text-white sm:text-3xl">{t("Accepted Payments")}</h2>
+            <svg aria-hidden="true" className="pointer-events-none absolute size-0"><defs><linearGradient id="payment-brand-gradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#41cf8b" /><stop offset="55%" stopColor="#7ee8b5" /><stop offset="100%" stopColor="#ffffff" /></linearGradient></defs></svg>
             <div className="mt-7 grid grid-cols-2 items-center gap-6 sm:grid-cols-4 sm:gap-8">
               <div className="flex min-h-16 items-center justify-center gap-3">
                 <svg viewBox="0 0 48 48" role="img" aria-label="Patreon" className="size-9 shrink-0" fill="none">
-                  <circle cx="29" cy="13" r="10" fill="#FF424D" />
+                  <circle cx="29" cy="13" r="10" fill="url(#payment-brand-gradient)" />
                   <path d="M8 7h7v34H8z" fill="#FF424D" />
                 </svg>
-                <span className="text-lg font-bold tracking-tight text-[#FF424D]">Patreon</span>
+                <span className="text-lg font-bold tracking-tight text-white">Patreon</span>
               </div>
               <div className="flex min-h-16 items-center justify-center gap-3">
                 <svg viewBox="0 0 48 48" role="img" aria-label="Lemon Squeezy" className="size-9 shrink-0" fill="none">
-                  <path d="M12 34c-5-5-5-13 0-19 5-6 15-8 23-3 6 4 7 12 2 19-5 7-18 9-25 3Z" fill="#FFC233" />
-                  <path d="M18 30c4-7 10-12 17-15" stroke="#111713" strokeWidth="3" strokeLinecap="round" />
-                  <path d="M25 8c1-3 4-5 7-5" stroke="#FFC233" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M12 34c-5-5-5-13 0-19 5-6 15-8 23-3 6 4 7 12 2 19-5 7-18 9-25 3Z" fill="url(#payment-brand-gradient)" />
+                  <path d="M18 30c4-7 10-12 17-15" stroke="#ffffff" strokeWidth="3" strokeLinecap="round" />
+                  <path d="M25 8c1-3 4-5 7-5" stroke="#7ee8b5" strokeWidth="2.5" strokeLinecap="round" />
                 </svg>
-                <span className="text-base font-bold tracking-tight text-[#FFC233]">Lemon Squeezy</span>
+                <span className="text-base font-bold tracking-tight text-white">Lemon Squeezy</span>
               </div>
               <div className="flex min-h-16 items-center justify-center gap-3">
-                <svg viewBox="0 0 48 48" role="img" aria-label="Apple App Store" className="size-9 shrink-0" fill="currentColor">
+                <svg viewBox="0 0 48 48" role="img" aria-label="Apple App Store" className="size-9 shrink-0" fill="url(#payment-brand-gradient)">
                   <path d="M31.7 25.2c0-5 4.1-7.4 4.3-7.5-2.3-3.4-5.9-3.9-7.2-4-3.1-.3-6 1.8-7.6 1.8s-4.1-1.8-6.8-1.7c-3.5.1-6.7 2-8.5 5.1-3.7 6.4-.9 15.8 2.7 21 1.8 2.5 3.8 5.3 6.5 5.2 2.6-.1 3.6-1.7 6.8-1.7s4.1 1.7 6.9 1.7c2.8 0 4.5-2.5 6.2-5.1 2-2.9 2.8-5.8 2.8-5.9-.1 0-5.1-2-5.1-8.9ZM26.7 10.4c1.4-1.7 2.4-4 2.1-6.3-2 .1-4.5 1.3-6 3-1.3 1.5-2.5 3.8-2.2 6 2.3.2 4.7-1 6.1-2.7Z" transform="translate(4 1) scale(.86)" />
                 </svg>
                 <span className="text-sm font-semibold text-white">Apple App Store</span>
               </div>
               <div className="flex min-h-16 items-center justify-center gap-3">
                 <svg viewBox="0 0 48 48" role="img" aria-label="Google Play" className="size-9 shrink-0">
-                  <path d="M8 5.5c-.7.5-1 1.3-1 2.5v32c0 1.2.3 2 1 2.5l18-18.5L8 5.5Z" fill="#34A853" />
-                  <path d="m8 5.5 22 12.8-4 5.7L8 5.5Z" fill="#4285F4" />
-                  <path d="m26 24 4-5.7 10.5 6.1c2 1.2 2 2.1 0 3.3L30 33.8 26 24Z" fill="#FBBC04" />
-                  <path d="M8 42.5 30 29.7 26 24 8 42.5Z" fill="#EA4335" />
+                  <path d="M8 5.5c-.7.5-1 1.3-1 2.5v32c0 1.2.3 2 1 2.5l18-18.5L8 5.5Z" fill="url(#payment-brand-gradient)" />
+                  <path d="m8 5.5 22 12.8-4 5.7L8 5.5Z" fill="url(#payment-brand-gradient)" />
+                  <path d="m26 24 4-5.7 10.5 6.1c2 1.2 2 2.1 0 3.3L30 33.8 26 24Z" fill="url(#payment-brand-gradient)" />
+                  <path d="M8 42.5 30 29.7 26 24 8 42.5Z" fill="url(#payment-brand-gradient)" />
                 </svg>
-                <span className="bg-gradient-to-r from-[#34A853] via-[#4285F4] to-[#FBBC04] bg-clip-text text-sm font-bold text-transparent">Google Play</span>
+                <span className="text-sm font-bold text-white">Google Play</span>
               </div>
             </div>
           </div>
