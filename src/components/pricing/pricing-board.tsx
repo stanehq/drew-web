@@ -239,7 +239,7 @@ export function PricingBoard() {
                     <p className="mt-0.5 text-sm font-normal text-mute">{money(monthlyPrice(PLANS[0].monthly, billing))} {t("/ month")}</p>
                   </th>
                   <th className="w-44 rounded-t-xl bg-brand/[0.07] px-4 pb-5 pt-6 align-bottom">
-                    <p className="text-xl font-bold text-brand-bright">{t("Advanced")}</p>
+                    <p className="text-xl font-bold drew-title-green">{t("Advanced")}</p>
                     <p className="mt-0.5 text-sm font-normal text-mute">{money(monthlyPrice(PLANS[1].monthly, billing))} {t("/ month")}</p>
                   </th>
                 </tr>
@@ -251,15 +251,15 @@ export function PricingBoard() {
                     {[a, b].map((v, i) => (
                       <td key={i} className={`px-4 py-4 ${i === 1 ? "bg-brand/[0.07]" : ""}`}>
                         {v === true ? (
-                          <span className={`inline-flex size-6 items-center justify-center rounded-full ${i === 1 ? "bg-brand/20" : "bg-white/[0.05]"}`} aria-label={t("Included")}>
-                            <Check className={`size-3.5 ${i === 1 ? "text-brand-bright" : "text-white/45"}`} strokeWidth={3} />
+                          <span className={`inline-flex size-6 items-center justify-center rounded-full ${i === 1 ? "bg-brand/25 ring-1 ring-brand/35" : "bg-white/[0.05]"}`} aria-label={t("Included")}>
+                            <Check className={`size-3.5 ${i === 1 ? "text-[#eafff4]" : "text-white/45"}`} strokeWidth={3} />
                           </span>
                         ) : v === false ? (
                           <span className="inline-flex size-6 items-center justify-center rounded-full bg-white/[0.05]" aria-label={t("Not included")}>
                             <Minus className="size-3.5 text-white/30" strokeWidth={3} />
                           </span>
                         ) : (
-                          <span className={i === 1 ? "font-semibold text-brand-bright" : "text-mute"}>{t(v)}</span>
+                          <span className={i === 1 ? "font-semibold drew-title-green" : "text-mute"}>{t(v)}</span>
                         )}
                       </td>
                     ))}
