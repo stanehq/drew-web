@@ -98,7 +98,7 @@ export default function HomePage() {
           </div>
         </div>
         <div className="mx-auto max-w-5xl px-5 pb-6">
-          <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#0b0f0d]/80 backdrop-blur">
+          <div className="relative rounded-2xl border border-white/10 bg-[#0b0f0d]/80 backdrop-blur">
             <LiveStats />
           </div>
         </div>
