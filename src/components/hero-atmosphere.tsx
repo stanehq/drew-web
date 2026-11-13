@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef } from "react";
 
 export function HeroAtmosphere() {
@@ -11,14 +12,16 @@ export function HeroAtmosphere() {
     if (!canvas || !context) return;
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const cellWidth = 12;
-    const cellHeight = 18;
+    const baseCellWidth = 12;
+    const baseCellHeight = 18;
     const glyphs = " .:-=+*#%@";
     const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     let width = 0;
     let height = 0;
     let columns = 0;
     let rows = 0;
+    let cellWidth = baseCellWidth;
+    let cellHeight = baseCellHeight;
     let raf = 0;
 
     const draw = (time: number) => {
@@ -66,8 +69,12 @@ export function HeroAtmosphere() {
       const rect = canvas.getBoundingClientRect();
       width = rect.width;
       height = rect.height;
-      columns = Math.ceil(width / cellWidth);
-      rows = Math.ceil(height / cellHeight);
+      // Distribute the character grid evenly across the exact rendered canvas size.
+      // This prevents fractional leftover space and keeps the stream flush with the viewport.
+      columns = Math.max(1, Math.ceil(width / baseCellWidth));
+      rows = Math.max(1, Math.ceil(height / baseCellHeight));
+      cellWidth = width / columns;
+      cellHeight = height / rows;
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -95,7 +102,17 @@ export function HeroAtmosphere() {
 
   return (
     <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
-      <canvas ref={canvasRef} className="absolute inset-0 size-full" />
+      <canvas ref={canvasRef} className="absolute inset-0 block size-full" />
+      <div className="absolute left-1/2 top-[58%] -translate-x-1/2 -translate-y-1/2">
+        <Image
+          src="/brand/drew-icon.svg"
+          alt=""
+          width={104}
+          height={104}
+          priority
+          className="h-[clamp(4.5rem,8vw,7rem)] w-[clamp(4.5rem,8vw,7rem)] opacity-80 drop-shadow-[0_0_32px_rgb(65_207_139/0.3)]"
+        />
+      </div>
     </div>
   );
 }
