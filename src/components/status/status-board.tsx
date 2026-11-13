@@ -18,7 +18,6 @@ import {
 } from "lucide-react";
 import type { PublicService, PublicShard, PublicStatus } from "@/lib/public-status";
 import { formatCompact, formatExact, formatUptime } from "@/lib/format";
-import { Aurora } from "@/components/aurora";
 import { useI18n } from "@/lib/i18n";
 
 const REFRESH = 30;
@@ -185,22 +184,23 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
     },
   ];
 
-  return (
-    <div className="noise relative isolate overflow-hidden">
-      <div className="dot-grid absolute inset-0 -z-10 [mask-image:linear-gradient(to_bottom,black,transparent_60%)]" />
-      <Aurora className="-z-10 opacity-70" />
+  const tone = overall === "operational" ? "good" : overall === "degraded" ? "warn" : "bad";
+  const banner = {
+    good: "bg-brand/[0.08] ring-brand/25 text-brand",
+    warn: "bg-warn/[0.08] ring-warn/30 text-warn",
+    bad: "bg-bad/[0.08] ring-bad/30 text-bad",
+  }[tone];
 
-      <div className="mx-auto max-w-6xl px-4 pb-24 pt-32 sm:px-6 sm:pt-36">
+  return (
+    <div className="relative isolate">
+      <div className="absolute inset-x-0 top-0 -z-10 h-[420px] bg-[radial-gradient(50%_60%_at_50%_0%,rgb(65_207_139/0.12),transparent_70%)]" aria-hidden />
+      <div className="mx-auto max-w-4xl px-5 pb-28 pt-36 sm:pt-40">
         {/* Header */}
-        <div className="flex flex-col gap-8 border-b border-line pb-10 md:flex-row md:items-end md:justify-between">
-          <div className="animate-fade-up">
-            <h1 className="mt-3 text-5xl font-semibold tracking-[-0.02em] sm:text-6xl">
-              Drew <span className="brand-text">{t("status")}</span>
-            </h1>
-            <p className="mt-4 max-w-md text-soft">{t("Live health of every shard and service, and the shard your server runs on")}</p>
-          </div>
-          <div className="w-full md:max-w-sm">
-            <div className="surface flex items-center gap-2 px-4 focus-within:border-brand/50">
+        <div className="text-center">
+          <h1 className="text-4xl font-semibold tracking-[-0.02em] sm:text-5xl">{t("Drew status")}</h1>
+          <p className="mx-auto mt-4 max-w-lg text-balance text-soft">{t("Live health of every shard and service, and the shard your server runs on")}</p>
+          <div className="mx-auto mt-8 max-w-md">
+            <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 focus-within:border-brand/50">
               <Search className="size-4 text-mute" />
               <input
                 id="server-id"
@@ -210,132 +210,91 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
                 aria-label={t("Server ID")}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="h-12 w-full bg-transparent font-mono text-sm text-fg placeholder:text-mute focus:outline-none"
+                className="h-11 w-full bg-transparent text-sm text-fg placeholder:text-mute focus:outline-none"
               />
             </div>
-            <p className={`mt-2 min-h-5 text-xs ${lookupInvalid ?"text-bad":"text-soft"}`} aria-live="polite">
-              {lookupInvalid
-                ? "That doesn't look like a server ID."
-                : target !== null
-                  ? (
-                    <>
-                      Your server is on <span className="font-medium text-brand">shard {target}</span>
-                      {shards[target] ? `, ${STATE[shards[target].status].text.toLowerCase()}` : ""}
-                    </>
-                  )
-                  : ""}
+            <p className={`mt-2 min-h-5 text-sm ${lookupInvalid ? "text-bad" : "text-soft"}`} aria-live="polite">
+              {lookupInvalid ? (
+                t("That doesn't look like a server ID")
+              ) : target !== null ? (
+                <>
+                  {t("Your server is on ")}
+                  <span className="font-medium text-brand">{t("shard ")}{target}</span>
+                  {shards[target] ? `, ${t(STATE[shards[target].status].text).toLowerCase()}` : ""}
+                </>
+              ) : (
+                ""
+              )}
             </p>
           </div>
         </div>
 
         {/* Overall */}
-        <section
-          className={`surface relative mt-10 overflow-hidden p-6 sm:p-8 ${overall ==="operational"?"border-brand/30": overall ==="degraded"?"border-warn/30":"border-bad/30"}`}
-          aria-labelledby="overall"
-        >
-          <div
-            className={`absolute -left-20 -top-24 size-72 rounded-full blur-3xl ${overall === "operational" ? "bg-brand/15" : overall === "degraded" ? "bg-warn/10" : "bg-bad/10"}`}
-            aria-hidden
-          />
-          <div className="relative flex flex-wrap items-center justify-between gap-6">
-            <div className="flex items-center gap-4">
-              <div
-                className={`flex size-14 items-center justify-center border ${overall ==="operational"?"border-brand/30 bg-brand/10 text-brand": overall ==="degraded"?"border-warn/30 bg-warn/10 text-warn":"border-bad/30 bg-bad/10 text-bad"}`}
-              >
-                {overall === "operational" ? <CheckCircle2 className="size-7" /> : overall === "degraded" ? <TriangleAlert className="size-7" /> : <XCircle className="size-7" />}
-              </div>
-              <div>
-                <h2 id="overall" className="text-2xl font-semibold tracking-tight">
-                  {t(overallTitle)}
-                </h2>
-              </div>
+        <section className={`mt-10 rounded-2xl p-6 ring-1 ring-inset sm:p-8 ${banner}`} aria-labelledby="overall">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              {tone === "good" ? <CheckCircle2 className="size-7" /> : tone === "warn" ? <TriangleAlert className="size-7" /> : <XCircle className="size-7" />}
+              <h2 id="overall" className="text-xl font-semibold tracking-tight text-fg sm:text-2xl">
+                {t(overallTitle)}
+              </h2>
             </div>
-            <div className="flex items-center gap-3 text-xs text-mute" aria-live="off">
-              <svg viewBox="0 0 36 36" className="size-8 -rotate-90" aria-hidden>
-                <circle cx="18" cy="18" r="15" fill="none" stroke="rgb(255 255 255 / 0.08)" strokeWidth="3" />
-                <circle
-                  cx="18"
-                  cy="18"
-                  r="15"
-                  fill="none"
-                  stroke="var(--color-brand)"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  strokeDasharray={94.2}
-                  strokeDashoffset={94.2 * (1 - countdown / REFRESH)}
-                  className="transition-[stroke-dashoffset] duration-1000 ease-linear"
-                />
-              </svg>
-              {t("Refreshing in ")}{countdown}s
-            </div>
+            <span className="text-sm text-mute" aria-live="off">
+              {t("Refreshing in ")}
+              {countdown}s
+            </span>
           </div>
-
-          <div className="relative mt-7 flex h-9 items-end gap-[3px]" role="img" aria-label={`${online.length} of ${shards.length} shards online`}>
-            {(shards.length ? shards : Array.from({ length: 24 }, (_, i) => ({ id: i, status: "offline" as const, latencyMs: 0, guilds: 0, users: 0 }))).map((s) => (
+          <div className="mt-6 flex h-2 gap-1" role="img" aria-label={`${online.length} of ${shards.length} shards online`}>
+            {(shards.length ? shards : Array.from({ length: 12 }, (_, i) => ({ id: i, status: "offline" as const, latencyMs: 0, guilds: 0, users: 0 }))).map((s) => (
               <span
                 key={s.id}
                 title={data ? `Shard ${s.id}, ${t(STATE[s.status].text)}${s.status === "online" ? `, ${s.latencyMs}ms` : ""}` : undefined}
-                className={`h-full flex-1 transition-all hover:opacity-80 ${!data ? "bg-white/[0.06]" : s.status === "online" ? (s.latencyMs >= LATENCY_WARN_MS ? "bg-warn" : "bg-brand") : s.status === "connecting" ? "bg-warn" : "bg-bad"} ${target === s.id ?"outline outline-2 outline-offset-2 outline-white":""}`}
+                className={`h-full flex-1 rounded-full ${!data ? "bg-white/[0.08]" : s.status === "online" ? (s.latencyMs >= LATENCY_WARN_MS ? "bg-warn" : "bg-brand") : s.status === "connecting" ? "bg-warn" : "bg-bad"} ${target === s.id ? "ring-2 ring-white ring-offset-2 ring-offset-ink" : ""}`}
               />
             ))}
           </div>
         </section>
 
-        {/* KPIs */}
-        <section className="mt-5 grid grid-cols-2 gap-4 lg:grid-cols-4" aria-label="Summary">
-          {kpis.map(({ icon: Icon, label, value, suffix, note, health }) => {
-            const toneStyles = TONE[health?.tone ?? "idle"];
-            return (
-              <div key={label} className={`surface relative overflow-hidden p-5 ${health ? toneStyles.border : ""}`}>
-                {health && health.tone !== "idle" && <span className={`absolute inset-x-0 top-0 h-0.5 ${toneStyles.bar}`} aria-hidden />}
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 text-mute">
-                    <Icon className={`size-4 ${health ? toneStyles.icon : "text-brand"}`} />
-                    <span className="text-xs">{t(label)}</span>
-                  </div>
-                </div>
-                <p className={`mt-3 text-3xl font-semibold tabular-nums tracking-tight ${health ? toneStyles.text : ""}`}>
-                  {value}
-                  {suffix && <span className="ml-1 text-lg font-medium text-mute">{suffix}</span>}
-                </p>
-                <p className="mt-1 min-h-4 text-xs text-mute">{note}</p>
-              </div>
-            );
-          })}
+        {/* Numbers: one quiet panel */}
+        <section className="mt-6 grid grid-cols-2 overflow-hidden rounded-2xl border border-white/10 sm:grid-cols-4" aria-label="Summary">
+          {kpis.map(({ icon: Icon, label, value, suffix, note, health }, i) => (
+            <div key={label} className={`p-5 sm:p-6 ${i % 2 ? "border-l border-white/10" : ""} ${i >= 2 ? "border-t border-white/10 sm:border-t-0" : ""} ${i === 2 ? "sm:border-l" : ""}`}>
+              <p className="flex items-center gap-1.5 text-sm text-mute">
+                <Icon className="size-4" strokeWidth={1.75} /> {t(label)}
+              </p>
+              <p className={`mt-2 text-2xl font-semibold tabular-nums tracking-tight sm:text-3xl ${health ? TONE[health.tone].text : "text-fg"}`}>
+                {value}
+                {suffix && <span className="ml-1 text-base font-normal text-mute">{suffix}</span>}
+              </p>
+              {note && <p className="mt-1 text-xs text-mute">{note}</p>}
+            </div>
+          ))}
         </section>
 
         {/* Services */}
-        <section className="surface mt-5 overflow-hidden" aria-labelledby="services">
-          <div className="flex items-center justify-between border-b border-line px-6 py-4">
-            <h2 id="services" className="font-semibold tracking-tight">
-              Services
-            </h2>
-            <span className="text-xs text-mute">{data ? `${Object.keys(data.services).length} monitored` : ""}</span>
-          </div>
-          <ul className="divide-y divide-line">
+        <section className="mt-14" aria-labelledby="services">
+          <h2 id="services" className="text-lg font-semibold tracking-tight">
+            {t("Services")}
+          </h2>
+          <ul className="mt-4 divide-y divide-white/[0.06] overflow-hidden rounded-2xl border border-white/10">
             {(data ? [...SERVICE_ORDER.filter((k) => data.services[k]), ...Object.keys(data.services).filter((k) => !SERVICE_ORDER.includes(k))] : SERVICE_ORDER).map((key) => {
               const meta = SERVICE_META[key] ?? { label: key, icon: Cloud, detail: "" };
               const svc: PublicService | undefined = data?.services[key];
               const state = svc?.status ?? "not_configured";
               const Icon = meta.icon;
               return (
-                <li key={key} className="flex items-center justify-between gap-4 px-6 py-4">
+                <li key={key} className="flex items-center justify-between gap-4 px-5 py-4">
                   <div className="flex items-center gap-3">
-                    <div className="flex size-9 items-center justify-center border border-line bg-white/[0.03] text-soft">
-                      <Icon className="size-4" />
-                    </div>
+                    <Icon className="size-4 text-mute" strokeWidth={1.75} />
                     <div>
                       <p className="text-sm font-medium">{t(meta.label)}</p>
                       <p className="text-xs text-mute">{t(meta.detail)}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 text-sm">
-                    {svc && svc.status === "operational" && svc.latencyMs > 0 && (
-                      <span className="hidden font-mono text-xs text-mute sm:inline">{svc.latencyMs}ms</span>
-                    )}
-                    <span className={`inline-flex items-center gap-2 border border-line px-3 py-1 text-xs ${STATE[state].ring}`}>
+                    {svc && svc.status === "operational" && svc.latencyMs > 0 && <span className="hidden text-xs text-mute sm:inline">{svc.latencyMs}ms</span>}
+                    <span className={`inline-flex items-center gap-2 text-sm ${STATE[state].ring}`}>
                       <Dot state={state} />
-                      {data ? STATE[state].text : "..."}
+                      {data ? t(STATE[state].text) : "..."}
                     </span>
                   </div>
                 </li>
@@ -345,44 +304,39 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
         </section>
 
         {/* Shards */}
-        <section className="mt-12" aria-labelledby="shards">
+        <section className="mt-14" aria-labelledby="shards">
           <div className="flex items-end justify-between">
-            <div>
-              <h2 id="shards" className="mt-2 text-2xl font-semibold tracking-tight">
-                Shards
-              </h2>
-            </div>
+            <h2 id="shards" className="text-lg font-semibold tracking-tight">
+              {t("Shards")}
+            </h2>
             <div className="hidden items-center gap-4 text-xs text-mute sm:flex">
               <span className="inline-flex items-center gap-1.5"><Dot state="online" /> {t("Online")}</span>
               <span className="inline-flex items-center gap-1.5"><Dot state="connecting" /> {t("Connecting")}</span>
               <span className="inline-flex items-center gap-1.5"><Dot state="offline" /> {t("Offline")}</span>
             </div>
           </div>
-          <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
+          <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
             {shards.map((s) => (
               <article
                 key={s.id}
-                className={`surface surface-hover p-4 ${target === s.id ?"border-brand/60 shadow-[0_0_0_1px_var(--color-brand),0_12px_40px_-10px_rgb(65_207_139/0.5)]":""}`}
+                className={`rounded-xl border p-4 transition-colors ${target === s.id ? "border-brand/70 bg-brand/[0.06]" : "border-white/10 hover:border-white/20"}`}
                 aria-label={`Shard ${s.id}, ${t(STATE[s.status].text)}`}
               >
                 <div className="flex items-center justify-between">
-                  <h3 className="font-semibold tracking-tight">Shard {s.id}</h3>
+                  <h3 className="text-sm font-semibold">Shard {s.id}</h3>
                   <Dot state={s.status} pulse={s.status === "online"} />
                 </div>
-                <div className="mt-4 flex items-center justify-between font-mono text-xs">
-                  <span className={`inline-flex items-center gap-2 ${s.status === "online" ? TONE[latencyTone(s.latencyMs).tone].text : "text-mute"}`}>
-                    <SignalBars latency={s.latencyMs} status={s.status} />
-                    {s.status === "online" ? `${s.latencyMs}ms` : STATE[s.status].text}
-                  </span>
-                </div>
-                <div className="mt-3 flex items-center justify-between border-t border-line pt-3 text-xs text-mute">
+                <p className={`mt-3 inline-flex items-center gap-2 text-sm ${s.status === "online" ? TONE[latencyTone(s.latencyMs).tone].text : "text-mute"}`}>
+                  <SignalBars latency={s.latencyMs} status={s.status} />
+                  {s.status === "online" ? `${s.latencyMs}ms` : t(STATE[s.status].text)}
+                </p>
+                <p className="mt-3 flex items-center justify-between text-xs text-mute">
                   <span className="inline-flex items-center gap-1.5"><Server className="size-3.5" /> {formatExact(s.guilds)}</span>
                   <span className="inline-flex items-center gap-1.5"><Users className="size-3.5" /> {formatCompact(s.users)}</span>
-                </div>
+                </p>
               </article>
             ))}
-            {!shards.length &&
-              Array.from({ length: 4 }, (_, i) => <div key={i} className="surface h-[124px] animate-pulse opacity-50" />)}
+            {!shards.length && Array.from({ length: 4 }, (_, i) => <div key={i} className="h-[108px] animate-pulse rounded-xl border border-white/10" />)}
           </div>
         </section>
       </div>
