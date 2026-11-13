@@ -48,7 +48,7 @@ function SectionTitle({ kicker, title, children }: { kicker: string; title: stri
   return (
     <div className="mx-auto max-w-3xl text-center">
       <p className="text-sm font-medium text-brand-bright">{kicker}</p>
-      <h2 className="mt-3 text-balance text-3xl font-semibold tracking-[-0.02em] sm:text-5xl"><TwoTone text={title} /></h2>
+      <h2 className="mt-3 text-balance text-4xl font-semibold tracking-[-0.025em] sm:text-6xl"><TwoTone text={title} /></h2>
       {children && <p className="mx-auto mt-5 max-w-2xl text-pretty text-lg leading-relaxed text-soft">{children}</p>}
     </div>
   );
@@ -72,7 +72,7 @@ export default function HomePage() {
             <span className="rounded-full bg-brand/15 px-2 py-0.5 text-xs font-semibold text-brand-bright">{t("New")}</span>
             {t("Configuration API")}
           </Link>
-          <h1 className="animate-fade-up mt-8 text-balance text-[2.5rem] font-semibold leading-[1.05] tracking-[-0.02em] sm:text-7xl">
+          <h1 className="animate-fade-up mt-8 text-balance text-[2.5rem] font-semibold leading-[1.05] tracking-[-0.02em] sm:text-[5.25rem]">
             <span className="text-brand">{t("Discord security ")}</span>
             <span className="text-fg">{t("that never sleeps")}</span>
           </h1>
@@ -162,7 +162,7 @@ export default function HomePage() {
       <section className="relative px-5 pb-28">
         <div className="cta-gradient relative mx-auto max-w-4xl overflow-hidden rounded-2xl px-6 py-16 text-center shadow-[0_40px_100px_-40px_rgba(65,207,139,0.7)] sm:px-12 sm:py-20">
           <Image src="/brand/drew-icon.svg" unoptimized alt="" width={56} height={56} className="mx-auto" />
-          <h2 className="mt-6 text-balance text-3xl font-semibold tracking-[-0.02em] text-white sm:text-5xl">{t("Protect your server in under a minute")}</h2>
+          <h2 className="mt-6 text-balance text-4xl font-semibold tracking-[-0.025em] text-white sm:text-6xl">{t("Protect your server in under a minute")}</h2>
           <p className="mx-auto mt-5 max-w-xl text-pretty text-lg leading-relaxed text-white/90">{t("Invite Drew, run /opsec setup and sleep well tonight")}</p>
           <div className="mx-auto mt-10 inline-flex overflow-hidden rounded-xl border border-white/70 text-white">
             <a href={SITE.invite} className="inline-flex h-14 items-center gap-2.5 px-6 text-sm font-bold uppercase tracking-wider transition-colors hover:bg-white/15 sm:px-8">

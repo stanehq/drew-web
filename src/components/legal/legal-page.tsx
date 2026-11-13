@@ -7,7 +7,7 @@ export async function LegalPage({ slug }: { slug: LegalSlug }) {
   return (
     <section className="px-5 pb-28 pt-[76px]">
       <header className="pt-20 text-center">
-        <h1 className="text-balance text-4xl font-semibold tracking-[-0.02em] sm:text-5xl">
+        <h1 className="text-balance text-4xl font-semibold tracking-[-0.025em] sm:text-6xl">
           <TwoTone text={doc.title} />
         </h1>
         {doc.updated && <p className="mt-3 text-sm text-mute">{doc.updated}</p>}

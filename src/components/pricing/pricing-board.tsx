@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Check, ChevronDown, Clock3, Minus, ShieldCheck, Sparkles, Zap } from "lucide-react";
+import { Highlight } from "@/components/highlight";
+import { Check, Clock3, Minus, ShieldCheck, Sparkles, Zap, Plus } from "lucide-react";
 import { buttonClass } from "@/components/button";
 import { SITE } from "@/lib/site";
 import { useI18n } from "@/lib/i18n";
@@ -71,6 +72,7 @@ const money = (n: number) => `$${n.toFixed(2)}`;
 
 export function PricingBoard() {
   const [billing, setBilling] = useState<Billing>("monthly");
+  const [open, setOpen] = useState<number | null>(0);
   const { t } = useI18n();
 
 
@@ -82,7 +84,7 @@ export function PricingBoard() {
           aria-hidden
         />
         <div className="mx-auto max-w-6xl px-5 pb-12 pt-20 text-center">
-          <h1 className="mx-auto max-w-3xl text-balance text-4xl font-semibold tracking-[-0.02em] sm:text-5xl"><TwoTone text={t("Protection for less than a coffee")} /></h1>
+          <h1 className="mx-auto max-w-3xl text-balance text-4xl font-semibold tracking-[-0.025em] sm:text-6xl"><TwoTone text={t("Protection for less than a coffee")} /></h1>
           <p className="mx-auto mt-4 max-w-lg text-balance text-soft">
             Try every Premium feature free for 5 days. Cancel before it ends and you won&apos;t pay a cent.
           </p>
@@ -189,35 +191,61 @@ export function PricingBoard() {
       </section>
 
       {/* Comparison */}
-      <section className="">
+      <section>
         <div className="mx-auto max-w-5xl px-5">
-          <h2 className="pb-6 pt-20 text-center text-3xl font-semibold tracking-[-0.02em] sm:text-4xl"><TwoTone text={t("Compare plans")} /></h2>
+          <h2 className="pb-10 pt-24 text-center text-4xl font-semibold tracking-[-0.025em] sm:text-6xl"><TwoTone text={t("Compare plans")} /></h2>
           <div className="surface overflow-x-auto">
-            <table className="w-full min-w-[520px] text-left text-sm">
+            <table className="w-full min-w-[560px] text-left text-[0.95rem]">
               <thead>
-                <tr className="border-b border-white/10 text-mute">
-                  <th className="px-5 py-4 font-medium sm:px-6">{t("Feature")}</th>
-                  <th className="w-40 px-4 py-4 font-medium">Standard</th>
-                  <th className="w-40 px-4 py-4 font-medium text-brand-bright">Advanced</th>
+                <tr>
+                  <th className="px-6 pb-5 pt-6 align-bottom text-sm font-medium text-mute">{t("Feature")}</th>
+                  <th className="w-44 px-4 pb-5 pt-6 align-bottom">
+                    <p className="font-display text-lg font-semibold text-fg">{t("Standard")}</p>
+                    <p className="mt-0.5 text-sm font-normal text-mute">{money(PLANS[0].monthly)} {t("/ month")}</p>
+                  </th>
+                  <th className="w-44 rounded-t-xl bg-brand/[0.07] px-4 pb-5 pt-6 align-bottom">
+                    <span className="mb-2 inline-flex items-center gap-1 rounded-full bg-brand/15 px-2 py-0.5 text-[0.7rem] font-semibold text-brand-bright">
+                      <Sparkles className="size-3" /> {t("Most popular")}
+                    </span>
+                    <p className="font-display text-lg font-semibold text-brand-bright">{t("Advanced")}</p>
+                    <p className="mt-0.5 text-sm font-normal text-mute">{money(PLANS[1].monthly)} {t("/ month")}</p>
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {COMPARE.map(([label, a, b]) => (
-                  <tr key={label} className="border-b border-white/[0.06] last:border-b-0">
-                    <td className="px-5 py-3.5 text-soft sm:px-6">{t(label)}</td>
+                  <tr key={label} className="border-t border-white/[0.06] transition-colors hover:bg-white/[0.02]">
+                    <td className="px-6 py-4 text-soft">{t(label)}</td>
                     {[a, b].map((v, i) => (
-                      <td key={i} className="px-4 py-3.5">
+                      <td key={i} className={`px-4 py-4 ${i === 1 ? "bg-brand/[0.07]" : ""}`}>
                         {v === true ? (
-                          <Check className="size-4 text-brand" aria-label={t("Included")} />
+                          <span className="inline-flex size-6 items-center justify-center rounded-full bg-brand/15" aria-label={t("Included")}>
+                            <Check className="size-3.5 text-brand-bright" strokeWidth={3} />
+                          </span>
                         ) : v === false ? (
-                          <Minus className="size-4 text-white/25" aria-label={t("Not included")} />
+                          <span className="inline-flex size-6 items-center justify-center rounded-full bg-white/[0.05]" aria-label={t("Not included")}>
+                            <Minus className="size-3.5 text-white/30" strokeWidth={3} />
+                          </span>
                         ) : (
-                          <span className="text-fg">{v}</span>
+                          <span className={i === 1 ? "font-semibold text-brand-bright" : "text-fg"}>{t(v)}</span>
                         )}
                       </td>
                     ))}
                   </tr>
                 ))}
+                <tr className="border-t border-white/[0.06]">
+                  <td className="px-6 py-5" />
+                  <td className="px-4 py-5">
+                    <a href={SITE.support} target="_blank" rel="noreferrer" className={`${buttonClass("secondary", "md")} w-full whitespace-nowrap`}>
+                      {t("Get started")}
+                    </a>
+                  </td>
+                  <td className="rounded-b-xl bg-brand/[0.07] px-4 py-5">
+                    <a href={SITE.support} target="_blank" rel="noreferrer" className={`${buttonClass("primary", "md")} w-full whitespace-nowrap`}>
+                      {t("Get started")}
+                    </a>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -225,28 +253,41 @@ export function PricingBoard() {
       </section>
 
       {/* FAQ */}
-      <section className="">
-        <div className="mx-auto grid max-w-5xl gap-10 px-5 pb-28 pt-20 md:grid-cols-[1fr_1.6fr]">
+      <section>
+        <div className="mx-auto grid max-w-5xl gap-10 px-5 pb-28 pt-24 md:grid-cols-[1fr_1.7fr]">
           <div>
-            <h2 className="text-3xl font-semibold tracking-[-0.02em] sm:text-4xl">{t("Questions?")}</h2>
-            <p className="mt-3 text-soft">
-              {t("Still unsure?")}{" "}
-              <a href={SITE.support} className="text-brand-bright underline decoration-brand/40 underline-offset-4 hover:decoration-brand">
-                {t("Ask us on Discord")}
-              </a>
-              .
-            </p>
+            <h2 className="text-4xl font-semibold tracking-[-0.025em] sm:text-6xl"><TwoTone text={t("Questions?")} /></h2>
+            <p className="mt-4 text-lg text-soft">{t("Still unsure?")}</p>
+            <a href={SITE.support} target="_blank" rel="noreferrer" className={`${buttonClass("outline", "md")} mt-6`}>
+              {t("Ask us on Discord")}
+            </a>
           </div>
-          <div className="surface px-5">
-            {FAQ.map(([q, a]) => (
-              <details key={t(q)} className="group border-b border-white/[0.06] last:border-b-0">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 font-medium [&::-webkit-details-marker]:hidden">
-                  {t(q)}
-                  <ChevronDown className="size-4 shrink-0 text-mute transition-transform group-open:rotate-180" />
-                </summary>
-                <p className="pb-5 text-soft">{t(a)}</p>
-              </details>
-            ))}
+          <div className="grid gap-3">
+            {FAQ.map(([q, a], i) => {
+              const isOpen = open === i;
+              return (
+                <div key={q} className={`surface transition-colors ${isOpen ? "!border-brand/40 !bg-brand/[0.04]" : "hover:!border-white/20"}`}>
+                  <button
+                    type="button"
+                    aria-expanded={isOpen}
+                    onClick={() => setOpen(isOpen ? null : i)}
+                    className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left text-[1.02rem] font-semibold"
+                  >
+                    {t(q)}
+                    <span className={`inline-flex size-7 shrink-0 items-center justify-center rounded-full transition-all duration-300 ${isOpen ? "rotate-45 bg-brand text-[#03110a]" : "bg-white/[0.06] text-soft"}`}>
+                      <Plus className="size-4" strokeWidth={2.25} />
+                    </span>
+                  </button>
+                  <div className={`grid transition-[grid-template-rows] duration-300 ease-out ${isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
+                    <div className="overflow-hidden">
+                      <p className="px-6 pb-6 leading-relaxed text-soft">
+                        <Highlight text={t(a)} />
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
