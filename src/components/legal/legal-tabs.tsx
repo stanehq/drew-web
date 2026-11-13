@@ -8,79 +8,91 @@ type Box = { left: number; width: number };
 
 const KEY = "drew-legal-tab";
 
-/**
- * Document tabs with a highlight that slides: it follows the cursor and, when
- * you open another document, glides from the previous tab to the new one.
- */
+/** Sliding active-tab indicator that remains visible during document navigation. */
 export function LegalTabs({ tabs, active }: { tabs: Tab[]; active: string }) {
+  const listRef = useRef<HTMLUListElement>(null);
   const refs = useRef<Record<string, HTMLAnchorElement | null>>({});
   const [box, setBox] = useState<Box | null>(null);
   const [animate, setAnimate] = useState(false);
 
   const measure = (slug: string): Box | null => {
     const el = refs.current[slug];
-    const li = el?.parentElement;
-    return el && li ? { left: li.offsetLeft, width: el.offsetWidth } : null;
+    const list = listRef.current;
+    if (!el || !list) return null;
+    const item = el.parentElement;
+    if (!item) return null;
+    const listRect = list.getBoundingClientRect();
+    const itemRect = item.getBoundingClientRect();
+    return { left: itemRect.left - listRect.left, width: el.getBoundingClientRect().width };
   };
 
-  // Start where the previous page left off, then slide to the active tab.
   useLayoutEffect(() => {
-    let prev: string | null = null;
+    let previous: string | null = null;
     try {
-      prev = sessionStorage.getItem(KEY);
+      previous = sessionStorage.getItem(KEY);
       sessionStorage.setItem(KEY, active);
-    } catch {}
-    let second = 0;
-    const first = requestAnimationFrame(() => {
-      const start = prev && prev !== active ? measure(prev) : null;
-      setAnimate(false);
-      setBox(start ?? measure(active));
-      second = requestAnimationFrame(() => {
-        setAnimate(true);
-        setBox(measure(active));
-      });
+    } catch {
+      // Storage may be unavailable; the active tab still renders normally.
+    }
+
+    const start = previous && previous !== active ? measure(previous) : null;
+    setAnimate(false);
+    setBox(start ?? measure(active));
+
+    // Start the transition only after the previous position has been painted.
+    const frame = requestAnimationFrame(() => {
+      setBox(measure(active));
+      setAnimate(true);
     });
-    return () => {
-      cancelAnimationFrame(first);
-      cancelAnimationFrame(second);
-    };
+    return () => cancelAnimationFrame(frame);
   }, [active]);
 
   useEffect(() => {
-    const onResize = () => setBox(measure(active));
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+    const update = () => setBox(measure(active));
+    const observer = listRef.current ? new ResizeObserver(update) : null;
+    if (listRef.current) observer?.observe(listRef.current);
+    window.addEventListener("resize", update);
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener("resize", update);
+    };
   }, [active]);
 
   return (
-    <nav aria-label="Legal documents" className="mx-auto mt-10 flex max-w-3xl justify-center overflow-x-auto">
-      <ul className="relative flex gap-1 rounded-xl border border-white/10 p-1" onMouseLeave={() => setBox(measure(active))}>
-        {box && (
-          <span
-            aria-hidden
-            className={`absolute bottom-1 top-1 rounded-lg bg-white/10 ${animate ? "transition-[left,width] duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)]" : ""}`}
-            style={{ left: box.left, width: box.width }}
-          />
-        )}
-        {tabs.map((d) => (
-          <li key={d.slug} className="relative">
-            <Link
-              ref={(el) => {
-                refs.current[d.slug] = el;
-              }}
-              href={`/${d.slug}`}
-              aria-current={d.slug === active ? "page" : undefined}
-              onMouseEnter={() => setBox(measure(d.slug))}
-              onFocus={() => setBox(measure(d.slug))}
-              className={`relative block whitespace-nowrap rounded-lg px-3.5 py-2 text-sm transition-colors ${
-                d.slug === active ? "text-fg" : "text-soft hover:text-fg"
-              }`}
-            >
-              {d.title}
-            </Link>
-          </li>
-        ))}
-      </ul>
+    <nav aria-label="Legal documents" className="mx-auto mt-10 w-full max-w-3xl">
+      <div className="overflow-x-auto overscroll-x-contain">
+        <ul
+          ref={listRef}
+          className="relative mx-auto flex w-max min-w-max gap-1 rounded-xl border border-white/10 p-1"
+          onMouseLeave={() => setBox(measure(active))}
+        >
+          {box && (
+            <span
+              aria-hidden
+              className={`pointer-events-none absolute bottom-1 top-1 rounded-lg bg-white/10 will-change-[left,width] ${animate ? "transition-[left,width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]" : ""}`}
+              style={{ left: box.left, width: box.width }}
+            />
+          )}
+          {tabs.map((tab) => (
+            <li key={tab.slug} className="relative">
+              <Link
+                ref={(el) => {
+                  refs.current[tab.slug] = el;
+                }}
+                href={`/${tab.slug}`}
+                aria-current={tab.slug === active ? "page" : undefined}
+                onMouseEnter={() => setBox(measure(tab.slug))}
+                onFocus={() => setBox(measure(tab.slug))}
+                className={`relative block whitespace-nowrap rounded-lg px-3.5 py-2 text-sm transition-colors ${
+                  tab.slug === active ? "text-fg" : "text-soft hover:text-fg"
+                }`}
+              >
+                {tab.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
     </nav>
   );
 }
