@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Highlight } from "@/components/highlight";
-import { Check, Clock3, Minus, ShieldCheck, Sparkles, Zap, Plus } from "lucide-react";
+import { Check, Clock3, Minus, ShieldCheck, Zap, Plus } from "lucide-react";
 import { buttonClass } from "@/components/button";
 import { SITE } from "@/lib/site";
 import { useI18n } from "@/lib/i18n";
@@ -121,11 +121,6 @@ export function PricingBoard() {
               <article key={p.id} className={`surface relative flex flex-col p-8 sm:p-10 ${popular ? "!border-brand/50" : ""}`}>
                 <div className="flex items-center justify-between gap-3">
                   <h2 className="text-2xl font-semibold tracking-tight">{p.name}</h2>
-                  {popular && (
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-brand/15 px-2.5 py-1 text-xs font-semibold text-brand-bright">
-                      <Sparkles className="size-3.5" /> {t("Most popular")}
-                    </span>
-                  )}
                 </div>
                 <p className="mt-2 text-soft">{t(p.blurb)}</p>
 
@@ -204,9 +199,6 @@ export function PricingBoard() {
                     <p className="mt-0.5 text-sm font-normal text-mute">{money(PLANS[0].monthly)} {t("/ month")}</p>
                   </th>
                   <th className="w-44 rounded-t-xl bg-brand/[0.07] px-4 pb-5 pt-6 align-bottom">
-                    <span className="mb-2 inline-flex items-center gap-1 rounded-full bg-brand/15 px-2 py-0.5 text-[0.7rem] font-semibold text-brand-bright">
-                      <Sparkles className="size-3" /> {t("Most popular")}
-                    </span>
                     <p className="font-display text-lg font-semibold text-brand-bright">{t("Advanced")}</p>
                     <p className="mt-0.5 text-sm font-normal text-mute">{money(PLANS[1].monthly)} {t("/ month")}</p>
                   </th>
@@ -257,10 +249,12 @@ export function PricingBoard() {
         <div className="mx-auto grid max-w-5xl gap-10 px-5 pb-28 pt-24 md:grid-cols-[1fr_1.7fr]">
           <div>
             <h2 className="text-4xl font-semibold tracking-[-0.025em] sm:text-6xl"><TwoTone text={t("Questions?")} /></h2>
-            <p className="mt-4 text-lg text-soft">{t("Still unsure?")}</p>
-            <a href={SITE.support} target="_blank" rel="noreferrer" className={`${buttonClass("outline", "md")} mt-6`}>
-              {t("Ask us on Discord")}
-            </a>
+            <p className="mt-4 text-lg text-soft">
+              {t("Still unsure?")}{" "}
+              <a href={SITE.support} target="_blank" rel="noreferrer" className="text-brand-bright underline decoration-brand/40 underline-offset-4 hover:decoration-brand">
+                {t("Ask us on Discord")}
+              </a>
+            </p>
           </div>
           <div className="grid gap-3">
             {FAQ.map(([q, a], i) => {

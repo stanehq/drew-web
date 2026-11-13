@@ -235,7 +235,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               {tone === "good" ? <CheckCircle2 className="size-7" /> : tone === "warn" ? <TriangleAlert className="size-7" /> : <XCircle className="size-7" />}
-              <h2 id="overall" className="text-xl font-semibold tracking-tight text-fg sm:text-2xl">
+              <h2 id="overall" className="font-sans text-xl font-semibold tracking-tight text-fg sm:text-2xl">
                 {t(overallTitle)}
               </h2>
             </div>
@@ -273,7 +273,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
 
         {/* Services */}
         <section className="mt-14" aria-labelledby="services">
-          <h2 id="services" className="text-lg font-semibold tracking-tight">
+          <h2 id="services" className="font-sans text-lg font-semibold tracking-tight">
             {t("Services")}
           </h2>
           <ul className="mt-4 divide-y divide-white/[0.06] overflow-hidden rounded-2xl border border-white/10">
@@ -307,7 +307,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
         {/* Shards */}
         <section className="mt-14" aria-labelledby="shards">
           <div className="flex items-end justify-between">
-            <h2 id="shards" className="text-lg font-semibold tracking-tight">
+            <h2 id="shards" className="font-sans text-lg font-semibold tracking-tight">
               {t("Shards")}
             </h2>
             <div className="hidden items-center gap-4 text-xs text-mute sm:flex">
@@ -324,7 +324,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
                 aria-label={`Shard ${s.id}, ${t(STATE[s.status].text)}`}
               >
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold">Shard {s.id}</h3>
+                  <h3 className="font-sans text-sm font-semibold">Shard {s.id}</h3>
                   <Dot state={s.status} pulse={s.status === "online"} />
                 </div>
                 <p className={`mt-3 inline-flex items-center gap-2 text-sm ${s.status === "online" ? TONE[latencyTone(s.latencyMs).tone].text : "text-mute"}`}>

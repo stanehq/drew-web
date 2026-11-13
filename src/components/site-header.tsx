@@ -67,14 +67,16 @@ export function SiteHeader() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-[#101113] text-fg">
       <div className="flex h-[76px] w-full items-center gap-5 px-4 sm:px-6 xl:gap-6 lg:px-8">
-        <Link href="/" aria-label="Stane × Drew home" className="inline-flex shrink-0 items-center gap-3">
-          <Image src="/brand/stane-mark.webp" alt="Stane" width={40} height={40} priority className="size-10 rounded-lg object-cover" />
+        <div className="inline-flex shrink-0 items-center gap-3">
+          <a href="https://stanelabs.com/?utm_source=drewbot.xyz" target="_blank" rel="noopener" aria-label="Stane Labs" className="transition-opacity hover:opacity-85">
+            <Image src="/brand/stane-mark.webp" alt="Stane" width={40} height={40} priority className="size-10 rounded-lg object-cover" />
+          </a>
           <span aria-hidden className="text-2xl font-light text-white/55">×</span>
-          <span className="inline-flex items-center gap-2">
+          <Link href="/" aria-label="Drew home" className="inline-flex items-center gap-2">
             <Image src="/brand/drew-icon.svg" unoptimized alt="" width={39} height={39} priority />
             <span className="font-display text-[1.35rem] font-semibold tracking-[-0.03em] drew-wordmark">Drew</span>
-          </span>
-        </Link>
+          </Link>
+        </div>
 
         <nav className="hidden items-center gap-0.5 xl:flex" aria-label={t("Main")}>
           {MORE.map((item) =>
@@ -95,7 +97,7 @@ export function SiteHeader() {
           <a href={LOGIN} className={DASHBOARD_BTN}>
             <LayoutDashboard className="size-4" /> {label("Dashboard")}
           </a>
-          <a href={SITE.invite} className="inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-lg bg-brand px-4 text-[0.95rem] font-semibold text-[#03110a] transition-colors hover:bg-brand-bright">
+          <a href={SITE.invite} className="inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-lg bg-brand px-4 text-[0.95rem] font-semibold text-white transition-colors hover:bg-brand-bright">
             {tr("Add to Discord")} <DiscordIcon />
           </a>
         </div>
@@ -122,7 +124,7 @@ export function SiteHeader() {
             <a href={LOGIN} className={`${DASHBOARD_BTN} h-12 justify-center`}>
               <LayoutDashboard className="size-4" /> {label("Dashboard")}
             </a>
-            <a href={SITE.invite} className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-brand font-semibold text-[#03110a]">
+            <a href={SITE.invite} className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-brand font-semibold text-white">
               {tr("Add to Discord")} <DiscordIcon />
             </a>
             <div className="flex justify-center">

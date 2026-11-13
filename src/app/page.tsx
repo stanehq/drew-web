@@ -40,15 +40,14 @@ const steps = [
 ];
 
 const primary =
-  "inline-flex h-12 items-center gap-2 rounded-md bg-brand px-6 text-[0.98rem] font-semibold text-[#03110a] transition-colors hover:bg-brand-bright";
+  "inline-flex h-12 items-center gap-2 rounded-md bg-brand px-6 text-[0.98rem] font-semibold text-white transition-colors hover:bg-brand-bright";
 const secondary =
   "inline-flex h-12 items-center gap-2 rounded-md border border-white/15 px-6 text-[0.98rem] font-semibold text-fg transition-colors hover:border-white/30 hover:bg-white/[0.04]";
 
-function SectionTitle({ kicker, title, children }: { kicker: string; title: string; children?: React.ReactNode }) {
+function SectionTitle({ title, children }: { title: string; children?: React.ReactNode }) {
   return (
     <div className="mx-auto max-w-3xl text-center">
-      <p className="text-sm font-medium text-brand-bright">{kicker}</p>
-      <h2 className="mt-3 text-balance text-4xl font-semibold tracking-[-0.025em] sm:text-6xl"><TwoTone text={title} /></h2>
+      <h2 className="text-balance text-4xl font-semibold tracking-[-0.025em] sm:text-6xl"><TwoTone text={title} /></h2>
       {children && <p className="mx-auto mt-5 max-w-2xl text-pretty text-lg leading-relaxed text-soft">{children}</p>}
     </div>
   );
@@ -65,14 +64,7 @@ export default function HomePage() {
           aria-hidden
         />
         <div className="mx-auto max-w-4xl px-5 pb-24 pt-24 text-center sm:pt-32">
-          <Link
-            href="/developers"
-            className="animate-fade-up inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] py-1 pl-1 pr-3 text-sm text-soft transition-colors hover:border-white/20 hover:text-fg"
-          >
-            <span className="rounded-full bg-brand/15 px-2 py-0.5 text-xs font-semibold text-brand-bright">{t("New")}</span>
-            {t("Configuration API")}
-          </Link>
-          <h1 className="animate-fade-up mt-8 text-balance text-[2.5rem] font-semibold leading-[1.05] tracking-[-0.02em] sm:text-[5.25rem]">
+          <h1 className="animate-fade-up text-balance text-[2.5rem] font-semibold leading-[1.05] tracking-[-0.02em] sm:text-[5.25rem]">
             <span className="text-brand">{t("Discord security ")}</span>
             <span className="text-fg">{t("that never sleeps")}</span>
           </h1>
@@ -99,7 +91,7 @@ export default function HomePage() {
 
       {/* Features */}
       <section id="features" className="scroll-mt-24 px-5 py-28">
-        <SectionTitle kicker={t("Protection")} title={t("Everything your server needs to stay standing")}>
+        <SectionTitle title={t("Everything your server needs to stay standing")}>
           {t("Set it up in minutes, Drew does the watching 24/7")}
         </SectionTitle>
         <div className="mx-auto mt-16 grid max-w-6xl gap-4 md:grid-cols-2">
@@ -144,7 +136,7 @@ export default function HomePage() {
 
       {/* How it works */}
       <section className="px-5 pb-28">
-        <SectionTitle kicker={t("Get started")} title={t("Protect your server in under a minute")} />
+        <SectionTitle title={t("Protect your server in under a minute")} />
         <ol className="mx-auto mt-14 grid max-w-5xl gap-10 md:grid-cols-3">
           {steps.map((s) => (
             <li key={s.n} className="text-center md:text-left">

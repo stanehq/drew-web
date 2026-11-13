@@ -288,7 +288,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
+  *:not(.animate-marquee),
   *::before,
   *::after {
     animation-duration: 0.001ms !important;

@@ -31,8 +31,8 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
   const min = series.bars ? 0 : Math.min(...values);
   const span = Math.max(1, max - min);
   const flat = max === min;
-  const lo = series.bars ? 0 : flat ? Math.max(0, min - 1) : Math.max(0, min - span * 0.15);
-  const hi = flat ? max + 1 : max + span * 0.15;
+  const lo = series.bars || flat ? 0 : Math.max(0, min - span * 0.15);
+  const hi = flat ? Math.max(2, Math.ceil(max * 1.25)) : max + span * 0.15;
   const x = (i: number) => PAD.l + (points.length <= 1 ? (W - PAD.l - PAD.r) / 2 : (i / (points.length - 1)) * (W - PAD.l - PAD.r));
   const y = (v: number) => PAD.t + (1 - (v - lo) / (hi - lo || 1)) * (H - PAD.t - PAD.b);
   const ticks = [lo, (lo + hi) / 2, hi].filter((t, i, a) => a.findIndex((u) => Math.round(u) === Math.round(t)) === i);
@@ -66,7 +66,7 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
         {ticks.map((t) => (
           <g key={t}>
             <line x1={PAD.l} x2={W - PAD.r} y1={y(t)} y2={y(t)} stroke="rgb(255 255 255 / 0.06)" />
-            <text x={PAD.l - 8} y={y(t) + 3.5} textAnchor="end" className="fill-mute font-mono text-[10px]">
+            <text x={PAD.l - 8} y={y(t) + 3.5} textAnchor="end" className="fill-mute font-sans text-[10px]">
               {series.unit || hi < 100_000 ? formatExact(Math.round(t)) : formatCompact(Math.round(t))}
             </text>
           </g>
@@ -92,7 +92,7 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
         {[0, Math.floor((points.length - 1) / 2), points.length - 1]
           .filter((v, i, a) => a.indexOf(v) === i && points[v])
           .map((i) => (
-            <text key={i} x={x(i)} y={H - 6} textAnchor={i === 0 ? "start" : i === points.length - 1 ? "end" : "middle"} className="fill-mute font-mono text-[10px]">
+            <text key={i} x={x(i)} y={H - 6} textAnchor={i === 0 ? "start" : i === points.length - 1 ? "end" : "middle"} className="fill-mute font-sans text-[10px]">
               {fmtTime(points[i].t, range)}
             </text>
           ))}
@@ -105,7 +105,7 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
       </svg>
       {h && (
         <div className="pointer-events-none absolute right-2 top-0 rounded-lg border border-white/10 bg-ink/90 px-2.5 py-1.5 text-right text-xs backdrop-blur">
-          <p className="font-mono text-[10px] text-mute">{fmtFull(h.t)}</p>
+          <p className="font-sans text-[10px] text-mute">{fmtFull(h.t)}</p>
           <p className="font-medium text-fg">{fmt(Number(h[series.key]))}</p>
         </div>
       )}
@@ -251,7 +251,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
               <p className="flex items-center gap-2 text-xs text-mute">
                 <Icon className="size-3.5 text-brand" /> {label}
               </p>
-              <p className="mt-3 truncate font-display text-2xl font-semibold tabular-nums tracking-[-0.02em] sm:text-3xl">{data ? value : "..."}</p>
+              <p className="mt-3 truncate font-sans text-2xl font-semibold tabular-nums tracking-[-0.02em] sm:text-3xl">{data ? value : "..."}</p>
               <div className="mt-1.5 min-h-5 truncate leading-5">{data && note}</div>
             </div>
           ))}
@@ -272,10 +272,10 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
             {CHARTS.map((s) => (
               <article key={s.key} className="surface min-w-0 p-5 sm:p-6">
                 <header className="mb-3 flex items-center justify-between">
-                  <h2 className="flex items-center gap-2 text-sm font-medium">
+                  <h2 className="font-sans flex items-center gap-2 text-sm font-medium">
                     <s.icon className="size-4 text-brand" /> {s.label}
                   </h2>
-                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-mute">{t(RANGE_LABEL[range])}</span>
+                  <span className="text-xs text-mute">{t(RANGE_LABEL[range])}</span>
                 </header>
                 <Chart points={points} series={s} range={range} />
               </article>
