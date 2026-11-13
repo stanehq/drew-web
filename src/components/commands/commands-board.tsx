@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from "react";
 import {
-  Search, X, ChevronRight, ChevronDown, Shield, Server, Users, Headphones,
-  Award, Gift, Sparkles, Smile, Clock3, Hash, Settings, Music2, Bot,
+  Search, X, ChevronRight, Shield, Server, Users, Headphones,
+  Award, Gift, Sparkles, Smile, Clock3, Settings, Music2, Bot,
   MessageSquare, Ticket, LockKeyhole, Wrench, type LucideIcon,
 } from "lucide-react";
 import { PageHero } from "@/components/page-hero";
