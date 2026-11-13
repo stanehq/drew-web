@@ -71,7 +71,6 @@ export default function HomePage() {
           >
             <span className="rounded-full bg-brand/15 px-2 py-0.5 text-xs font-semibold text-brand-bright">{t("New")}</span>
             {t("Configuration API")}
-            <ArrowRight className="size-3.5" />
           </Link>
           <h1 className="animate-fade-up mt-8 text-balance text-[2.5rem] font-semibold leading-[1.05] tracking-[-0.02em] sm:text-7xl">
             <span className="text-brand">{t("Discord security ")}</span>

@@ -10,7 +10,12 @@ const FLAGS: Record<Locale, typeof US> = { en: US, es: ES, pt: PT, fr: FR, de: D
 
 function Flag({ code, className = "" }: { code: Locale; className?: string }) {
   const F = FLAGS[code];
-  return <F aria-hidden className={`shrink-0 overflow-hidden rounded-[3px] ring-1 ring-white/15 ${className}`} />;
+  // Clipped by a wrapper: rounding an <svg> directly leaves light edge pixels.
+  return (
+    <span aria-hidden className={`inline-block shrink-0 overflow-hidden rounded-[4px] ${className}`}>
+      <F className="block size-full scale-[1.06]" />
+    </span>
+  );
 }
 
 export function LanguageSelector({ compact = false }: { compact?: boolean }) {
