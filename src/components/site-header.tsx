@@ -72,7 +72,7 @@ export function SiteHeader() {
           <span aria-hidden className="text-2xl font-light text-white/55">×</span>
           <span className="inline-flex items-center gap-2">
             <Image src="/brand/drew-icon.svg" unoptimized alt="" width={39} height={39} priority />
-            <span className="font-display text-[1.35rem] font-semibold tracking-[-0.03em] text-fg">Drew</span>
+            <span className="font-display text-[1.35rem] font-semibold tracking-[-0.03em] drew-wordmark">Drew</span>
           </span>
         </Link>
 
