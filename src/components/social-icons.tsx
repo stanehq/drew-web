@@ -1,0 +1,18 @@
+// Brand marks as inline SVG (lucide no longer ships brand icons).
+export function XIcon({ className = "size-4" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="#FFFFFF" className={className} aria-hidden>
+      <path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.66l-5.21-6.82-5.97 6.82H1.67l7.73-8.84L1.25 2.25h6.83l4.71 6.23 5.45-6.23Zm-1.16 17.52h1.83L7.08 4.13H5.12l11.96 15.64Z" />
+    </svg>
+  );
+}
+
+export function InstagramIcon({ className = "size-4" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="url(#instagram-brand-gradient)" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+      <defs><linearGradient id="instagram-brand-gradient" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stopColor="#FEDA75" /><stop offset="45%" stopColor="#FA7E1E" /><stop offset="72%" stopColor="#D62976" /><stop offset="100%" stopColor="#4F5BD5" /></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="5.5" />
+      <circle cx="12" cy="12" r="4.2" />
+      <circle cx="17.6" cy="6.4" r="0.6" fill="url(#instagram-brand-gradient)" stroke="none" />
+    </svg>
+  );
+}

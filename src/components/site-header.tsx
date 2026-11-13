@@ -1,28 +1,24 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/locale-link";
 import { useEffect, useState } from "react";
 import { ExternalLink, LayoutDashboard, Menu, X } from "lucide-react";
 import { SITE } from "@/lib/site";
 import { DiscordIcon } from "./discord-icon";
 import { LanguageSelector } from "./language-selector";
-import { useI18n, type Locale } from "@/lib/i18n";
+import { useI18n } from "@/lib/i18n";
 
 const LOGIN = "/api/auth/discord";
 
 const DASHBOARD_BTN =
-  "inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-lg border border-brand/50 bg-brand/[0.08] px-4 text-[0.95rem] font-semibold text-brand-bright transition-colors hover:border-brand hover:bg-brand/[0.16]";
+  "inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-lg border border-white bg-white px-4 text-[0.95rem] font-semibold text-[#07110c] transition-colors hover:border-white/85 hover:bg-white/90";
 
-// Header copy with its translations (falls back to English).
-const COPY: Record<string, Partial<Record<Locale, string>>> = {
-  "Add to Discord": { es: "Añadir a Discord", pt: "Adicionar ao Discord", fr: "Ajouter à Discord", de: "Zu Discord hinzufügen", ru: "Добавить в Discord" },
-};
-
-type Item = { label: string; href: string; hint?: string; keywords?: string };
+type Item = { label: string; href: string };
 
 const MORE: Item[] = [
   { label: "Features", href: "/#features" },
+  { label: "Commands", href: "/commands" },
   { label: "Pricing", href: "/pricing" },
   { label: "Status", href: "/status" },
   { label: "Metrics", href: "/metrics" },
@@ -40,7 +36,7 @@ function MenuLink({ item, onPick, label }: { item: Item; onPick: () => void; lab
   const body = (
     <>
       <span>{label}</span>
-      {item.hint ? <span className="font-mono text-[10px] uppercase tracking-wider text-mute">{item.hint}</span> : isExternal(item.href) ? <ExternalLink className="size-3.5 text-mute" /> : null}
+      {isExternal(item.href) && <ExternalLink className="size-3.5 text-mute" />}
     </>
   );
   return isExternal(item.href) || item.href.startsWith("/api/") ? (
@@ -53,12 +49,8 @@ function MenuLink({ item, onPick, label }: { item: Item; onPick: () => void; lab
 
 
 export function SiteHeader() {
-  const { t, locale } = useI18n();
-  const tr = (k: string) => COPY[k]?.[locale] ?? k;
-  const label = (k: string) => {
-    const v = t(k.toLowerCase());
-    return v === k.toLowerCase() ? k : v;
-  };
+  const { t } = useI18n();
+  const label = (k: string) => t(k);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -70,14 +62,16 @@ export function SiteHeader() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-[#101113] text-fg">
       <div className="flex h-[76px] w-full items-center gap-5 px-4 sm:px-6 xl:gap-6 lg:px-8">
-        <Link href="/" aria-label="Stane × Drew home" className="inline-flex shrink-0 items-center gap-3">
-          <Image src="/brand/stane-mark.svg" alt="Stane" width={43} height={43} priority className="size-[43px] object-contain" />
+        <div className="inline-flex shrink-0 items-center gap-3">
+          <a href={SITE.stane.web} target="_blank" rel="noopener" aria-label="Stane Labs" className="transition-opacity hover:opacity-85">
+            <Image src="/brand/stane-mark.webp" alt="Stane" width={48} height={48} priority className="size-12 rounded-xl object-cover" />
+          </a>
           <span aria-hidden className="text-2xl font-light text-white/55">×</span>
-          <span className="inline-flex items-center gap-2">
+          <Link href="/" aria-label="Drew home" className="inline-flex items-center gap-2">
             <Image src="/brand/drew-icon.svg" unoptimized alt="" width={39} height={39} priority />
-            <span className="font-display text-[1.35rem] font-semibold tracking-[-0.03em] text-fg">Drew</span>
-          </span>
-        </Link>
+            <span className="font-display text-[1.35rem] font-semibold tracking-[-0.03em] drew-wordmark">Drew</span>
+          </Link>
+        </div>
 
         <nav className="hidden items-center gap-0.5 xl:flex" aria-label={t("Main")}>
           {MORE.map((item) =>
@@ -98,8 +92,8 @@ export function SiteHeader() {
           <a href={LOGIN} className={DASHBOARD_BTN}>
             <LayoutDashboard className="size-4" /> {label("Dashboard")}
           </a>
-          <a href={SITE.invite} className="inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-lg bg-brand px-4 text-[0.95rem] font-semibold text-[#03110a] transition-colors hover:bg-brand-bright">
-            {tr("Add to Discord")} <DiscordIcon />
+          <a href={SITE.invite} className="inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-lg border border-[#7ee8b5] bg-[linear-gradient(110deg,#35c98d_0%,#41cf8b_58%,#7ee8b5_100%)] px-4 text-[0.95rem] font-semibold text-white transition-all hover:bg-[linear-gradient(110deg,#41cf8b_0%,#65dda9_58%,#a5f3cf_100%)]">
+            {t("Add to Discord")} <DiscordIcon />
           </a>
         </div>
 
@@ -125,8 +119,8 @@ export function SiteHeader() {
             <a href={LOGIN} className={`${DASHBOARD_BTN} h-12 justify-center`}>
               <LayoutDashboard className="size-4" /> {label("Dashboard")}
             </a>
-            <a href={SITE.invite} className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-brand font-semibold text-[#03110a]">
-              {tr("Add to Discord")} <DiscordIcon />
+            <a href={SITE.invite} className="inline-flex h-12 items-center justify-center gap-2 rounded-lg border border-[#7ee8b5] bg-[linear-gradient(110deg,#35c98d_0%,#41cf8b_58%,#7ee8b5_100%)] font-semibold text-white">
+              {t("Add to Discord")} <DiscordIcon />
             </a>
             <div className="flex justify-center">
               <LanguageSelector />

@@ -5,6 +5,7 @@ import { Activity, Clock3, Gauge, Hash, Layers, Server, ShieldCheck, Terminal, T
 import type { PublicMetricPoint, PublicMetrics } from "@/lib/public-metrics";
 import { useI18n } from "@/lib/i18n";
 import { formatCompact, formatExact, formatUptime } from "@/lib/format";
+import { TwoTone } from "@/components/two-tone";
 
 const RANGES = ["24h", "7d", "30d", "90d"] as const;
 type Range = (typeof RANGES)[number];
@@ -30,8 +31,8 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
   const min = series.bars ? 0 : Math.min(...values);
   const span = Math.max(1, max - min);
   const flat = max === min;
-  const lo = series.bars ? 0 : flat ? Math.max(0, min - 1) : Math.max(0, min - span * 0.15);
-  const hi = flat ? max + 1 : max + span * 0.15;
+  const lo = series.bars || flat ? 0 : Math.max(0, min - span * 0.15);
+  const hi = flat ? Math.max(2, Math.ceil(max * 1.25)) : max + span * 0.15;
   const x = (i: number) => PAD.l + (points.length <= 1 ? (W - PAD.l - PAD.r) / 2 : (i / (points.length - 1)) * (W - PAD.l - PAD.r));
   const y = (v: number) => PAD.t + (1 - (v - lo) / (hi - lo || 1)) * (H - PAD.t - PAD.b);
   const ticks = [lo, (lo + hi) / 2, hi].filter((t, i, a) => a.findIndex((u) => Math.round(u) === Math.round(t)) === i);
@@ -65,7 +66,7 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
         {ticks.map((t) => (
           <g key={t}>
             <line x1={PAD.l} x2={W - PAD.r} y1={y(t)} y2={y(t)} stroke="rgb(255 255 255 / 0.06)" />
-            <text x={PAD.l - 8} y={y(t) + 3.5} textAnchor="end" className="fill-mute font-mono text-[10px]">
+            <text x={PAD.l - 8} y={y(t) + 3.5} textAnchor="end" className="fill-mute font-sans text-[10px]">
               {series.unit || hi < 100_000 ? formatExact(Math.round(t)) : formatCompact(Math.round(t))}
             </text>
           </g>
@@ -91,7 +92,7 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
         {[0, Math.floor((points.length - 1) / 2), points.length - 1]
           .filter((v, i, a) => a.indexOf(v) === i && points[v])
           .map((i) => (
-            <text key={i} x={x(i)} y={H - 6} textAnchor={i === 0 ? "start" : i === points.length - 1 ? "end" : "middle"} className="fill-mute font-mono text-[10px]">
+            <text key={i} x={x(i)} y={H - 6} textAnchor={i === 0 ? "start" : i === points.length - 1 ? "end" : "middle"} className="fill-mute font-sans text-[10px]">
               {fmtTime(points[i].t, range)}
             </text>
           ))}
@@ -103,8 +104,8 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
         )}
       </svg>
       {h && (
-        <div className="pointer-events-none absolute right-2 top-0 border border-line bg-ink/90 px-2.5 py-1.5 text-right text-xs backdrop-blur">
-          <p className="font-mono text-[10px] text-mute">{fmtFull(h.t)}</p>
+        <div className="pointer-events-none absolute right-2 top-0 rounded-lg border border-white/10 bg-ink/90 px-2.5 py-1.5 text-right text-xs backdrop-blur">
+          <p className="font-sans text-[10px] text-mute">{fmtFull(h.t)}</p>
           <p className="font-medium text-fg">{fmt(Number(h[series.key]))}</p>
         </div>
       )}
@@ -112,20 +113,6 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
   );
 }
 
-function Delta({ now, before, invert }: { now: number; before: number; invert?: boolean }) {
-  const { t } = useI18n();
-  if (!before) return null;
-  const d = now - before;
-  if (d === 0) return <span className="text-xs text-mute">{t("no change")}</span>;
-  const good = invert ? d < 0 : d > 0;
-  const pct = Math.abs((d / before) * 100);
-  return (
-    <span className={`text-xs font-medium ${good ?"text-brand":"text-bad"}`}>
-      {d > 0 ? "+" : "-"}
-      {pct < 0.1 ? "<0.1" : pct.toFixed(1)}%
-    </span>
-  );
-}
 
 const CHARTS: Series[] = [
   { key: "guilds", label: "Servers", icon: Server },
@@ -136,7 +123,6 @@ const CHARTS: Series[] = [
   { key: "shardsOnline", label: "Shards online", icon: Layers },
 ];
 
-const Muted = ({ children }: { children: React.ReactNode }) => <span className="text-xs text-mute">{children}</span>;
 
 export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics | null; initialRange: Range }) {
   const { t } = useI18n();
@@ -193,51 +179,46 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
     };
   }, [points]);
   const cur = data?.current;
-  const { first, last } = stats;
 
   const kpis = [
-    { label: "Servers", icon: Server, value: formatExact(cur?.guilds ?? 0), note: first && last && <Delta now={last.guilds} before={first.guilds} /> },
-    { label: "Members", icon: Users, value: formatCompact(cur?.users ?? 0), note: first && last && <Delta now={last.users} before={first.users} /> },
-    { label: "Channels", icon: Hash, value: formatCompact(cur?.channels ?? 0), note: first && last && <Delta now={last.channels} before={first.channels} /> },
+    { label: "Servers", icon: Server, value: formatExact(cur?.guilds ?? 0) },
+    { label: "Members", icon: Users, value: formatCompact(cur?.users ?? 0) },
+    { label: "Channels", icon: Hash, value: formatCompact(cur?.channels ?? 0) },
     {
       label: "Members per server",
       icon: TrendingUp,
       value: cur?.guilds ? formatExact(Math.round(cur.users / cur.guilds)) : "0",
-      note: <Muted>{t("on average")}</Muted>,
     },
-    { label: `Commands (${range})`, icon: Terminal, value: formatCompact(stats.commands), note: <Muted>{stats.perHour.toFixed(1)} {t("per hour")}</Muted> },
+    { label: `Commands (${range})`, icon: Terminal, value: formatCompact(stats.commands) },
     {
       label: "Avg latency",
       icon: Gauge,
       value: `${Math.round(stats.avgLatency || cur?.latencyMs || 0)} ms`,
-      note: <Muted>{stats.best ? `${stats.best} best, ${stats.worst} worst` : ""}</Muted>,
     },
     {
       label: "Availability",
       icon: ShieldCheck,
       value: points.length ? `${stats.availability.toFixed(stats.availability === 100 ? 0 : 2)}%` : "...",
-      note: <Muted>{cur ? `${cur.shardsOnline}/${cur.shardsTotal} shards online` : ""}</Muted>,
     },
-    { label: "Uptime", icon: Clock3, value: cur?.uptimeSeconds ? formatUptime(cur.uptimeSeconds) : "...", note: <Muted>{t("since last restart")}</Muted> },
+    { label: "Uptime", icon: Clock3, value: cur?.uptimeSeconds ? formatUptime(cur.uptimeSeconds) : "..." },
   ];
 
   return (
-    <section className="relative isolate overflow-hidden border-b border-line pt-[76px]">
-      <div className="line-grid absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_70%_50%_at_50%_0%,black,transparent)]" />
-      <div className="mx-auto max-w-6xl border-x border-line">
-        <div className="animate-fade-up flex flex-col gap-6 px-4 pb-10 pt-16 sm:flex-row sm:items-end sm:justify-between sm:px-8">
+    <section className="relative isolate overflow-hidden pt-[76px]">
+      <div className="mx-auto max-w-6xl px-5 pb-28">
+        <div className="animate-fade-up flex flex-col items-center gap-8 pb-10 pt-20 text-center">
           <div>
-            <h1 className="mt-3 text-5xl font-semibold tracking-[-0.02em] sm:text-6xl">{t("Drew in numbers")}</h1>
-            <p className="mt-3 max-w-xl text-soft">{t("Public, aggregate figures sampled every five minutes, no server or user data")}</p>
+            <h1 className="text-balance text-4xl font-semibold tracking-[-0.025em] sm:text-6xl"><TwoTone text={t("Drew in numbers")} /></h1>
+            <p className="mx-auto mt-4 max-w-lg text-balance text-soft">{t("Public, aggregate figures sampled every five minutes, no server or user data")}</p>
           </div>
-          <div role="tablist" aria-label="Time range" className="flex w-fit border border-line bg-night p-1">
+          <div role="tablist" aria-label="Time range" className="flex w-fit gap-1 rounded-xl border border-white/10 p-1">
             {RANGES.map((r) => (
               <button
                 key={r}
                 role="tab"
                 aria-selected={range === r}
                 onClick={() => pick(r)}
-                className={`px-4 py-1.5 font-mono text-xs transition-colors ${range === r ? "bg-brand text-[#03110a]" : "text-soft hover:text-fg"}`}
+                className={`rounded-lg px-4 py-1.5 text-sm font-medium transition-colors ${range === r ? "bg-white/10 text-fg" : "text-soft hover:text-fg"}`}
               >
                 {r}
               </button>
@@ -245,20 +226,19 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-px border-t border-line bg-line lg:grid-cols-4">
-          {kpis.map(({ label, icon: Icon, value, note }) => (
-            <div key={label} className="min-w-0 bg-ink p-5 sm:p-6">
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          {kpis.map(({ label, icon: Icon, value }) => (
+            <div key={label} className="surface min-w-0 p-5 sm:p-6">
               <p className="flex items-center gap-2 text-xs text-mute">
                 <Icon className="size-3.5 text-brand" /> {label}
               </p>
-              <p className="mt-3 truncate font-display text-2xl font-semibold tabular-nums tracking-[-0.02em] sm:text-3xl">{data ? value : "..."}</p>
-              <div className="mt-1.5 min-h-5 truncate leading-5">{data && note}</div>
+              <p className="mt-4 truncate font-sans text-2xl font-semibold leading-none tabular-nums tracking-[-0.02em] sm:text-3xl">{data ? value : "..."}</p>
             </div>
           ))}
         </div>
 
         {points.length < 2 ? (
-          <div className="flex flex-col items-center gap-3 border-t border-line px-6 py-20 text-center">
+          <div className="surface mt-3 flex flex-col items-center gap-3 px-6 py-20 text-center">
             <Activity className="size-6 text-brand" />
             <p className="font-medium">{failed || !data ? t("Metrics are unavailable right now.") : "Collecting data..."}</p>
             <p className="max-w-sm text-sm text-mute">
@@ -268,21 +248,21 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
             </p>
           </div>
         ) : (
-          <div className="grid gap-px border-t border-line bg-line lg:grid-cols-2">
+          <div className="mt-3 grid gap-3 lg:grid-cols-2">
             {CHARTS.map((s) => (
-              <article key={s.key} className="min-w-0 bg-ink p-5 sm:p-6">
+              <article key={s.key} className="surface min-w-0 p-5 sm:p-6">
                 <header className="mb-3 flex items-center justify-between">
-                  <h2 className="flex items-center gap-2 text-sm font-medium">
+                  <h2 className="font-sans flex items-center gap-2 text-sm font-medium">
                     <s.icon className="size-4 text-brand" /> {s.label}
                   </h2>
-                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-mute">{t(RANGE_LABEL[range])}</span>
+                  <span className="text-xs text-mute">{t(RANGE_LABEL[range])}</span>
                 </header>
                 <Chart points={points} series={s} range={range} />
               </article>
             ))}
           </div>
         )}
-        {failed && data && <p className="border-t border-line py-3 text-center text-xs text-warn">Showing the last data we received. Retrying...</p>}
+        {failed && data && <p className="py-3 text-center text-xs text-warn">Showing the last data we received. Retrying...</p>}
       </div>
     </section>
   );

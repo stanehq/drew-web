@@ -1,13 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { preload } from "react-dom";
+import Link from "@/components/locale-link";
 import { ArrowRight, Braces, DatabaseBackup, FileClock, KeyRound, LayoutDashboard, PlusCircle, ScrollText, ShieldAlert, UserCheck, Users } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { DiscordIcon } from "@/components/discord-icon";
 import { LiveStats } from "@/components/live-stats";
 import { ServerShowcase } from "@/components/server-showcase";
+import { Testimonials } from "@/components/testimonials";
 import { SITE } from "@/lib/site";
+import { HeroAtmosphere } from "@/components/hero-atmosphere";
+import { TwoTone } from "@/components/two-tone";
 
 // Two highlighted protections, then the rest in a quieter grid (GitHub-style).
 const highlights = [
@@ -39,15 +43,14 @@ const steps = [
 ];
 
 const primary =
-  "inline-flex h-12 items-center gap-2 rounded-md bg-brand px-6 text-[0.98rem] font-semibold text-[#03110a] transition-colors hover:bg-brand-bright";
+  "inline-flex h-12 items-center gap-2 rounded-md border border-[#7ee8b5] bg-[linear-gradient(110deg,#35c98d_0%,#41cf8b_58%,#7ee8b5_100%)] px-6 text-[0.98rem] font-semibold text-white transition-all hover:bg-[linear-gradient(110deg,#41cf8b_0%,#65dda9_58%,#a5f3cf_100%)]";
 const secondary =
   "inline-flex h-12 items-center gap-2 rounded-md border border-white/15 px-6 text-[0.98rem] font-semibold text-fg transition-colors hover:border-white/30 hover:bg-white/[0.04]";
 
-function SectionTitle({ kicker, title, children }: { kicker: string; title: string; children?: React.ReactNode }) {
+function SectionTitle({ title, children }: { title: string; children?: React.ReactNode }) {
   return (
     <div className="mx-auto max-w-3xl text-center">
-      <p className="text-sm font-medium text-brand-bright">{kicker}</p>
-      <h2 className="mt-3 text-balance text-3xl font-semibold tracking-[-0.02em] sm:text-5xl">{title}</h2>
+      <h2 className="text-balance text-4xl font-semibold tracking-[-0.025em] sm:text-6xl"><TwoTone text={title} /></h2>
       {children && <p className="mx-auto mt-5 max-w-2xl text-pretty text-lg leading-relaxed text-soft">{children}</p>}
     </div>
   );
@@ -55,28 +58,35 @@ function SectionTitle({ kicker, title, children }: { kicker: string; title: stri
 
 export default function HomePage() {
   const { t } = useI18n();
+  // Start the live data requests with the HTML instead of after hydration.
+  if (typeof window === "undefined") {
+    preload("/api/stats", { as: "fetch", crossOrigin: "anonymous" });
+    preload("/api/showcase", { as: "fetch", crossOrigin: "anonymous" });
+  }
   return (
     <>
+      <svg aria-hidden="true" className="pointer-events-none absolute size-0 overflow-hidden">
+        <defs>
+          <linearGradient id="drew-icon-gradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#35c98d" />
+            <stop offset="52%" stopColor="#7ee8b5" />
+            <stop offset="100%" stopColor="#ffffff" />
+          </linearGradient>
+        </defs>
+      </svg>
       {/* Hero: centered, one soft glow, nothing else in the background */}
       <section className="relative isolate overflow-hidden pt-[76px]">
+        <HeroAtmosphere />
+        {/* Soft glow behind the stats, fully faded before any edge so no seam shows */}
         <div
-          className="absolute inset-x-0 bottom-0 -z-10 h-[520px] bg-[radial-gradient(60%_70%_at_50%_100%,rgb(65_207_139/0.16),transparent_70%)]"
+          className="pointer-events-none absolute inset-x-0 top-[38%] -z-10 h-[560px] bg-[radial-gradient(45%_50%_at_50%_50%,rgb(65_207_139/0.13),transparent_100%)]"
           aria-hidden
         />
-        <div className="mx-auto max-w-4xl px-5 pb-24 pt-24 text-center sm:pt-32">
-          <Link
-            href="/developers"
-            className="animate-fade-up inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] py-1 pl-1 pr-3 text-sm text-soft transition-colors hover:border-white/20 hover:text-fg"
-          >
-            <span className="rounded-full bg-brand/15 px-2 py-0.5 text-xs font-semibold text-brand-bright">{t("New")}</span>
-            {t("Configuration API")}
-            <ArrowRight className="size-3.5" />
-          </Link>
-          <h1 className="animate-fade-up mt-8 text-balance text-[2.5rem] font-semibold leading-[1.05] tracking-[-0.02em] sm:text-7xl">
-            {t("Discord security ")}
-            <span className="text-brand">{t("that never sleeps")}</span>
+        <div className="mx-auto max-w-4xl px-5 pb-24 pt-8 text-center sm:pt-12">
+          <h1 className="animate-fade-up mx-auto max-w-[14ch] text-balance text-[clamp(2.4rem,7.2vw,7rem)] font-semibold leading-[1.04] tracking-[-0.035em]">
+            <TwoTone text={`${t("Discord security")} ${t("that never sleeps")}`} greenWords={2} />
           </h1>
-          <p className="animate-fade-up mx-auto mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-soft sm:text-xl [animation-delay:80ms]">
+          <p className="animate-fade-up mx-auto mt-6 max-w-2xl px-2 text-pretty text-[clamp(1rem,1.5vw,1.3rem)] leading-relaxed text-white [animation-delay:80ms]">
             {t("Anti-nuke, anti-raid, verification and logging in one bot. Set it up in a minute and let Drew do the watching")}
           </p>
           <div className="animate-fade-up mt-10 flex flex-wrap items-center justify-center gap-3 [animation-delay:140ms]">
@@ -88,28 +98,27 @@ export default function HomePage() {
             </a>
           </div>
         </div>
-        <div className="mx-auto max-w-5xl px-5 pb-16">
-          <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#0b0f0d]/80 backdrop-blur">
+        <div className="mx-auto max-w-5xl px-5 pb-6">
+          <div className="relative rounded-2xl border border-white/10 bg-[#0b0f0d]/80 backdrop-blur">
             <LiveStats />
           </div>
         </div>
+        <ServerShowcase />
       </section>
-
-      <ServerShowcase />
 
       {/* Features */}
       <section id="features" className="scroll-mt-24 px-5 py-28">
-        <SectionTitle kicker={t("Protection")} title={t("Everything your server needs to stay standing")}>
+        <SectionTitle title={t("Everything your server needs to stay standing")}>
           {t("Set it up in minutes, Drew does the watching 24/7")}
         </SectionTitle>
         <div className="mx-auto mt-16 grid max-w-6xl gap-4 md:grid-cols-2">
           {highlights.map(({ icon: Icon, title, body }) => (
             <article
               key={title}
-              className="relative overflow-hidden rounded-2xl border border-white/10 bg-[linear-gradient(180deg,rgb(65_207_139/0.08),transparent_60%)] p-8 sm:p-10"
+              className="surface relative overflow-hidden p-8 sm:p-10"
             >
-              <Icon className="size-7 text-brand" strokeWidth={1.75} />
-              <h3 className="mt-8 text-2xl font-semibold tracking-tight">{t(title)}</h3>
+              <Icon className="drew-icon-gradient size-7" strokeWidth={1.75} />
+              <h3 className="mt-8 text-2xl font-semibold tracking-tight text-white">{t(title)}</h3>
               <p className="mt-3 max-w-md leading-relaxed text-soft">{t(body)}</p>
             </article>
           ))}
@@ -118,11 +127,11 @@ export default function HomePage() {
           {features.map(({ icon: Icon, title, body, href }) => {
             const inner = (
               <>
-                <Icon className="size-5 text-brand" strokeWidth={1.75} />
-                <h3 className="mt-5 text-lg font-semibold tracking-tight">{t(title)}</h3>
+                <Icon className="drew-icon-gradient size-5" strokeWidth={1.75} />
+                <h3 className="mt-5 text-lg font-semibold tracking-tight text-white">{t(title)}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-mute">{t(body)}</p>
                 {href && (
-                  <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand-bright">
+                  <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-fg">
                     {t("Read more")} <ArrowRight className="size-3.5" />
                   </span>
                 )}
@@ -144,11 +153,11 @@ export default function HomePage() {
 
       {/* How it works */}
       <section className="px-5 pb-28">
-        <SectionTitle kicker={t("Get started")} title={t("Protect your server in under a minute")} />
+        <SectionTitle title={t("Up and running in three steps")} />
         <ol className="mx-auto mt-14 grid max-w-5xl gap-10 md:grid-cols-3">
           {steps.map((s) => (
             <li key={s.n} className="text-center md:text-left">
-              <span className="inline-flex size-9 items-center justify-center rounded-full border border-white/15 text-sm font-semibold text-brand-bright">
+              <span className="inline-flex size-9 items-center justify-center rounded-full border border-white/15 text-sm font-semibold text-soft">
                 {s.n}
               </span>
               <h3 className="mt-5 text-xl font-semibold tracking-tight">{t(s.title)}</h3>
@@ -158,14 +167,24 @@ export default function HomePage() {
         </ol>
       </section>
 
+
+      <Testimonials />
+
       {/* Closing CTA card, Wick/Kena style: centered, vivid multi-color gradient, joined buttons */}
       <section className="relative px-5 pb-28">
-        <div className="pointer-events-none absolute inset-x-0 top-10 -z-10 mx-auto h-72 max-w-4xl bg-[radial-gradient(closest-side,rgb(65_207_139/0.35),transparent)] blur-3xl" aria-hidden />
         <div className="cta-gradient relative mx-auto max-w-4xl overflow-hidden rounded-2xl px-6 py-16 text-center shadow-[0_40px_100px_-40px_rgba(65,207,139,0.7)] sm:px-12 sm:py-20">
-          <Image src="/brand/drew-icon.svg" unoptimized alt="" width={56} height={56} className="mx-auto drop-shadow-[0_8px_20px_rgba(0,0,0,0.35)]" />
-          <h2 className="mt-6 text-balance text-3xl font-semibold tracking-[-0.02em] text-white sm:text-5xl">{t("Protect your server in under a minute")}</h2>
-          <p className="mx-auto mt-5 max-w-xl text-pretty text-lg leading-relaxed text-white/90">{t("Invite Drew, run /opsec setup and sleep well tonight")}</p>
-          <div className="mx-auto mt-10 inline-flex overflow-hidden rounded-xl border border-white/70 text-white backdrop-blur-sm">
+          <Image
+            src="/brand/drew-icon.svg"
+            unoptimized
+            alt=""
+            aria-hidden
+            width={340}
+            height={340}
+            className="pointer-events-none absolute -right-16 top-1/2 size-[240px] -translate-y-1/2 rotate-[-8deg] opacity-30 brightness-0 invert [mask-image:linear-gradient(90deg,transparent,black_55%)] sm:-right-10 sm:size-[380px] sm:opacity-40"
+          />
+          <h2 className="relative text-balance text-4xl font-semibold tracking-[-0.025em] text-white sm:text-6xl">{t("Protect your server in under a minute")}</h2>
+          <p className="relative mx-auto mt-5 max-w-xl text-pretty text-lg leading-relaxed text-white/90">{t("Invite Drew, run /opsec setup and sleep well tonight")}</p>
+          <div className="relative mx-auto mt-10 inline-flex overflow-hidden rounded-xl border border-white/70 text-white">
             <a href={SITE.invite} className="inline-flex h-14 items-center gap-2.5 px-6 text-sm font-bold uppercase tracking-wider transition-colors hover:bg-white/15 sm:px-8">
               <PlusCircle className="size-5" strokeWidth={1.75} /> {t("Invite")}
             </a>
@@ -174,8 +193,8 @@ export default function HomePage() {
               <LayoutDashboard className="size-5" strokeWidth={1.75} /> {t("Dashboard")}
             </a>
           </div>
-          <p className="mt-6 text-sm text-white/80">
-            <a href={SITE.support} className="underline decoration-white/40 underline-offset-4 hover:decoration-white">
+          <p className="relative mt-6 text-sm text-white/85">
+            <a href={SITE.support} className="underline decoration-white/50 underline-offset-4 hover:decoration-white">
               {t("Join support")}
             </a>
           </p>

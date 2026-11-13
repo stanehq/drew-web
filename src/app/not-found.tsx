@@ -5,7 +5,7 @@ import { PageHero } from "@/components/page-hero";
 export default function NotFound() {
   return (
     <div className="pb-24">
-      <PageHero eyebrow="404" title={<>This page <span className="brand-text">flew away</span></>}>
+      <PageHero eyebrow="404" title="This page flew away">
         We couldn&apos;t find what you were looking for.
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <ButtonLink href="/">

@@ -17,8 +17,10 @@ import {
   Zap,
 } from "lucide-react";
 import type { PublicService, PublicShard, PublicStatus } from "@/lib/public-status";
-import { formatCompact, formatExact, formatUptime } from "@/lib/format";
+import { formatCompact, formatExact } from "@/lib/format";
 import { useI18n } from "@/lib/i18n";
+import { TwoTone } from "@/components/two-tone";
+import { UptimeHistory } from "./uptime-history";
 
 const REFRESH = 30;
 
@@ -165,14 +167,14 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
     note: string;
     health?: { tone: Tone; label: string } | null;
   }[] = [
-    { icon: Server, label: "Servers", value: data ? formatExact(data.guilds) : "...", note: data ? `across ${data.shardCount} shard${data.shardCount === 1 ? "" : "s"}` : "" },
-    { icon: Users, label: "Members", value: data ? formatCompact(data.users) : "...", note: "across all servers" },
+    { icon: Server, label: "Servers", value: data ? formatExact(data.guilds) : "...", note: "" },
+    { icon: Users, label: "Members", value: data ? formatCompact(data.users) : "...", note: "" },
     {
       icon: Activity,
       label: "Shards online",
       value: data ? `${online.length}` : "...",
       suffix: data ? `/ ${shards.length}` : "",
-      note: data ? `up ${formatUptime(data.uptimeSeconds)}` : "",
+      note: "",
       health: shardHealth,
     },
     {
@@ -197,7 +199,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
       <div className="mx-auto max-w-4xl px-5 pb-28 pt-36 sm:pt-40">
         {/* Header */}
         <div className="text-center">
-          <h1 className="text-4xl font-semibold tracking-[-0.02em] sm:text-5xl">{t("Drew status")}</h1>
+          <h1 className="text-4xl font-semibold tracking-[-0.025em] sm:text-6xl"><TwoTone text={t("Drew status")} /></h1>
           <p className="mx-auto mt-4 max-w-lg text-balance text-soft">{t("Live health of every shard and service, and the shard your server runs on")}</p>
           <div className="mx-auto mt-8 max-w-md">
             <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 focus-within:border-brand/50">
@@ -234,7 +236,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               {tone === "good" ? <CheckCircle2 className="size-7" /> : tone === "warn" ? <TriangleAlert className="size-7" /> : <XCircle className="size-7" />}
-              <h2 id="overall" className="text-xl font-semibold tracking-tight text-fg sm:text-2xl">
+              <h2 id="overall" className="font-sans text-xl font-semibold tracking-tight text-fg sm:text-2xl">
                 {t(overallTitle)}
               </h2>
             </div>
@@ -243,25 +245,20 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
               {countdown}s
             </span>
           </div>
-          <div className="mt-6 flex h-2 gap-1" role="img" aria-label={`${online.length} of ${shards.length} shards online`}>
-            {(shards.length ? shards : Array.from({ length: 12 }, (_, i) => ({ id: i, status: "offline" as const, latencyMs: 0, guilds: 0, users: 0 }))).map((s) => (
-              <span
-                key={s.id}
-                title={data ? `Shard ${s.id}, ${t(STATE[s.status].text)}${s.status === "online" ? `, ${s.latencyMs}ms` : ""}` : undefined}
-                className={`h-full flex-1 rounded-full ${!data ? "bg-white/[0.08]" : s.status === "online" ? (s.latencyMs >= LATENCY_WARN_MS ? "bg-warn" : "bg-brand") : s.status === "connecting" ? "bg-warn" : "bg-bad"} ${target === s.id ? "ring-2 ring-white ring-offset-2 ring-offset-ink" : ""}`}
-              />
-            ))}
+          <div className="mt-6">
+            <UptimeHistory />
           </div>
         </section>
 
         {/* Numbers: one quiet panel */}
         <section className="mt-6 grid grid-cols-2 overflow-hidden rounded-2xl border border-white/10 sm:grid-cols-4" aria-label="Summary">
           {kpis.map(({ icon: Icon, label, value, suffix, note, health }, i) => (
-            <div key={label} className={`p-5 sm:p-6 ${i % 2 ? "border-l border-white/10" : ""} ${i >= 2 ? "border-t border-white/10 sm:border-t-0" : ""} ${i === 2 ? "sm:border-l" : ""}`}>
+            <div key={label} className={`min-w-0 p-4 sm:p-5 ${i % 2 ? "border-l border-white/10" : ""} ${i >= 2 ? "border-t border-white/10 sm:border-t-0" : ""} ${i % 3 !== 0 ? "sm:border-l" : ""} ${i >= 3 ? "sm:border-t sm:border-white/10" : ""} ${i % 6 !== 0 ? "lg:border-l" : ""} ${i >= 3 ? "lg:border-t-0" : ""}`}>
               <p className="flex items-center gap-1.5 text-sm text-mute">
                 <Icon className="size-4" strokeWidth={1.75} /> {t(label)}
               </p>
-              <p className={`mt-2 text-2xl font-semibold tabular-nums tracking-tight sm:text-3xl ${health ? TONE[health.tone].text : "text-fg"}`}>
+              {/* White while healthy, coloured only when shards or latency need attention */}
+              <p className={`mt-4 text-2xl font-semibold leading-none tabular-nums tracking-tight sm:text-3xl ${health && health.tone !== "good" ? TONE[health.tone].text : "text-fg"}`}>
                 {value}
                 {suffix && <span className="ml-1 text-base font-normal text-mute">{suffix}</span>}
               </p>
@@ -270,12 +267,13 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
           ))}
         </section>
 
-        {/* Services */}
+        {/* Services and infrastructure latency */}
         <section className="mt-14" aria-labelledby="services">
-          <h2 id="services" className="text-lg font-semibold tracking-tight">
+          <h2 id="services" className="font-sans text-lg font-semibold tracking-tight">
             {t("Services")}
           </h2>
-          <ul className="mt-4 divide-y divide-white/[0.06] overflow-hidden rounded-2xl border border-white/10">
+          <div className="mt-4 grid items-center gap-4 lg:grid-cols-[1.5fr_1fr]">
+          <ul className="divide-y divide-white/[0.06] overflow-hidden rounded-2xl border border-white/10">
             {(data ? [...SERVICE_ORDER.filter((k) => data.services[k]), ...Object.keys(data.services).filter((k) => !SERVICE_ORDER.includes(k))] : SERVICE_ORDER).map((key) => {
               const meta = SERVICE_META[key] ?? { label: key, icon: Cloud, detail: "" };
               const svc: PublicService | undefined = data?.services[key];
@@ -291,7 +289,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
                     </div>
                   </div>
                   <div className="flex items-center gap-3 text-sm">
-                    {svc && svc.status === "operational" && svc.latencyMs > 0 && <span className="hidden text-xs text-mute sm:inline">{svc.latencyMs}ms</span>}
+                    {svc && key !== "database" && key !== "cache" && svc.status === "operational" && svc.latencyMs > 0 && <span className="hidden text-xs text-mute sm:inline">{svc.latencyMs}ms</span>}
                     <span className={`inline-flex items-center gap-2 text-sm ${STATE[state].ring}`}>
                       <Dot state={state} />
                       {data ? t(STATE[state].text) : "..."}
@@ -301,12 +299,36 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
               );
             })}
           </ul>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+            {([
+              { key: "database", label: "DB latency", icon: Database },
+              { key: "cache", label: "Cache latency", icon: Layers },
+            ] as const).map(({ key, label, icon: Icon }) => {
+              const service = data?.services[key];
+              const health = service ? latencyTone(service.latencyMs) : { tone: "idle" as Tone, label: "No data" };
+              return (
+                <article key={key} className="surface flex min-h-28 items-center justify-between gap-4 p-5 sm:p-6">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <Icon className="size-5 shrink-0 text-brand" strokeWidth={1.75} />
+                    <div className="min-w-0">
+                      <p className="text-sm text-mute">{t(label)}</p>
+                      <p className={`mt-2 text-2xl font-semibold tabular-nums tracking-tight ${health.tone === "good" ? "text-fg" : TONE[health.tone].text}`}>
+                        {service && service.latencyMs > 0 ? `${service.latencyMs}ms` : data ? "N/A" : "..."}
+                      </p>
+                    </div>
+                  </div>
+                  <span className={`shrink-0 text-xs ${TONE[health.tone].text}`}>{t(health.label)}</span>
+                </article>
+              );
+            })}
+          </div>
+          </div>
         </section>
 
         {/* Shards */}
         <section className="mt-14" aria-labelledby="shards">
           <div className="flex items-end justify-between">
-            <h2 id="shards" className="text-lg font-semibold tracking-tight">
+            <h2 id="shards" className="font-sans text-lg font-semibold tracking-tight">
               {t("Shards")}
             </h2>
             <div className="hidden items-center gap-4 text-xs text-mute sm:flex">
@@ -323,7 +345,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
                 aria-label={`Shard ${s.id}, ${t(STATE[s.status].text)}`}
               >
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold">Shard {s.id}</h3>
+                  <h3 className="font-sans text-sm font-semibold">Shard {s.id}</h3>
                   <Dot state={s.status} pulse={s.status === "online"} />
                 </div>
                 <p className={`mt-3 inline-flex items-center gap-2 text-sm ${s.status === "online" ? TONE[latencyTone(s.latencyMs).tone].text : "text-mute"}`}>

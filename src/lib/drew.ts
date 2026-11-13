@@ -215,7 +215,7 @@ export const getBotMetrics = (range: MetricRange) =>
 
 // ---- Public showcase (largest public servers) -------------------------------
 
-export type ShowcaseGuild = { name: string; icon_url: string | null; member_count: number; verified: boolean; partnered: boolean };
-export type Showcase = { total_guilds: number; guilds: ShowcaseGuild[] };
+export type ShowcaseGuild = { name: string; icon_url: string | null; member_count: number; verified: boolean; partnered: boolean; badge?: string };
+export type Showcase = { total_guilds: number; total_members?: number; guilds: ShowcaseGuild[] };
 
 export const getShowcase = () => request<Showcase>("/api/v1/client/showcase");

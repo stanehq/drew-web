@@ -1,9 +1,9 @@
-import Link from "next/link";
+import Link from "@/components/locale-link";
 import type { ComponentProps, ReactNode } from "react";
 
 type Variant = "primary" | "secondary" | "ghost" | "outline";
 const styles: Record<Variant, string> = {
-  primary: "border border-brand bg-brand text-[#03110a] shadow-[0_5px_18px_rgba(65,207,139,0.16)] hover:border-brand-bright hover:bg-brand-bright hover:shadow-[0_7px_22px_rgba(65,207,139,0.24)]",
+  primary: "border border-[#7ee8b5] bg-[linear-gradient(110deg,#35c98d_0%,#41cf8b_58%,#7ee8b5_100%)] text-white [&_svg]:!fill-white shadow-[0_5px_18px_rgba(65,207,139,0.2)] hover:border-[#a5f3cf] hover:bg-[linear-gradient(110deg,#41cf8b_0%,#65dda9_58%,#a5f3cf_100%)] hover:text-white hover:shadow-[0_7px_22px_rgba(65,207,139,0.3)]",
   secondary: "border border-line-strong bg-white/[0.06] text-fg hover:border-white/30 hover:bg-white/[0.1]",
   ghost: "border border-transparent text-soft hover:border-line hover:bg-white/[0.05] hover:text-fg",
   outline: "border border-brand/55 bg-brand/[0.07] text-brand-bright hover:border-brand hover:bg-brand/[0.14]",

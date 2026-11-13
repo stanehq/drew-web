@@ -4,8 +4,11 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { PageLoader } from "@/components/page-loader";
 import { SITE } from "@/lib/site";
+import { headers } from "next/headers";
 import { I18nProvider } from "@/lib/i18n";
+import { isLocale } from "@/lib/locales";
 import "./globals.css";
 
 const sans = Albert_Sans({ subsets: ["latin"], variable: "--font-albert", display: "swap" });
@@ -36,11 +39,14 @@ export const viewport: Viewport = {
   colorScheme: "dark",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const fromHeader = (await headers()).get("x-drew-locale");
+  const locale = isLocale(fromHeader) ? fromHeader : "en";
   return (
-    <html lang="en" className={`${sans.variable} ${display.variable} ${mono.variable}`}>
+    <html lang={locale} className={`${sans.variable} ${display.variable} ${mono.variable}`}>
       <body className="min-h-dvh overflow-x-hidden">
-        <I18nProvider>
+        <PageLoader />
+        <I18nProvider initialLocale={locale}>
         <SiteHeader />
         <main className="relative">{children}</main>
         <SiteFooter />

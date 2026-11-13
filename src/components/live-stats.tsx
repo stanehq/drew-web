@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { formatCompact, formatUptime } from "@/lib/format";
 import { useI18n } from "@/lib/i18n";
 
@@ -33,11 +34,12 @@ export function LiveStats() {
   ];
 
   return (
-    <div>
-      <div className="grid grid-cols-2 gap-px bg-line sm:grid-cols-4">
+    <div className="relative isolate">
+      <Image src="/brand/drew-icon.svg" alt="" aria-hidden width={144} height={144} priority className="pointer-events-none absolute left-1/2 top-0 z-0 size-28 -translate-x-1/2 -translate-y-[58%] rotate-[-9deg] opacity-45 drop-shadow-[0_0_28px_rgb(65_207_139/0.35)] sm:size-36" />
+      <div className="relative z-10 grid grid-cols-2 gap-px overflow-hidden rounded-2xl bg-white/[0.06] sm:grid-cols-4">
         {items.map((it) => (
-          <div key={it.label} className="bg-ink px-6 py-7 text-left">
-            <p className="font-display text-3xl font-semibold tabular-nums tracking-[-0.02em] text-fg sm:text-4xl">{it.value}</p>
+          <div key={it.label} className="min-w-0 bg-ink px-6 py-7 text-left">
+            <p className="truncate whitespace-nowrap text-3xl font-bold tabular-nums tracking-[-0.02em] text-fg sm:text-[2.5rem] sm:leading-tight" title={it.value}>{it.value}</p>
             <p className="mt-1.5 text-sm text-mute">{t(it.label)}</p>
           </div>
         ))}

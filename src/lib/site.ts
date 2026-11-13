@@ -4,6 +4,12 @@ export const SITE = {
   description:
     "Drew is the Discord security bot for modern communities: anti-nuke, anti-raid, verification, logging and a configuration API built for AI agents.",
   support: "https://discord.gg/stane",
+  stane: {
+    web: "https://stanelabs.com/?utm_source=drewbot.xyz",
+    x: "https://x.com/stanelabs",
+    discord: "https://discord.gg/stane",
+    instagram: "https://instagram.com/stanelabs",
+  },
   docs: "https://docs.drewbot.xyz",
   topgg: "https://top.gg/bot/1441457111409103010",
   api: "https://api.drewbot.xyz/api/v1",

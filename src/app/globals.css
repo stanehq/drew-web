@@ -19,32 +19,17 @@
   --font-display: var(--font-unbounded), var(--font-albert), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, monospace;
 
-  --animate-aurora: aurora 18s ease-in-out infinite alternate;
-  --animate-float: float 7s ease-in-out infinite;
   --animate-pulse-ring: pulse-ring 2.4s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
-  --animate-shine: shine 6s linear infinite;
   --animate-fade-up: fade-up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
   --animate-marquee: marquee 50s linear infinite;
 
-  @keyframes aurora {
-    0% { transform: translate3d(-8%, -4%, 0) scale(1); }
-    100% { transform: translate3d(8%, 6%, 0) scale(1.15); }
-  }
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-  }
   @keyframes pulse-ring {
     0% { transform: scale(0.6); opacity: 0.7; }
     100% { transform: scale(2.4); opacity: 0; }
   }
-  @keyframes shine {
-    from { background-position: 200% 0; }
-    to { background-position: -200% 0; }
-  }
   @keyframes marquee {
     from { transform: translateX(0); }
-    to { transform: translateX(calc(-50% - 0.5rem)); }
+    to { transform: translateX(calc(-50% - 1.25rem)); }
   }
   @keyframes fade-up {
     from { opacity: 0; transform: translateY(14px); }
@@ -66,8 +51,9 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
-  h1, h2, h3, h4 {
+  h1, h2, h3 {
     font-family: var(--font-display);
+    color: var(--color-fg);
   }
   ::selection {
     background: rgb(65 207 139 / 0.35);
@@ -83,9 +69,9 @@
   /* Glassy surface used by cards across the site. */
   /* Sharp, hairline-bordered panel (no radius anywhere on the site). */
   .surface {
-    background: var(--color-night);
-    border: 1px solid var(--color-line);
-    border-radius: 0;
+    background: rgb(255 255 255 / 0.02);
+    border: 1px solid rgb(255 255 255 / 0.1);
+    border-radius: 0.875rem;
   }
   .surface-hover {
     transition: border-color 0.25s ease, transform 0.25s ease, background 0.25s ease;
@@ -94,40 +80,22 @@
     border-color: rgb(65 207 139 / 0.35);
     background: #0c1210;
   }
-  /* Vercel-style line grid used behind heroes. */
-  .line-grid {
-    background-image:
-      linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
-    background-size: 64px 64px;
+  /* Gradient reserved for the page's primary titles, not every heading. */
+  .drew-title {
+    background: linear-gradient(180deg, #35c98d 0%, #5bd4a6 48%, #ddf8ea 78%, #ffffff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
-  /* Small "+" markers on the corners of a framed block. */
-  .corners {
-    position: relative;
+  .drew-title-green {
+    background: linear-gradient(180deg, #35c98d 0%, #5bd4a6 48%, #ddf8ea 78%, #ffffff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
-  .corners::before,
-  .corners::after {
-    content: "";
-    position: absolute;
-    width: 11px;
-    height: 11px;
-    pointer-events: none;
-    background:
-      linear-gradient(var(--color-soft), var(--color-soft)) center / 1px 100% no-repeat,
-      linear-gradient(var(--color-soft), var(--color-soft)) center / 100% 1px no-repeat;
-    opacity: 0.6;
-  }
-  .corners::before {
-    left: -6px;
-    top: -6px;
-  }
-  .corners::after {
-    right: -6px;
-    bottom: -6px;
-  }
-  .brand-text {
-    background: linear-gradient(100deg, #ffffff 0%, var(--color-brand-bright) 40%, var(--color-brand) 70%, #ffffff 100%);
-    background-size: 200% auto;
+  /* Same vertical gradient as the Drew logo (public/brand/drew-icon.svg). */
+  .drew-wordmark {
+    background: linear-gradient(180deg, #35c98d 0%, #5bd4a6 48%, #ddf8ea 78%, #ffffff 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -139,25 +107,34 @@
     text-transform: uppercase;
     color: var(--color-brand);
   }
-  .dot-grid {
-    background-image: radial-gradient(rgb(255 255 255 / 0.07) 1px, transparent 1px);
-    background-size: 22px 22px;
-  }
-  .noise::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    opacity: 0.035;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
+
 }
 
 /* Long-form legal text rendered from content/legal. */
 .legal {
+  width: 100%;
   max-width: 46rem;
+  min-width: 0;
   color: var(--color-soft);
   line-height: 1.75;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+.legal * {
+  min-width: 0;
+  max-width: 100%;
+}
+.legal p,
+.legal li,
+.legal blockquote {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.legal pre {
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 .legal h2 {
   margin: 2.75rem 0 0.9rem;
@@ -184,8 +161,23 @@
   margin: 0.9rem 0;
 }
 .legal ul {
-  list-style: square;
-  padding-left: 1.25rem;
+  list-style: none;
+  padding-left: 0;
+}
+.legal ul > li {
+  position: relative;
+  padding-left: 1.35rem;
+}
+.legal ul > li::before {
+  content: "";
+  position: absolute;
+  left: 0.12rem;
+  top: 0.78em;
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #35c98d 0%, #7ee8b5 55%, #ffffff 100%);
+  box-shadow: 0 0 10px rgb(65 207 139 / 0.18);
 }
 .legal ol {
   list-style: decimal;
@@ -194,8 +186,9 @@
 .legal li {
   margin: 0.3rem 0;
 }
-.legal li::marker {
-  color: var(--color-brand);
+.legal ol > li::marker {
+  color: #41cf8b;
+  font-weight: 700;
 }
 .legal strong {
   color: var(--color-fg);
@@ -241,14 +234,37 @@
   padding: 0.1rem 0.35rem;
 }
 
-/* Closing CTA: several soft color spots over Drew green that drift slowly. */
+/* Language picker: panel scales in, items cascade, the flag pops on change. */
+.lang-panel-in {
+  animation: lang-panel 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.lang-item-in {
+  animation: lang-item 220ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.lang-flag-in {
+  animation: lang-flag 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes lang-panel {
+  from { opacity: 0; transform: translateY(-4px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes lang-item {
+  from { opacity: 0; transform: translateY(3px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes lang-flag {
+  from { opacity: 0; transform: scale(0.6) rotate(-8deg); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Closing CTA: Drew green with soft color spots that drift slowly. */
 .cta-gradient {
   background:
-    radial-gradient(60% 80% at 15% 20%, #35c98d 0%, transparent 60%),
-    radial-gradient(55% 75% at 85% 30%, #0fb5a6 0%, transparent 60%),
+    radial-gradient(60% 80% at 15% 20%, #5bd9a0 0%, transparent 60%),
+    radial-gradient(55% 75% at 85% 30%, #41cf8b 0%, transparent 60%),
     radial-gradient(70% 90% at 50% 110%, #7ee8b5 0%, transparent 55%),
-    radial-gradient(50% 70% at 70% 90%, #1f7a52 0%, transparent 60%),
-    linear-gradient(135deg, #1fae74, #128a7a);
+    radial-gradient(50% 70% at 70% 90%, #2fae72 0%, transparent 60%),
+    linear-gradient(135deg, #41cf8b, #2fae72);
   background-size: 160% 160%;
   animation: cta-drift 14s ease-in-out infinite alternate;
 }
@@ -257,6 +273,8 @@
   to { background-position: 100% 100%; }
 }
 
+/* Reduced motion (e.g. Windows "Animation effects" off): stop decorative motion,
+   but keep the server carousel and loading indicators working. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -265,4 +283,77 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
+}
+
+
+/* Radial loader based on the supplied four-corner spinner. */
+.loader {
+  width: 76px;
+  height: 76px;
+  color: #41cf8b;
+  position: relative;
+  display: block;
+  flex: 0 0 auto;
+  background: radial-gradient(19px, currentColor 94%, transparent);
+}
+.loader::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #35c98d 0%, #5bd4a6 48%, #ddf8ea 78%, #ffffff 100%);
+  -webkit-mask:
+    radial-gradient(17.1px at bottom right, transparent 94%, #000) top left,
+    radial-gradient(17.1px at bottom left, transparent 94%, #000) top right,
+    radial-gradient(17.1px at top right, transparent 94%, #000) bottom left,
+    radial-gradient(17.1px at top left, transparent 94%, #000) bottom right;
+  mask:
+    radial-gradient(17.1px at bottom right, transparent 94%, #000) top left,
+    radial-gradient(17.1px at bottom left, transparent 94%, #000) top right,
+    radial-gradient(17.1px at top right, transparent 94%, #000) bottom left,
+    radial-gradient(17.1px at top left, transparent 94%, #000) bottom right;
+  -webkit-mask-size: 38px 38px;
+  mask-size: 38px 38px;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  animation: loader 1.5s infinite cubic-bezier(0.3, 1, 0, 1);
+}
+@keyframes loader {
+  33% { inset: -19px; transform: rotate(0deg); }
+  66% { inset: -19px; transform: rotate(90deg); }
+  100% { inset: 0; transform: rotate(90deg); }
+}
+/* If JavaScript never runs, the full-screen loader still gets out of the way. */
+.page-loader:not(.page-loader-nav) {
+  animation: page-loader-out 0.3s 9s forwards;
+}
+@keyframes page-loader-out {
+  to { opacity: 0; visibility: hidden; }
+}
+
+/* Leaving: the squares shrink and blur away while the black curtain fades. */
+.page-loader-leave {
+  animation: page-loader-curtain 0.9s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+.page-loader-leave .page-loader-mark {
+  animation: page-loader-mark-out 0.55s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+@keyframes page-loader-curtain {
+  0%, 35% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes page-loader-mark-out {
+  to { opacity: 0; transform: scale(0.6); filter: blur(8px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none !important;
+  }
+}
+
+
+/* Feature and interface SVGs use the Drew green-to-white brand gradient. */
+.drew-icon-gradient {
+  stroke: url("#drew-icon-gradient");
 }

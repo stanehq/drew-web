@@ -1,0 +1,1470 @@
+[
+ {
+  "id": "opsec",
+  "label": "Security",
+  "order": 990,
+  "intro": "Configure Drew's protection modules: anti-nuke, anti-raid, punishments, thresholds, whitelists and presets.",
+  "notes": [
+   "Every subcommand except config and servershow requires an active SUDO session. Run /sudo enter first.",
+   "Features that take effect today: nuke (anti-nuke) and raid (anti-raid). links and invites are stored for an upcoming module and have no effect yet.",
+   "Punishments and limits that take effect today: nuke, raid, channel_delete, channel_create, role_delete, role_create and join_rate. Other values are accepted and stored for upcoming modules."
+  ],
+  "commands": [
+   {
+    "name": "/opsec config",
+    "description": "View current security settings.",
+    "notes": [],
+    "options": [
+     {
+      "name": "category",
+      "type": "Text",
+      "required": true,
+      "description": "Choose the settings category. Values: anti_nuke, verification, beast_mode, whitelist, backup."
+     }
+    ]
+   },
+   {
+    "name": "/opsec snapshot",
+    "description": "Manage server security snapshots.",
+    "notes": [],
+    "options": [
+     {
+      "name": "action",
+      "type": "Text",
+      "required": true,
+      "description": "Action to perform. Values: save, load, delete."
+     }
+    ]
+   },
+   {
+    "name": "/opsec enable",
+    "description": "Enable a protection feature.",
+    "notes": [
+     "Values for feature: nuke, raid, links, invites."
+    ],
+    "options": [
+     {
+      "name": "feature",
+      "type": "Text",
+      "required": true,
+      "description": "Feature to enable"
+     }
+    ]
+   },
+   {
+    "name": "/opsec disable",
+    "description": "Disable a protection feature (Requires SUDO).",
+    "notes": [
+     "Values for feature: nuke, raid, links, invites."
+    ],
+    "options": [
+     {
+      "name": "feature",
+      "type": "Text",
+      "required": true,
+      "description": "Feature to disable"
+     }
+    ]
+   },
+   {
+    "name": "/opsec punishment",
+    "description": "Configure punishment for an action.",
+    "notes": [
+     "Values for action: nuke, raid, channel_delete, channel_create, role_delete, role_create, dangerous_permissions, admin_role, invite_link, spam, antibot."
+    ],
+    "options": [
+     {
+      "name": "action",
+      "type": "Text",
+      "required": true,
+      "description": "The action to punish"
+     },
+     {
+      "name": "type",
+      "type": "Text",
+      "required": true,
+      "description": "Punishment type. Values: none, timeout, kick, ban."
+     }
+    ]
+   },
+   {
+    "name": "/opsec limit",
+    "description": "Configure threshold for an action.",
+    "notes": [
+     "Values for action: ban, kick, channel_delete, channel_create, role_delete, role_create, join_rate. Limits count actions by one user within 10 seconds (join_rate counts joins)."
+    ],
+    "options": [
+     {
+      "name": "action",
+      "type": "Text",
+      "required": true,
+      "description": "The action to limit"
+     },
+     {
+      "name": "threshold",
+      "type": "Integer",
+      "required": true,
+      "description": "Threshold value"
+     }
+    ]
+   },
+   {
+    "name": "/opsec whitelist",
+    "description": "Manage security whitelists.",
+    "notes": [],
+    "options": [
+     {
+      "name": "action",
+      "type": "Text",
+      "required": true,
+      "description": "Add/Remove from whitelist. Values: add_user, remove_user, add_role, remove_role."
+     },
+     {
+      "name": "user",
+      "type": "User",
+      "required": false,
+      "description": "The user to whitelist"
+     },
+     {
+      "name": "role",
+      "type": "Role",
+      "required": false,
+      "description": "The role to whitelist"
+     }
+    ]
+   },
+   {
+    "name": "/opsec setup",
+    "description": "Apply a security preset.",
+    "notes": [
+     "Presets turn anti-nuke and anti-raid on (or off with unprotected) and set the join-rate thresholds: basic 6 joins in 30 s, guarded 5 in 25 s, fortress 4 in 20 s."
+    ],
+    "options": [
+     {
+      "name": "tier",
+      "type": "Text",
+      "required": true,
+      "description": "Preset tier to apply. Values: basic, guarded, fortress, unprotected."
+     }
+    ]
+   },
+   {
+    "name": "/opsec servershow",
+    "description": "Show or hide this server in the carousel on drewbot.xyz.",
+    "notes": [
+     "off hides this server from the carousel on drewbot.xyz, on shows it again. Servers are shown by default. Doesn't need SUDO."
+    ],
+    "options": [
+     {
+      "name": "state",
+      "type": "Text",
+      "required": true,
+      "description": "on shows the server, off hides it. Values: on, off."
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "sudo",
+  "label": "SUDO",
+  "order": 980,
+  "intro": "SUDO mode protects sensitive changes with a password that only the server owner sets, so a compromised admin account can't switch your protection off.",
+  "notes": [
+   "Sessions last 15 minutes. Use /sudo exit to end one early."
+  ],
+  "commands": [
+   {
+    "name": "/sudo enter",
+    "description": "Enter SUDO mode for 15 minutes.",
+    "notes": [
+     "Requires the Administrator permission."
+    ],
+    "options": [
+     {
+      "name": "password",
+      "type": "Text",
+      "required": false,
+      "description": "Required after the server owner configures SUDO"
+     }
+    ]
+   },
+   {
+    "name": "/sudo exit",
+    "description": "Exit SUDO mode immediately.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/sudo status",
+    "description": "Check current SUDO session status.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/sudo setup",
+    "description": "Configure SUDO protection (Owner only).",
+    "notes": [
+     "Server owner only."
+    ],
+    "options": [
+     {
+      "name": "password",
+      "type": "Text",
+      "required": true,
+      "description": "Set or update the SUDO password"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "mod",
+  "label": "Moderation",
+  "order": 970,
+  "intro": "Day-to-day moderation: bans, kicks, timeouts, warnings, purges, channel locks and case history.",
+  "notes": [
+   "ban, kick, unban, lockall and unlockall also require an active SUDO session."
+  ],
+  "commands": [
+   {
+    "name": "/mod ban",
+    "description": "Ban a member from the server.",
+    "notes": [
+     "Requires an active SUDO session (/sudo enter)."
+    ],
+    "options": [
+     {
+      "name": "user",
+      "type": "User",
+      "required": true,
+      "description": "User to ban"
+     },
+     {
+      "name": "reason",
+      "type": "Text",
+      "required": false,
+      "description": "Reason for the ban"
+     }
+    ]
+   },
+   {
+    "name": "/mod kick",
+    "description": "Kick a member from the server.",
+    "notes": [
+     "Requires an active SUDO session (/sudo enter)."
+    ],
+    "options": [
+     {
+      "name": "user",
+      "type": "User",
+      "required": true,
+      "description": "User to kick"
+     },
+     {
+      "name": "reason",
+      "type": "Text",
+      "required": false,
+      "description": "Reason for the kick"
+     }
+    ]
+   },
+   {
+    "name": "/mod timeout",
+    "description": "Timeout a member in minutes.",
+    "notes": [
+     "Requires Moderate Members."
+    ],
+    "options": [
+     {
+      "name": "user",
+      "type": "User",
+      "required": true,
+      "description": "User to timeout"
+     },
+     {
+      "name": "minutes",
+      "type": "Integer",
+      "required": true,
+      "description": "Duration in minutes"
+     },
+     {
+      "name": "reason",
+      "type": "Text",
+      "required": false,
+      "description": "Reason for the timeout"
+     }
+    ]
+   },
+   {
+    "name": "/mod untimeout",
+    "description": "Remove a timeout from a member.",
+    "notes": [
+     "Requires Moderate Members."
+    ],
+    "options": [
+     {
+      "name": "user",
+      "type": "User",
+      "required": true,
+      "description": "User to untimeout"
+     },
+     {
+      "name": "reason",
+      "type": "Text",
+      "required": false,
+      "description": "Reason"
+     }
+    ]
+   },
+   {
+    "name": "/mod purge",
+    "description": "Delete a number of messages in the channel.",
+    "notes": [
+     "Requires Manage Messages."
+    ],
+    "options": [
+     {
+      "name": "amount",
+      "type": "Integer",
+      "required": true,
+      "description": "Number of messages to delete"
+     },
+     {
+      "name": "user",
+      "type": "User",
+      "required": false,
+      "description": "Only delete messages from this user"
+     }
+    ]
+   },
+   {
+    "name": "/mod unban",
+    "description": "Unban a user from the server.",
+    "notes": [
+     "Requires an active SUDO session (/sudo enter)."
+    ],
+    "options": [
+     {
+      "name": "user",
+      "type": "User",
+      "required": true,
+      "description": "User to unban"
+     },
+     {
+      "name": "reason",
+      "type": "Text",
+      "required": false,
+      "description": "Reason"
+     }
+    ]
+   },
+   {
+    "name": "/mod lock",
+    "description": "Lock the current channel.",
+    "notes": [
+     "Requires Manage Channels."
+    ],
+    "options": []
+   },
+   {
+    "name": "/mod unlock",
+    "description": "Unlock the current channel.",
+    "notes": [
+     "Requires Manage Channels."
+    ],
+    "options": []
+   },
+   {
+    "name": "/mod slowmode",
+    "description": "Set the slowmode for the channel.",
+    "notes": [
+     "Requires Manage Channels."
+    ],
+    "options": [
+     {
+      "name": "seconds",
+      "type": "Integer",
+      "required": true,
+      "description": "Slowmode in seconds (0 to disable)"
+     }
+    ]
+   },
+   {
+    "name": "/mod warn",
+    "description": "Warn a member.",
+    "notes": [
+     "Requires Kick Members."
+    ],
+    "options": [
+     {
+      "name": "user",
+      "type": "User",
+      "required": true,
+      "description": "User to warn"
+     },
+     {
+      "name": "reason",
+      "type": "Text",
+      "required": true,
+      "description": "Reason for the warning"
+     }
+    ]
+   },
+   {
+    "name": "/mod sanitize",
+    "description": "Clean a member's nickname.",
+    "notes": [
+     "Requires Manage Nicknames."
+    ],
+    "options": [
+     {
+      "name": "user",
+      "type": "User",
+      "required": true,
+      "description": "User to sanitize"
+     }
+    ]
+   },
+   {
+    "name": "/mod lockall",
+    "description": "Lock all text channels.",
+    "notes": [
+     "Requires an active SUDO session (/sudo enter)."
+    ],
+    "options": []
+   },
+   {
+    "name": "/mod unlockall",
+    "description": "Unlock all text channels.",
+    "notes": [
+     "Requires an active SUDO session (/sudo enter)."
+    ],
+    "options": []
+   },
+   {
+    "name": "/mod cases",
+    "description": "View or modify moderation cases.",
+    "notes": [
+     "Requires Manage Server or Administrator."
+    ],
+    "options": [
+     {
+      "name": "operation",
+      "type": "Text",
+      "required": true,
+      "description": "Select an action. Values: view, modify."
+     },
+     {
+      "name": "user",
+      "type": "User",
+      "required": false,
+      "description": "Filter cases by user (view)"
+     },
+     {
+      "name": "case_id",
+      "type": "Integer",
+      "required": false,
+      "description": "Case ID to edit (modify)"
+     },
+     {
+      "name": "reason",
+      "type": "Text",
+      "required": false,
+      "description": "New reason (modify)"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "log",
+  "label": "Logging",
+  "order": 960,
+  "intro": "Send server events to a log channel: messages, members, moderation, channels, roles, voice, invites and server changes.",
+  "notes": [
+   "Every configuration change made with commands, the dashboard or the API is also announced in the log channel."
+  ],
+  "commands": [
+   {
+    "name": "/log set",
+    "description": "Set the audit log channel.",
+    "notes": [],
+    "options": [
+     {
+      "name": "channel",
+      "type": "Channel",
+      "required": true,
+      "description": "Channel for audit logs"
+     },
+     {
+      "name": "debounce",
+      "type": "Integer",
+      "required": false,
+      "description": "Seconds between duplicate logs"
+     }
+    ]
+   },
+   {
+    "name": "/log toggle",
+    "description": "Enable/disable specific log categories.",
+    "notes": [],
+    "options": [
+     {
+      "name": "category",
+      "type": "Text",
+      "required": true,
+      "description": "The category to toggle. Values: message, member, moderation, channel, role, voice, invite, guild."
+     }
+    ]
+   },
+   {
+    "name": "/log status",
+    "description": "Show logging status and enabled categories.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/log clear",
+    "description": "Clear the audit log channel.",
+    "notes": [],
+    "options": []
+   }
+  ]
+ },
+ {
+  "id": "verify",
+  "label": "Verification",
+  "order": 950,
+  "intro": "A one-click verification panel that gives members a role.",
+  "notes": [],
+  "commands": [
+   {
+    "name": "/verify setup",
+    "description": "Setup the verification role and channel.",
+    "notes": [],
+    "options": [
+     {
+      "name": "role",
+      "type": "Role",
+      "required": true,
+      "description": "Role to assign upon verification"
+     },
+     {
+      "name": "channel",
+      "type": "Channel",
+      "required": true,
+      "description": "Channel for the verification panel"
+     }
+    ]
+   },
+   {
+    "name": "/verify send",
+    "description": "Send the verification panel.",
+    "notes": [],
+    "options": []
+   }
+  ]
+ },
+ {
+  "id": "bkp",
+  "label": "Backups",
+  "order": 940,
+  "intro": "Save your server configuration and restore it later.",
+  "notes": [],
+  "commands": [
+   {
+    "name": "/bkp save",
+    "description": "Save current server configuration.",
+    "notes": [],
+    "options": [
+     {
+      "name": "category",
+      "type": "Text",
+      "required": true,
+      "description": "Backup category (full, security, limits, punishments, channels)"
+     },
+     {
+      "name": "label",
+      "type": "Text",
+      "required": false,
+      "description": "Optional label for this backup"
+     }
+    ]
+   },
+   {
+    "name": "/bkp list",
+    "description": "List available backups.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/bkp load",
+    "description": "Load a server backup.",
+    "notes": [],
+    "options": [
+     {
+      "name": "category",
+      "type": "Text",
+      "required": true,
+      "description": "Backup category to load. Values: full, security, limits, punishments, channels."
+     }
+    ]
+   },
+   {
+    "name": "/bkp delete",
+    "description": "Delete backups in a category.",
+    "notes": [],
+    "options": [
+     {
+      "name": "category",
+      "type": "Text",
+      "required": true,
+      "description": "Category to clear. Values: full, security, limits, punishments, channels."
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "api",
+  "label": "API tokens",
+  "order": 930,
+  "intro": "Create and manage tokens for the [Configuration API](../developers/api/intro.md).",
+  "notes": [
+   "Creating a token requires being the server owner or having an active SUDO session. admin tokens can only be created by the owner.",
+   "The token is shown once, only to you. Drew stores only its SHA-256 hash."
+  ],
+  "commands": [
+   {
+    "name": "/api token create",
+    "description": "Create an API token (requires server owner or an active SUDO session).",
+    "notes": [],
+    "options": [
+     {
+      "name": "name",
+      "type": "Text",
+      "required": true,
+      "description": "What the token is for, e.g. \"claude-setup\""
+     },
+     {
+      "name": "scope",
+      "type": "Text",
+      "required": true,
+      "description": "What the token can do. Values: read, write, admin."
+     },
+     {
+      "name": "expires",
+      "type": "Text",
+      "required": false,
+      "description": "When the token stops working (default: 30 days). Values: 1, 7, 30, 90, 365."
+     }
+    ]
+   },
+   {
+    "name": "/api token list",
+    "description": "List this server's active API tokens.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/api token revoke",
+    "description": "Revoke an API token immediately.",
+    "notes": [
+     "Requires the server owner or an active SUDO session."
+    ],
+    "options": [
+     {
+      "name": "token",
+      "type": "Text",
+      "required": true,
+      "description": "Token prefix (drew_xxxxxxxx) or ID from /api token list"
+     }
+    ]
+   },
+   {
+    "name": "/api docs",
+    "description": "How to configure Drew through the API.",
+    "notes": [],
+    "options": []
+   }
+  ]
+ },
+ {
+  "id": "giveaway",
+  "label": "Giveaways",
+  "order": 920,
+  "intro": "Run giveaways with a timer, winners and an optional required role.",
+  "notes": [],
+  "commands": [
+   {
+    "name": "/giveaway start",
+    "description": "Launch a new giveaway.",
+    "notes": [],
+    "options": [
+     {
+      "name": "title",
+      "type": "Text",
+      "required": true,
+      "description": "Prize or giveaway title"
+     },
+     {
+      "name": "duration",
+      "type": "Text",
+      "required": true,
+      "description": "Duration (e.g. 10m, 2h, 1d)"
+     },
+     {
+      "name": "winners",
+      "type": "Integer",
+      "required": true,
+      "description": "Number of winners"
+     },
+     {
+      "name": "required_role",
+      "type": "Role",
+      "required": false,
+      "description": "Role required to enter (optional)"
+     }
+    ]
+   },
+   {
+    "name": "/giveaway end",
+    "description": "Force-end an active giveaway.",
+    "notes": [],
+    "options": [
+     {
+      "name": "message_id",
+      "type": "Text",
+      "required": true,
+      "description": "Giveaway message ID"
+     }
+    ]
+   },
+   {
+    "name": "/giveaway reroll",
+    "description": "Reroll a winner for an ended giveaway.",
+    "notes": [],
+    "options": [
+     {
+      "name": "message_id",
+      "type": "Text",
+      "required": true,
+      "description": "Giveaway message ID"
+     }
+    ]
+   },
+   {
+    "name": "/giveaway list",
+    "description": "List all active giveaways in this server.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/giveaway pause",
+    "description": "Pause an active giveaway (timer stops).",
+    "notes": [],
+    "options": [
+     {
+      "name": "message_id",
+      "type": "Text",
+      "required": true,
+      "description": "Giveaway message ID"
+     }
+    ]
+   },
+   {
+    "name": "/giveaway resume",
+    "description": "Resume a paused giveaway.",
+    "notes": [],
+    "options": [
+     {
+      "name": "message_id",
+      "type": "Text",
+      "required": true,
+      "description": "Giveaway message ID"
+     }
+    ]
+   },
+   {
+    "name": "/giveaway delete",
+    "description": "Delete a giveaway permanently.",
+    "notes": [],
+    "options": [
+     {
+      "name": "message_id",
+      "type": "Text",
+      "required": true,
+      "description": "Giveaway message ID"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "av",
+  "label": "Antivirus",
+  "order": 910,
+  "intro": "Check files, links, domains and IPs with VirusTotal.",
+  "notes": [],
+  "commands": [
+   {
+    "name": "/av scanfile",
+    "description": "Submit a file to VirusTotal for scanning.",
+    "notes": [],
+    "options": [
+     {
+      "name": "file",
+      "type": "File",
+      "required": true,
+      "description": "The file to scan (max 32MB)"
+     }
+    ]
+   },
+   {
+    "name": "/av scanweb",
+    "description": "Submit a URL to VirusTotal for scanning.",
+    "notes": [],
+    "options": [
+     {
+      "name": "url",
+      "type": "Text",
+      "required": true,
+      "description": "URL to scan"
+     }
+    ]
+   },
+   {
+    "name": "/av lookup",
+    "description": "Lookup a hash, URL, domain, or IP on VirusTotal.",
+    "notes": [],
+    "options": [
+     {
+      "name": "query",
+      "type": "Text",
+      "required": true,
+      "description": "Hash, URL, domain, or IP"
+     },
+     {
+      "name": "type",
+      "type": "Text",
+      "required": true,
+      "description": "Lookup type (file, url, domain, ip)"
+     }
+    ]
+   },
+   {
+    "name": "/av history",
+    "description": "Show recent VirusTotal scans.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/av rescan",
+    "description": "Request a file rescan.",
+    "notes": [],
+    "options": [
+     {
+      "name": "hash",
+      "type": "Text",
+      "required": true,
+      "description": "File hash (MD5/SHA1/SHA256)"
+     }
+    ]
+   },
+   {
+    "name": "/av flags",
+    "description": "Show analysis flags for a VirusTotal analysis ID.",
+    "notes": [],
+    "options": [
+     {
+      "name": "id",
+      "type": "Text",
+      "required": true,
+      "description": "VirusTotal analysis ID"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "gen",
+  "label": "General",
+  "order": 900,
+  "intro": "Help, bot info, server and user info, feedback, reports and message snipes.",
+  "notes": [],
+  "commands": [
+   {
+    "name": "/gen help",
+    "description": "Show help menu.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/gen about",
+    "description": "Show bot info.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/gen ping",
+    "description": "Show latency.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/gen dashboard",
+    "description": "Manage everything.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/gen invite",
+    "description": "Invite link.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/gen infouser",
+    "description": "Show user info.",
+    "notes": [],
+    "options": [
+     {
+      "name": "user",
+      "type": "User",
+      "required": false,
+      "description": "Target"
+     }
+    ]
+   },
+   {
+    "name": "/gen infoserver",
+    "description": "Show server info.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/gen feedback",
+    "description": "Send feedback.",
+    "notes": [],
+    "options": [
+     {
+      "name": "content",
+      "type": "Text",
+      "required": true,
+      "description": "Your feedback"
+     }
+    ]
+   },
+   {
+    "name": "/gen report",
+    "description": "Report a user.",
+    "notes": [],
+    "options": [
+     {
+      "name": "user",
+      "type": "User",
+      "required": true,
+      "description": "Target"
+     },
+     {
+      "name": "reason",
+      "type": "Text",
+      "required": true,
+      "description": "Reason for report"
+     }
+    ]
+   },
+   {
+    "name": "/gen snipe",
+    "description": "Snipe latest deleted message.",
+    "notes": [],
+    "options": [
+     {
+      "name": "index",
+      "type": "Integer",
+      "required": false,
+      "description": "Message index"
+     }
+    ]
+   },
+   {
+    "name": "/gen editsnipe",
+    "description": "Snipe latest edited message.",
+    "notes": [],
+    "options": [
+     {
+      "name": "index",
+      "type": "Integer",
+      "required": false,
+      "description": "Edit index"
+     }
+    ]
+   },
+   {
+    "name": "/gen reactionsnipe",
+    "description": "Snipe latest removed reaction.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/gen clearsnipe",
+    "description": "Clear all snipes (Manage Messages req).",
+    "notes": [
+     "Requires Manage Messages."
+    ],
+    "options": []
+   },
+   {
+    "name": "/gen reactionhistory",
+    "description": "View reaction history for message.",
+    "notes": [
+     "Requires Manage Messages."
+    ],
+    "options": [
+     {
+      "name": "messagelink",
+      "type": "Text",
+      "required": true,
+      "description": "Discord message link"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "music",
+  "label": "Music",
+  "order": 890,
+  "intro": "Play music in a voice channel.",
+  "notes": [],
+  "commands": [
+   {
+    "name": "/music play",
+    "description": "Play high-fidelity music from Spotify/Apple/Deezer.",
+    "notes": [],
+    "options": [
+     {
+      "name": "query",
+      "type": "Text",
+      "required": true,
+      "description": "Song name, Spotify URL, etc"
+     }
+    ]
+   },
+   {
+    "name": "/music skip",
+    "description": "Skip the current track.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/music stop",
+    "description": "Stop playback and clear queue.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/music queue",
+    "description": "Show current queue.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/music shuffle",
+    "description": "Shuffle the queue.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/music autoplay",
+    "description": "Toggle AutoPlay mode.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/music stay",
+    "description": "Toggle 24/7 mode.",
+    "notes": [],
+    "options": []
+   }
+  ]
+ },
+ {
+  "id": "voicemaster",
+  "label": "VoiceMaster",
+  "order": 880,
+  "intro": "Join to Create voice rooms that members can manage themselves.",
+  "notes": [],
+  "commands": [
+   {
+    "name": "/setup default",
+    "description": "Create default Join to Create channel.",
+    "notes": [],
+    "options": [
+     {
+      "name": "channel",
+      "type": "Channel",
+      "required": true,
+      "description": "Voice channel"
+     }
+    ]
+   },
+   {
+    "name": "/setup predefined",
+    "description": "Channels with variable names.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/set channel",
+    "description": "Set Join to Create channel.",
+    "notes": [],
+    "options": [
+     {
+      "name": "channel",
+      "type": "Channel",
+      "required": true,
+      "description": "The channel"
+     }
+    ]
+   },
+   {
+    "name": "/set role",
+    "description": "Set moderator role.",
+    "notes": [],
+    "options": [
+     {
+      "name": "role",
+      "type": "Role",
+      "required": true,
+      "description": "The role"
+     }
+    ]
+   },
+   {
+    "name": "/set bitrate",
+    "description": "Set default bitrate.",
+    "notes": [],
+    "options": [
+     {
+      "name": "bitrate",
+      "type": "Integer",
+      "required": true,
+      "description": "8-384"
+     }
+    ]
+   },
+   {
+    "name": "/toggle list",
+    "description": "Show all toggles.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/toggle set",
+    "description": "Set a toggle.",
+    "notes": [],
+    "options": [
+     {
+      "name": "feature",
+      "type": "Text",
+      "required": true,
+      "description": "Feature name"
+     },
+     {
+      "name": "state",
+      "type": "True/False",
+      "required": true,
+      "description": "On/Off"
+     }
+    ]
+   },
+   {
+    "name": "/voice lock",
+    "description": "Lock room.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/voice unlock",
+    "description": "Unlock room.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/voice ghost",
+    "description": "Hide room.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/voice unghost",
+    "description": "Unhide room.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/voice claim",
+    "description": "Claim room.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/voice limit",
+    "description": "Set limit.",
+    "notes": [],
+    "options": [
+     {
+      "name": "limit",
+      "type": "Integer",
+      "required": true,
+      "description": "Count"
+     }
+    ]
+   },
+   {
+    "name": "/voice name",
+    "description": "Rename room.",
+    "notes": [],
+    "options": [
+     {
+      "name": "name",
+      "type": "Text",
+      "required": true,
+      "description": "New name"
+     }
+    ]
+   },
+   {
+    "name": "/voice game",
+    "description": "Rename to activity.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/voice bitrate",
+    "description": "Set bitrate.",
+    "notes": [],
+    "options": [
+     {
+      "name": "kbps",
+      "type": "Integer",
+      "required": true,
+      "description": "Bitrate"
+     }
+    ]
+   },
+   {
+    "name": "/voice permit",
+    "description": "Permit user.",
+    "notes": [],
+    "options": [
+     {
+      "name": "user",
+      "type": "User",
+      "required": true,
+      "description": "Target"
+     }
+    ]
+   },
+   {
+    "name": "/voice reject",
+    "description": "Reject user.",
+    "notes": [],
+    "options": [
+     {
+      "name": "user",
+      "type": "User",
+      "required": true,
+      "description": "Target"
+     }
+    ]
+   },
+   {
+    "name": "/voice status",
+    "description": "Set room status.",
+    "notes": [],
+    "options": [
+     {
+      "name": "text",
+      "type": "Text",
+      "required": true,
+      "description": "The status"
+     }
+    ]
+   },
+   {
+    "name": "/voice region",
+    "description": "Set voice region.",
+    "notes": [],
+    "options": [
+     {
+      "name": "region",
+      "type": "Text",
+      "required": true,
+      "description": "The region. Values: us-east, us-west, rotterdam, brazil, hongkong."
+     }
+    ]
+   },
+   {
+    "name": "/voice transfer",
+    "description": "Transfer ownership.",
+    "notes": [],
+    "options": [
+     {
+      "name": "user",
+      "type": "User",
+      "required": true,
+      "description": "New owner"
+     }
+    ]
+   },
+   {
+    "name": "/voice text",
+    "description": "Toggle private text channel.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/interface",
+    "description": "Control panel.",
+    "notes": [],
+    "options": []
+   }
+  ]
+ },
+ {
+  "id": "lastfm",
+  "label": "Last.fm",
+  "order": 870,
+  "intro": "Show what you're listening to and your Last.fm stats.",
+  "notes": [],
+  "commands": [
+   {
+    "name": "/lastfm set",
+    "description": "Set your Last.fm username.",
+    "notes": [],
+    "options": [
+     {
+      "name": "username",
+      "type": "Text",
+      "required": true,
+      "description": "Your Last.fm username"
+     }
+    ]
+   },
+   {
+    "name": "/lastfm np",
+    "description": "Show what you are currently playing.",
+    "notes": [],
+    "options": [
+     {
+      "name": "user",
+      "type": "User",
+      "required": false,
+      "description": "User to check (defaults to you)"
+     }
+    ]
+   },
+   {
+    "name": "/lastfm stats",
+    "description": "Show your Last.fm stats.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/lastfm milestone",
+    "description": "How many scrobbles until a milestone.",
+    "notes": [],
+    "options": [
+     {
+      "name": "number",
+      "type": "Integer",
+      "required": true,
+      "description": "The milestone number (e.g. 10000)"
+     }
+    ]
+   },
+   {
+    "name": "/lastfm playsalbum",
+    "description": "Check how many plays you have for an album.",
+    "notes": [],
+    "options": [
+     {
+      "name": "query",
+      "type": "Text",
+      "required": true,
+      "description": "Artist - Album name"
+     },
+     {
+      "name": "member",
+      "type": "User",
+      "required": false,
+      "description": "Member to check (defaults to you)"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "crypto",
+  "label": "Crypto",
+  "order": 860,
+  "intro": "Prices, gas fees and transaction lookups.",
+  "notes": [],
+  "commands": [
+   {
+    "name": "/crypto",
+    "description": "Check cryptocurrency price.",
+    "notes": [],
+    "options": [
+     {
+      "name": "crypto",
+      "type": "Text",
+      "required": true,
+      "description": "The crypto (e.g. bitcoin, ethereum)"
+     },
+     {
+      "name": "currency",
+      "type": "Text",
+      "required": false,
+      "description": "Currency (default: usd)"
+     }
+    ]
+   },
+   {
+    "name": "/gas",
+    "description": "View current gas prices.",
+    "notes": [],
+    "options": []
+   },
+   {
+    "name": "/transaction",
+    "description": "Get transaction info (BTC, LTC, ETH).",
+    "notes": [],
+    "options": [
+     {
+      "name": "hash",
+      "type": "Text",
+      "required": true,
+      "description": "Transaction hash"
+     }
+    ]
+   },
+   {
+    "name": "/subscribe",
+    "description": "Subscribe to a BTC transaction for one confirmation.",
+    "notes": [],
+    "options": [
+     {
+      "name": "hash",
+      "type": "Text",
+      "required": true,
+      "description": "BTC Transaction hash"
+     }
+    ]
+   }
+  ]
+ }
+]
