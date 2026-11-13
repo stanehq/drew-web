@@ -184,6 +184,20 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
       note: "",
       health: latencyHealth,
     },
+    {
+      icon: Database,
+      label: "DB latency",
+      value: data?.services.database?.latencyMs ? `${data.services.database.latencyMs}ms` : data ? "N/A" : "...",
+      note: "",
+      health: data?.services.database ? latencyTone(data.services.database.latencyMs) : { tone: "idle", label: "No data" },
+    },
+    {
+      icon: Layers,
+      label: "Cache latency",
+      value: data?.services.cache?.latencyMs ? `${data.services.cache.latencyMs}ms` : data ? "N/A" : "...",
+      note: "",
+      health: data?.services.cache ? latencyTone(data.services.cache.latencyMs) : { tone: "idle", label: "No data" },
+    },
   ];
 
   const tone = overall === "operational" ? "good" : overall === "degraded" ? "warn" : "bad";
@@ -251,9 +265,9 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
         </section>
 
         {/* Numbers: one quiet panel */}
-        <section className="mt-6 grid grid-cols-2 overflow-hidden rounded-2xl border border-white/10 sm:grid-cols-4" aria-label="Summary">
+        <section className="mt-6 grid grid-cols-2 overflow-hidden rounded-2xl border border-white/10 sm:grid-cols-3 lg:grid-cols-6" aria-label="Summary">
           {kpis.map(({ icon: Icon, label, value, suffix, note, health }, i) => (
-            <div key={label} className={`p-5 sm:p-6 ${i % 2 ? "border-l border-white/10" : ""} ${i >= 2 ? "border-t border-white/10 sm:border-t-0" : ""} ${i === 2 ? "sm:border-l" : ""}`}>
+            <div key={label} className={`min-w-0 p-4 sm:p-5 ${i % 2 ? "border-l border-white/10" : ""} ${i >= 2 ? "border-t border-white/10 sm:border-t-0" : ""} ${i % 3 !== 0 ? "sm:border-l" : ""} ${i >= 3 ? "sm:border-t sm:border-white/10" : ""} ${i % 6 !== 0 ? "lg:border-l" : ""} ${i >= 3 ? "lg:border-t-0" : ""}`}>
               <p className="flex items-center gap-1.5 text-sm text-mute">
                 <Icon className="size-4" strokeWidth={1.75} /> {t(label)}
               </p>
