@@ -271,21 +271,6 @@
   to { opacity: 1; transform: none; }
 }
 
-/* Closing CTA: Drew green with soft color spots that drift slowly. */
-.cta-gradient {
-  background:
-    radial-gradient(60% 80% at 15% 20%, #35c98d 0%, transparent 60%),
-    radial-gradient(55% 75% at 85% 30%, #0fb5a6 0%, transparent 60%),
-    radial-gradient(70% 90% at 50% 110%, #7ee8b5 0%, transparent 55%),
-    radial-gradient(50% 70% at 70% 90%, #1f7a52 0%, transparent 60%),
-    linear-gradient(135deg, #1fae74, #128a7a);
-  background-size: 160% 160%;
-  animation: cta-drift 14s ease-in-out infinite alternate;
-}
-@keyframes cta-drift {
-  from { background-position: 0% 0%; }
-  to { background-position: 100% 100%; }
-}
 
 /* Reduced motion (e.g. Windows "Animation effects" off): stop decorative motion,
    but keep the server carousel and loading indicators working. */
