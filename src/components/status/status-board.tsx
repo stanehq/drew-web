@@ -257,7 +257,8 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
               <p className="flex items-center gap-1.5 text-sm text-mute">
                 <Icon className="size-4" strokeWidth={1.75} /> {t(label)}
               </p>
-              <p className={`mt-4 text-2xl font-semibold leading-none tabular-nums tracking-tight sm:text-3xl ${health ? TONE[health.tone].text : "text-fg"}`}>
+              {/* White while healthy, coloured only when shards or latency need attention */}
+              <p className={`mt-4 text-2xl font-semibold leading-none tabular-nums tracking-tight sm:text-3xl ${health && health.tone !== "good" ? TONE[health.tone].text : "text-fg"}`}>
                 {value}
                 {suffix && <span className="ml-1 text-base font-normal text-mute">{suffix}</span>}
               </p>
