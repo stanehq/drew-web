@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/locale-link";
 import { useMemo, useState } from "react";
 import { AlertTriangle, ArrowLeft, ArrowRight, Check, Clock, Globe, Lock, ShieldAlert, ShieldCheck, ScrollText, UserCheck, Users, Loader2 } from "lucide-react";
 import type { Channel, GuildInfo, Role, SchemaField, Settings } from "@/lib/drew";

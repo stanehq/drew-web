@@ -1,13 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/locale-link";
 import { ArrowRight, Braces, DatabaseBackup, FileClock, KeyRound, LayoutDashboard, PlusCircle, ScrollText, ShieldAlert, UserCheck, Users } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { DiscordIcon } from "@/components/discord-icon";
 import { LiveStats } from "@/components/live-stats";
 import { ServerShowcase } from "@/components/server-showcase";
 import { SITE } from "@/lib/site";
+import { TwoTone } from "@/components/two-tone";
 
 // Two highlighted protections, then the rest in a quieter grid (GitHub-style).
 const highlights = [
@@ -47,7 +48,7 @@ function SectionTitle({ kicker, title, children }: { kicker: string; title: stri
   return (
     <div className="mx-auto max-w-3xl text-center">
       <p className="text-sm font-medium text-brand-bright">{kicker}</p>
-      <h2 className="mt-3 text-balance text-3xl font-semibold tracking-[-0.02em] sm:text-5xl">{title}</h2>
+      <h2 className="mt-3 text-balance text-3xl font-semibold tracking-[-0.02em] sm:text-5xl"><TwoTone text={title} /></h2>
       {children && <p className="mx-auto mt-5 max-w-2xl text-pretty text-lg leading-relaxed text-soft">{children}</p>}
     </div>
   );
@@ -73,8 +74,8 @@ export default function HomePage() {
             <ArrowRight className="size-3.5" />
           </Link>
           <h1 className="animate-fade-up mt-8 text-balance text-[2.5rem] font-semibold leading-[1.05] tracking-[-0.02em] sm:text-7xl">
-            {t("Discord security ")}
-            <span className="text-brand">{t("that never sleeps")}</span>
+            <span className="text-brand">{t("Discord security ")}</span>
+            <span className="text-fg">{t("that never sleeps")}</span>
           </h1>
           <p className="animate-fade-up mx-auto mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-soft sm:text-xl [animation-delay:80ms]">
             {t("Anti-nuke, anti-raid, verification and logging in one bot. Set it up in a minute and let Drew do the watching")}
@@ -160,21 +161,21 @@ export default function HomePage() {
 
       {/* Closing CTA card, Wick/Kena style: centered, vivid multi-color gradient, joined buttons */}
       <section className="relative px-5 pb-28">
-        <div className="surface relative mx-auto max-w-4xl overflow-hidden px-6 py-16 text-center sm:px-12 sm:py-20">
+        <div className="cta-gradient relative mx-auto max-w-4xl overflow-hidden rounded-2xl px-6 py-16 text-center shadow-[0_40px_100px_-40px_rgba(65,207,139,0.7)] sm:px-12 sm:py-20">
           <Image src="/brand/drew-icon.svg" unoptimized alt="" width={56} height={56} className="mx-auto" />
           <h2 className="mt-6 text-balance text-3xl font-semibold tracking-[-0.02em] text-white sm:text-5xl">{t("Protect your server in under a minute")}</h2>
-          <p className="mx-auto mt-5 max-w-xl text-pretty text-lg leading-relaxed text-soft">{t("Invite Drew, run /opsec setup and sleep well tonight")}</p>
-          <div className="mx-auto mt-10 inline-flex overflow-hidden rounded-xl border border-white/15 text-fg">
-            <a href={SITE.invite} className="inline-flex h-14 items-center gap-2.5 px-6 text-sm font-bold uppercase tracking-wider transition-colors hover:bg-white/[0.06] sm:px-8">
+          <p className="mx-auto mt-5 max-w-xl text-pretty text-lg leading-relaxed text-white/90">{t("Invite Drew, run /opsec setup and sleep well tonight")}</p>
+          <div className="mx-auto mt-10 inline-flex overflow-hidden rounded-xl border border-white/70 text-white">
+            <a href={SITE.invite} className="inline-flex h-14 items-center gap-2.5 px-6 text-sm font-bold uppercase tracking-wider transition-colors hover:bg-white/15 sm:px-8">
               <PlusCircle className="size-5" strokeWidth={1.75} /> {t("Invite")}
             </a>
-            <span className="w-px bg-white/15" aria-hidden />
-            <a href="/api/auth/discord" className="inline-flex h-14 items-center gap-2.5 px-6 text-sm font-bold uppercase tracking-wider transition-colors hover:bg-white/[0.06] sm:px-8">
+            <span className="w-px bg-white/70" aria-hidden />
+            <a href="/api/auth/discord" className="inline-flex h-14 items-center gap-2.5 px-6 text-sm font-bold uppercase tracking-wider transition-colors hover:bg-white/15 sm:px-8">
               <LayoutDashboard className="size-5" strokeWidth={1.75} /> {t("Dashboard")}
             </a>
           </div>
-          <p className="mt-6 text-sm text-mute">
-            <a href={SITE.support} className="underline decoration-white/30 underline-offset-4 hover:text-fg hover:decoration-white">
+          <p className="mt-6 text-sm text-white/85">
+            <a href={SITE.support} className="underline decoration-white/50 underline-offset-4 hover:decoration-white">
               {t("Join support")}
             </a>
           </p>

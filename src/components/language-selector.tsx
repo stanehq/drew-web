@@ -39,17 +39,17 @@ export function LanguageSelector({ compact = false }: { compact?: boolean }) {
         aria-expanded={open}
         aria-label={`${t("language")}: ${selected.label}`}
         onClick={() => setOpen((v) => !v)}
-        className="inline-flex h-10 items-center gap-2 rounded-full border border-white/10 px-3 text-sm text-soft transition-colors hover:border-white/20 hover:bg-white/[0.04] hover:text-fg"
+        className="inline-flex h-10 items-center gap-2 rounded-lg px-2.5 text-sm text-soft transition-colors hover:bg-white/[0.06] hover:text-fg"
       >
-        <Flag code={selected.code} className="h-[14px] w-[21px]" />
+        <Flag key={selected.code} code={selected.code} className="lang-flag-in h-[14px] w-[21px]" />
         {!compact && <span>{selected.label}</span>}
         <ChevronDown className={`size-3.5 transition-transform ${open ? "rotate-180" : ""}`} strokeWidth={1.75} />
       </button>
       {open && (
-        <div className="absolute right-0 z-50 mt-2 w-[19rem] rounded-2xl border border-white/10 bg-[#0d1117] p-2 shadow-[0_20px_50px_rgba(0,0,0,0.55)]">
+        <div className="lang-panel-in absolute right-0 z-50 mt-2 w-[19rem] origin-top-right rounded-2xl border border-white/10 bg-[#0d1117] p-2 shadow-[0_20px_50px_rgba(0,0,0,0.55)]">
           <p className="px-2 pb-2 pt-1 text-xs capitalize text-mute">{t("language")}</p>
           <ul role="listbox" aria-label={t("language")} className="grid grid-cols-2 gap-1">
-            {LOCALES.map((item) => {
+            {LOCALES.map((item, i) => {
               const active = item.code === locale;
               return (
                 <li key={item.code} role="option" aria-selected={active}>
@@ -59,7 +59,8 @@ export function LanguageSelector({ compact = false }: { compact?: boolean }) {
                       setLocale(item.code);
                       setOpen(false);
                     }}
-                    className={`flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2.5 text-left text-sm transition-colors ${
+                    style={{ animationDelay: `${i * 25}ms` }}
+                    className={`lang-item-in flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2.5 text-left text-sm transition-all duration-200 active:scale-[0.97] ${
                       active ? "bg-brand/10 text-fg ring-1 ring-inset ring-brand/40" : "text-soft hover:bg-white/[0.05] hover:text-fg"
                     }`}
                   >

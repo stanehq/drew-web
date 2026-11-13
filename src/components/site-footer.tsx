@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/locale-link";
 import { Copyright } from "lucide-react";
 import { SITE } from "@/lib/site";
 import { Logo } from "./logo";

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/locale-link";
 import { ArrowRight, Crown, LogOut, Plus, Settings2, Shield } from "lucide-react";
 import { ButtonLink } from "@/components/button";
 import { avatarUrl, canManage, fetchGuilds, guildIconUrl, inviteUrl, isAdmin, type DiscordGuild } from "@/lib/discord";

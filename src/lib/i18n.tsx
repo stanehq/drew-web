@@ -1,5 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { LOCALE_COOKIE, localizePath, splitLocale } from "@/lib/locales";
 
 export const LOCALES = [
   { code: "en", label: "English" },
@@ -90,25 +92,27 @@ for (const locale of Object.keys(dashboardPricingMessages) as Locale[]) Object.a
 type I18nContextValue = { locale: Locale; setLocale: (locale: Locale) => void; t: (key: string) => string };
 const I18nContext = createContext<I18nContextValue | null>(null);
 
-export function I18nProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("en");
+export function I18nProvider({ children, initialLocale = "en" }: { children: React.ReactNode; initialLocale?: Locale }) {
+  const [locale, setLocaleState] = useState<Locale>(initialLocale);
+  const router = useRouter();
+  const pathname = usePathname();
+  // The URL is the source of truth: /es/... is Spanish, no prefix is English.
   useEffect(() => {
-    const saved = localStorage.getItem("drew-locale");
-    const browser = navigator.language.slice(0, 2);
-    const supported = LOCALES.some((item) => item.code === saved);
-    const detected = LOCALES.some((item) => item.code === browser) ? browser as Locale : "en";
-    const next = supported ? saved as Locale : detected;
-    Promise.resolve().then(() => setLocaleState(next));
-    document.documentElement.lang = next;
-  }, []);
+    const [fromUrl] = splitLocale(window.location.pathname);
+    if (fromUrl !== locale) Promise.resolve().then(() => setLocaleState(fromUrl));
+    document.documentElement.lang = fromUrl;
+  }, [pathname, locale]);
   const setLocale = (next: Locale) => {
+    document.cookie = `${LOCALE_COOKIE}=${next}; path=/; max-age=31536000; samesite=lax`;
+    const [, rest] = splitLocale(window.location.pathname);
     setLocaleState(next);
-    localStorage.setItem("drew-locale", next);
     document.documentElement.lang = next;
+    router.push(localizePath(rest, next) + window.location.search + window.location.hash, { scroll: false });
   };
   const value = useMemo(() => ({
     locale, setLocale,
     t: (key: string) => messages[locale][key] ?? messages.en[key] ?? key,
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }), [locale]);
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }

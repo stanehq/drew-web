@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { TwoTone } from "@/components/two-tone";
 
 export function PageHero({ title, children }: { eyebrow?: string; title: ReactNode; children?: ReactNode }) {
   return (
@@ -8,7 +9,7 @@ export function PageHero({ title, children }: { eyebrow?: string; title: ReactNo
         aria-hidden
       />
       <div className="animate-fade-up mx-auto max-w-3xl px-4 text-center sm:px-6">
-        <h1 className="text-balance text-4xl font-semibold tracking-[-0.02em] sm:text-5xl">{title}</h1>
+        <h1 className="text-balance text-4xl font-semibold tracking-[-0.02em] sm:text-5xl">{typeof title === "string" ? <TwoTone text={title} /> : title}</h1>
         {children && <div className="mx-auto mt-4 max-w-lg text-balance text-soft">{children}</div>}
       </div>
     </section>

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/locale-link";
 
 export function Logo({ size = 30, withText = true }: { size?: number; withText?: boolean }) {
   return (

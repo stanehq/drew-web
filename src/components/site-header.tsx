@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/locale-link";
 import { useEffect, useState } from "react";
 import { ExternalLink, LayoutDashboard, Menu, X } from "lucide-react";
 import { SITE } from "@/lib/site";
@@ -55,10 +55,7 @@ function MenuLink({ item, onPick, label }: { item: Item; onPick: () => void; lab
 export function SiteHeader() {
   const { t, locale } = useI18n();
   const tr = (k: string) => COPY[k]?.[locale] ?? k;
-  const label = (k: string) => {
-    const v = t(k.toLowerCase());
-    return v === k.toLowerCase() ? k : v;
-  };
+  const label = (k: string) => t(k);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -71,7 +68,7 @@ export function SiteHeader() {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-[#101113] text-fg">
       <div className="flex h-[76px] w-full items-center gap-5 px-4 sm:px-6 xl:gap-6 lg:px-8">
         <Link href="/" aria-label="Stane × Drew home" className="inline-flex shrink-0 items-center gap-3">
-          <Image src="/brand/stane-mark.svg" alt="Stane" width={43} height={43} priority className="size-[43px] object-contain" />
+          <Image src="/brand/stane-mark.webp" alt="Stane" width={40} height={40} priority className="size-10 rounded-lg object-cover" />
           <span aria-hidden className="text-2xl font-light text-white/55">×</span>
           <span className="inline-flex items-center gap-2">
             <Image src="/brand/drew-icon.svg" unoptimized alt="" width={39} height={39} priority />

@@ -241,6 +241,45 @@
   padding: 0.1rem 0.35rem;
 }
 
+/* Language picker: panel scales in, items cascade, the flag pops on change. */
+.lang-panel-in {
+  animation: lang-panel 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.lang-item-in {
+  animation: lang-item 220ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.lang-flag-in {
+  animation: lang-flag 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes lang-panel {
+  from { opacity: 0; transform: translateY(-4px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes lang-item {
+  from { opacity: 0; transform: translateY(3px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes lang-flag {
+  from { opacity: 0; transform: scale(0.6) rotate(-8deg); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Closing CTA: Drew green with soft color spots that drift slowly. */
+.cta-gradient {
+  background:
+    radial-gradient(60% 80% at 15% 20%, #35c98d 0%, transparent 60%),
+    radial-gradient(55% 75% at 85% 30%, #0fb5a6 0%, transparent 60%),
+    radial-gradient(70% 90% at 50% 110%, #7ee8b5 0%, transparent 55%),
+    radial-gradient(50% 70% at 70% 90%, #1f7a52 0%, transparent 60%),
+    linear-gradient(135deg, #1fae74, #128a7a);
+  background-size: 160% 160%;
+  animation: cta-drift 14s ease-in-out infinite alternate;
+}
+@keyframes cta-drift {
+  from { background-position: 0% 0%; }
+  to { background-position: 100% 100%; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

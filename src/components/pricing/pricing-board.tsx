@@ -5,6 +5,7 @@ import { Check, ChevronDown, Clock3, Minus, ShieldCheck, Sparkles, Zap } from "l
 import { buttonClass } from "@/components/button";
 import { SITE } from "@/lib/site";
 import { useI18n } from "@/lib/i18n";
+import { TwoTone } from "@/components/two-tone";
 
 type Billing = "monthly" | "yearly";
 
@@ -81,9 +82,7 @@ export function PricingBoard() {
           aria-hidden
         />
         <div className="mx-auto max-w-6xl px-5 pb-12 pt-20 text-center">
-          <h1 className="mx-auto max-w-3xl text-balance text-4xl font-semibold tracking-[-0.02em] sm:text-5xl">
-            {t("Protection for less than a coffee")}
-          </h1>
+          <h1 className="mx-auto max-w-3xl text-balance text-4xl font-semibold tracking-[-0.02em] sm:text-5xl"><TwoTone text={t("Protection for less than a coffee")} /></h1>
           <p className="mx-auto mt-4 max-w-lg text-balance text-soft">
             Try every Premium feature free for 5 days. Cancel before it ends and you won&apos;t pay a cent.
           </p>
@@ -192,7 +191,7 @@ export function PricingBoard() {
       {/* Comparison */}
       <section className="">
         <div className="mx-auto max-w-5xl px-5">
-          <h2 className="pb-6 pt-20 text-center text-3xl font-semibold tracking-[-0.02em] sm:text-4xl">{t("Compare plans")}</h2>
+          <h2 className="pb-6 pt-20 text-center text-3xl font-semibold tracking-[-0.02em] sm:text-4xl"><TwoTone text={t("Compare plans")} /></h2>
           <div className="surface overflow-x-auto">
             <table className="w-full min-w-[520px] text-left text-sm">
               <thead>

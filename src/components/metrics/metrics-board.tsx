@@ -5,6 +5,7 @@ import { Activity, Clock3, Gauge, Hash, Layers, Server, ShieldCheck, Terminal, T
 import type { PublicMetricPoint, PublicMetrics } from "@/lib/public-metrics";
 import { useI18n } from "@/lib/i18n";
 import { formatCompact, formatExact, formatUptime } from "@/lib/format";
+import { TwoTone } from "@/components/two-tone";
 
 const RANGES = ["24h", "7d", "30d", "90d"] as const;
 type Range = (typeof RANGES)[number];
@@ -226,7 +227,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
       <div className="mx-auto max-w-6xl px-5 pb-28">
         <div className="animate-fade-up flex flex-col items-center gap-8 pb-10 pt-20 text-center">
           <div>
-            <h1 className="text-balance text-4xl font-semibold tracking-[-0.02em] sm:text-5xl">{t("Drew in numbers")}</h1>
+            <h1 className="text-balance text-4xl font-semibold tracking-[-0.02em] sm:text-5xl"><TwoTone text={t("Drew in numbers")} /></h1>
             <p className="mx-auto mt-4 max-w-lg text-balance text-soft">{t("Public, aggregate figures sampled every five minutes, no server or user data")}</p>
           </div>
           <div role="tablist" aria-label="Time range" className="flex w-fit gap-1 rounded-xl border border-white/10 p-1">

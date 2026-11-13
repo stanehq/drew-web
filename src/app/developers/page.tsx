@@ -59,7 +59,7 @@ export default function DevelopersPage() {
   const { t } = useI18n();
   return (
     <>
-      <PageHero eyebrow={t("Developers & AI agents")} title={<>{t("Configure Drew ")}<span className="text-brand">{t("with code")}</span></>}>
+      <PageHero eyebrow={t("Developers & AI agents")} title={<><span className="text-brand">{t("Configure Drew ")}</span><span className="text-fg">{t("with code")}</span></>}>
         Per-server tokens, a self-describing schema and dry runs, so scripts and AI assistants can set up your server
         safely, without the dashboard.
         <div className="mt-8 flex flex-wrap justify-center gap-3">

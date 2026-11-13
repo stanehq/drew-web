@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { BadgeCheck, Users } from "lucide-react";
+import { BadgeCheck } from "lucide-react";
 import { formatCompact } from "@/lib/format";
 import { useI18n } from "@/lib/i18n";
 
@@ -13,24 +13,41 @@ const MIN_CARDS = 8;
 
 function ServerCard({ s, members }: { s: Server; members: string }) {
   return (
-    <li className="flex h-[108px] w-[360px] shrink-0 items-center gap-5 rounded-[24px] border border-white/[0.035] bg-[#151619] px-6 py-5 shadow-[0_8px_24px_rgba(0,0,0,0.16)] sm:w-[396px]">
+    <li className="group flex h-[84px] w-[300px] shrink-0 items-center gap-4 rounded-2xl border border-white/[0.08] bg-white/[0.025] px-4 transition-colors hover:border-brand/40 hover:bg-white/[0.04] sm:w-[320px]">
       {s.icon ? (
-        <Image src={s.icon} alt="" width={72} height={72} className="size-[72px] shrink-0 rounded-[18px] object-cover" />
+        <Image src={s.icon} alt="" width={52} height={52} className="size-[52px] shrink-0 rounded-xl object-cover ring-1 ring-white/10" />
       ) : (
-        <span className="flex size-[72px] shrink-0 items-center justify-center rounded-[18px] bg-white/[0.05] font-display text-xl font-semibold text-soft">
+        <span className="flex size-[52px] shrink-0 items-center justify-center rounded-xl bg-brand/10 font-display text-lg font-semibold text-brand ring-1 ring-brand/20">
           {s.name.slice(0, 1).toUpperCase()}
         </span>
       )}
       <div className="min-w-0">
-        <p className="flex items-center gap-1.5 truncate text-[1.05rem] font-semibold text-fg">
+        <p className="flex items-center gap-1.5 truncate font-semibold text-fg">
           <span className="truncate">{s.name}</span>
           {(s.verified || s.partnered) && <BadgeCheck className="size-4 shrink-0 text-brand" aria-label={s.verified ? "Verified" : "Partnered"} />}
         </p>
-        <p className="mt-1 flex items-center gap-1.5 text-sm font-medium text-mute">
-          <Users className="size-3.5" /> {formatCompact(s.members)} {members}
+        <p className="mt-0.5 flex items-center gap-1.5 text-sm text-mute">
+          <span className="size-1.5 rounded-full bg-brand" aria-hidden /> {formatCompact(s.members)} {members}
         </p>
       </div>
     </li>
+  );
+}
+
+function Row({ track, members, reverse = false }: { track: Server[]; members: string; reverse?: boolean }) {
+  return (
+    <div
+      className={`flex w-max animate-marquee gap-4 ${reverse ? "[animation-direction:reverse]" : ""}`}
+      style={{ animationDuration: `${track.length * SECONDS_PER_CARD}s` }}
+    >
+      {[0, 1].map((copy) => (
+        <ul key={copy} className="flex gap-4" aria-hidden={copy === 1 || reverse || undefined}>
+          {track.map((s, i) => (
+            <ServerCard key={`${copy}-${i}`} s={s} members={members} />
+          ))}
+        </ul>
+      ))}
+    </div>
   );
 }
 
@@ -54,17 +71,10 @@ export function ServerShowcase() {
   const track = Array.from({ length: Math.ceil(MIN_CARDS / servers.length) }, () => servers).flat();
   const members = t("members");
   return (
-    <section className="w-full overflow-hidden " aria-label="Servers using Drew">
-      <div className="relative w-full overflow-hidden py-8 [mask-image:linear-gradient(90deg,transparent,black_3%,black_97%,transparent)]">
-        <div className="flex w-max animate-marquee gap-5" style={{ animationDuration: `${track.length * SECONDS_PER_CARD}s` }}>
-          {[0, 1].map((copy) => (
-            <ul key={copy} className="flex gap-5" aria-hidden={copy === 1 || undefined}>
-              {track.map((s, i) => (
-                <ServerCard key={`${copy}-${i}`} s={s} members={members} />
-              ))}
-            </ul>
-          ))}
-        </div>
+    <section className="w-full overflow-hidden py-10" aria-label="Servers using Drew">
+      <div className="flex flex-col gap-4 [mask-image:linear-gradient(90deg,transparent,black_12%,black_88%,transparent)]">
+        <Row track={track} members={members} />
+        <Row track={[...track].reverse()} members={members} reverse />
       </div>
     </section>
   );
