@@ -53,10 +53,7 @@
   }
   h1, h2, h3 {
     font-family: var(--font-display);
-    background: linear-gradient(180deg, #35c98d 0%, #5bd4a6 48%, #ddf8ea 78%, #ffffff 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: var(--color-fg);
   }
   ::selection {
     background: rgb(65 207 139 / 0.35);
@@ -311,4 +308,10 @@
   .animate-marquee {
     animation: none !important;
   }
+}
+
+
+/* Feature and interface SVGs use the Drew green-to-white brand gradient. */
+.drew-icon-gradient {
+  stroke: url("#drew-icon-gradient");
 }
