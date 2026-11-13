@@ -5,14 +5,14 @@ import { usePathname } from "next/navigation";
 import { Loader } from "@/components/loader";
 
 // The first load always shows the loader at least this long.
-const FIRST_MS = 4000;
+const FIRST_MS = 4500;
 // Page changes inside the site show it at least this long.
 const NAV_MS = 700;
 const MAX_MS = 8000;
 
 /**
  * Full-screen loader over the whole site: on the first load until the page,
- * fonts and images are ready (at least 4 s), and again on every page change.
+ * fonts and images are ready (at least 4.5 s), and again on every page change.
  * Rendered on the server so it covers the page from the first paint. A CSS
  * fallback hides it if JavaScript fails.
  */

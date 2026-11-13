@@ -113,19 +113,6 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
   );
 }
 
-function Delta({ now, before, invert }: { now: number; before: number; invert?: boolean }) {
-  if (!before) return null;
-  const d = now - before;
-  if (d === 0) return null;
-  const good = invert ? d < 0 : d > 0;
-  const pct = Math.abs((d / before) * 100);
-  return (
-    <span className={`text-xs font-medium ${good ?"text-brand":"text-bad"}`}>
-      {d > 0 ? "+" : "-"}
-      {pct < 0.1 ? "<0.1" : pct.toFixed(1)}%
-    </span>
-  );
-}
 
 const CHARTS: Series[] = [
   { key: "guilds", label: "Servers", icon: Server },
@@ -192,32 +179,28 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
     };
   }, [points]);
   const cur = data?.current;
-  const { first, last } = stats;
 
   const kpis = [
-    { label: "Servers", icon: Server, value: formatExact(cur?.guilds ?? 0), note: first && last && <Delta now={last.guilds} before={first.guilds} /> },
-    { label: "Members", icon: Users, value: formatCompact(cur?.users ?? 0), note: first && last && <Delta now={last.users} before={first.users} /> },
-    { label: "Channels", icon: Hash, value: formatCompact(cur?.channels ?? 0), note: first && last && <Delta now={last.channels} before={first.channels} /> },
+    { label: "Servers", icon: Server, value: formatExact(cur?.guilds ?? 0) },
+    { label: "Members", icon: Users, value: formatCompact(cur?.users ?? 0) },
+    { label: "Channels", icon: Hash, value: formatCompact(cur?.channels ?? 0) },
     {
       label: "Members per server",
       icon: TrendingUp,
       value: cur?.guilds ? formatExact(Math.round(cur.users / cur.guilds)) : "0",
-      note: null,
     },
-    { label: `Commands (${range})`, icon: Terminal, value: formatCompact(stats.commands), note: null },
+    { label: `Commands (${range})`, icon: Terminal, value: formatCompact(stats.commands) },
     {
       label: "Avg latency",
       icon: Gauge,
       value: `${Math.round(stats.avgLatency || cur?.latencyMs || 0)} ms`,
-      note: null,
     },
     {
       label: "Availability",
       icon: ShieldCheck,
       value: points.length ? `${stats.availability.toFixed(stats.availability === 100 ? 0 : 2)}%` : "...",
-      note: null,
     },
-    { label: "Uptime", icon: Clock3, value: cur?.uptimeSeconds ? formatUptime(cur.uptimeSeconds) : "...", note: null },
+    { label: "Uptime", icon: Clock3, value: cur?.uptimeSeconds ? formatUptime(cur.uptimeSeconds) : "..." },
   ];
 
   return (
@@ -244,13 +227,12 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
         </div>
 
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          {kpis.map(({ label, icon: Icon, value, note }) => (
+          {kpis.map(({ label, icon: Icon, value }) => (
             <div key={label} className="surface min-w-0 p-5 sm:p-6">
               <p className="flex items-center gap-2 text-xs text-mute">
                 <Icon className="size-3.5 text-brand" /> {label}
               </p>
-              <p className="mt-3 truncate font-sans text-2xl font-semibold tabular-nums tracking-[-0.02em] sm:text-3xl">{data ? value : "..."}</p>
-              <div className="mt-1.5 min-h-5 truncate leading-5">{data && note}</div>
+              <p className="mt-4 truncate font-sans text-2xl font-semibold leading-none tabular-nums tracking-[-0.02em] sm:text-3xl">{data ? value : "..."}</p>
             </div>
           ))}
         </div>
