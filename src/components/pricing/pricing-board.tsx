@@ -130,7 +130,7 @@ export function PricingBoard() {
                     : "surface relative flex flex-col p-8 opacity-90 sm:p-10"
                 }
               >
-                <h2 className={`font-sans text-2xl font-bold tracking-tight ${popular ? "text-brand-bright" : "text-soft"}`}>{t(p.name)}</h2>
+                <h2 className={`font-sans text-2xl font-bold tracking-tight ${popular ? "text-white" : "text-soft"}`}>{t(p.name)}</h2>
                 <p className="mt-2 text-soft">{t(p.blurb)}</p>
 
                 <div className="mt-8 flex items-end gap-3">
