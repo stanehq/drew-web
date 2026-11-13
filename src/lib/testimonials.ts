@@ -15,27 +15,26 @@ export type Testimonial = {
 
 export const TESTIMONIALS: Testimonial[] = [];
 
-/** Layout previews shown, labelled "Example", until real quotes are added above. */
+/** Placeholder (lorem ipsum) previews shown, labelled "Example", until real quotes are added above. */
 export const EXAMPLES: Testimonial[] = [
   {
     server: { name: "Your community", icon: null, members: 120000, badge: "verified" },
-    quote:
-      "Someone got hold of a staff account and started deleting channels. Drew stopped it after the second one and banned them before anyone noticed. Setup took a minute.",
+    quote: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.",
     author: { name: "Server owner", role: "Example review" },
   },
   {
     server: { name: "Gaming hub", icon: null, members: 34000, badge: "partnered" },
-    quote: "The raid filter catches join floods instantly and the logs show exactly who changed what.",
+    quote: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio praesent libero.",
     author: { name: "Head moderator", role: "Example review" },
   },
   {
     server: { name: "Study group", icon: null, members: 8200, badge: "community" },
-    quote: "SUDO mode is the feature I didn't know I needed. Nobody can turn protection off without the owner.",
+    quote: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sodales ligula in libero.",
     author: { name: "Server manager", role: "Example review" },
   },
   {
     server: { name: "Creator server", icon: null, members: 61000, badge: "discoverable" },
-    quote: "Verification and backups in one bot, configured from the dashboard or the API.",
+    quote: "Lorem ipsum dolor sit amet, sed cursus ante dapibus diam.",
     author: { name: "Administrator", role: "Example review" },
   },
 ];
