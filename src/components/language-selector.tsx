@@ -18,7 +18,7 @@ function Flag({ code, className = "" }: { code: Locale; className?: string }) {
   );
 }
 
-export function LanguageSelector({ compact = false }: { compact?: boolean }) {
+export function LanguageSelector({ compact = false, up = false }: { compact?: boolean; up?: boolean }) {
   const { locale, setLocale, t } = useI18n();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -44,14 +44,14 @@ export function LanguageSelector({ compact = false }: { compact?: boolean }) {
         aria-expanded={open}
         aria-label={`${t("language")}: ${selected.label}`}
         onClick={() => setOpen((v) => !v)}
-        className="inline-flex h-10 items-center gap-2 rounded-lg px-2.5 text-sm text-soft transition-colors hover:bg-white/[0.06] hover:text-fg"
+        className={`inline-flex h-10 items-center gap-2 rounded-lg text-sm ${up ? "border border-white/10 px-3" : "px-2.5"} text-soft transition-colors hover:bg-white/[0.06] hover:text-fg`}
       >
         <Flag key={selected.code} code={selected.code} className="lang-flag-in h-[18px] w-[27px]" />
         {!compact && <span>{selected.label}</span>}
         <ChevronDown className={`size-3.5 transition-transform ${open ? "rotate-180" : ""}`} strokeWidth={1.75} />
       </button>
       {open && (
-        <div className="lang-panel-in absolute right-0 z-50 mt-2 w-[21rem] origin-top-right rounded-2xl border border-white/10 bg-[#0d1117] p-2 shadow-[0_20px_50px_rgba(0,0,0,0.55)]">
+        <div className={`lang-panel-in absolute z-50 w-[min(21rem,calc(100vw-2rem))] ${up ? "bottom-full left-0 mb-2 origin-bottom-left" : "right-0 mt-2 origin-top-right"} rounded-2xl border border-white/10 bg-[#0d1117] p-2 shadow-[0_20px_50px_rgba(0,0,0,0.55)]`}>
           <p className="px-2 pb-2 pt-1 text-xs capitalize text-mute">{t("language")}</p>
           <ul role="listbox" aria-label={t("language")} className="grid grid-cols-2 gap-1">
             {LOCALES.map((item, i) => {

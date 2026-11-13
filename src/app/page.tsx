@@ -160,7 +160,7 @@ export default function HomePage() {
             aria-hidden
             width={340}
             height={340}
-            className="pointer-events-none absolute -right-20 top-1/2 size-[220px] -translate-y-1/2 opacity-25 [mask-image:radial-gradient(closest-side,black_30%,transparent)] sm:-right-12 sm:size-[340px] sm:opacity-35"
+            className="pointer-events-none absolute -right-16 top-1/2 size-[240px] -translate-y-1/2 rotate-[-8deg] opacity-30 brightness-0 invert [mask-image:linear-gradient(90deg,transparent,black_55%)] sm:-right-10 sm:size-[380px] sm:opacity-40"
           />
           <h2 className="relative text-balance text-4xl font-semibold tracking-[-0.025em] text-white sm:text-6xl">{t("Protect your server in under a minute")}</h2>
           <p className="relative mx-auto mt-5 max-w-xl text-pretty text-lg leading-relaxed text-white/90">{t("Invite Drew, run /opsec setup and sleep well tonight")}</p>

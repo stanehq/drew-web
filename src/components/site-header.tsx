@@ -23,6 +23,7 @@ type Item = { label: string; href: string; hint?: string; keywords?: string };
 
 const MORE: Item[] = [
   { label: "Features", href: "/#features" },
+  { label: "Commands", href: "/commands" },
   { label: "Pricing", href: "/pricing" },
   { label: "Status", href: "/status" },
   { label: "Metrics", href: "/metrics" },
@@ -68,7 +69,7 @@ export function SiteHeader() {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-[#101113] text-fg">
       <div className="flex h-[76px] w-full items-center gap-5 px-4 sm:px-6 xl:gap-6 lg:px-8">
         <div className="inline-flex shrink-0 items-center gap-3">
-          <a href="https://stanelabs.com/?utm_source=drewbot.xyz" target="_blank" rel="noopener" aria-label="Stane Labs" className="transition-opacity hover:opacity-85">
+          <a href={SITE.stane.web} target="_blank" rel="noopener" aria-label="Stane Labs" className="transition-opacity hover:opacity-85">
             <Image src="/brand/stane-mark.webp" alt="Stane" width={48} height={48} priority className="size-12 rounded-xl object-cover" />
           </a>
           <span aria-hidden className="text-2xl font-light text-white/55">×</span>

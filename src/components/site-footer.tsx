@@ -4,6 +4,9 @@ import Link from "@/components/locale-link";
 import { Copyright } from "lucide-react";
 import { SITE } from "@/lib/site";
 import { Logo } from "./logo";
+import { LanguageSelector } from "./language-selector";
+import { DiscordIcon } from "./discord-icon";
+import { InstagramIcon, XIcon } from "./social-icons";
 import { useI18n } from "@/lib/i18n";
 
 const columns = [
@@ -11,6 +14,7 @@ const columns = [
     title: "Product",
     links: [
       { href: "/#features", label: "Features" },
+      { href: "/commands", label: "Commands" },
       { href: "/pricing", label: "Pricing" },
       { href: "/dashboard", label: "Dashboard" },
       { href: SITE.invite, label: "Invite" },
@@ -47,6 +51,7 @@ export function SiteFooter() {
           <p className="max-w-xs text-sm leading-relaxed text-mute">
             {t("Advanced security and automation for Discord communities. Made by Stane.")}
           </p>
+          <LanguageSelector up />
         </div>
         {columns.map((col) => (
           <div key={col.title}>
@@ -70,7 +75,24 @@ export function SiteFooter() {
         ))}
       </div>
       <div className="border-t border-line">
-        <p className="mx-auto max-w-6xl px-4 py-6 text-xs text-mute sm:px-6"><Copyright className="mr-1 inline size-3 align-[-1px]" aria-label="Copyright" />{new Date().getFullYear()} Drew. {t("All rights reserved.")}</p>
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-6 sm:px-6">
+          <p className="text-xs text-mute">
+            <Copyright className="mr-1 inline size-3 align-[-1px]" aria-label="Copyright" />
+            {new Date().getFullYear()} Drew {t("by")}{" "}
+            <a href={SITE.stane.web} target="_blank" rel="noopener" className="text-soft hover:text-fg">Stane</a>. {t("All rights reserved.")}
+          </p>
+          <div className="flex items-center gap-1" aria-label={t("Stane on social media")}>
+            {[
+              { href: SITE.stane.x, label: "Stane on X", Icon: XIcon },
+              { href: SITE.stane.discord, label: "Stane on Discord", Icon: DiscordIcon },
+              { href: SITE.stane.instagram, label: "Stane on Instagram", Icon: InstagramIcon },
+            ].map(({ href, label, Icon }) => (
+              <a key={href} href={href} target="_blank" rel="noopener" aria-label={label} title={label} className="inline-flex size-9 items-center justify-center rounded-lg text-mute transition-colors hover:bg-white/[0.06] hover:text-fg">
+                <Icon className="size-[18px]" />
+              </a>
+            ))}
+          </div>
+        </div>
       </div>
     </footer>
   );

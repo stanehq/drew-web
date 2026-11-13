@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { BadgeCheck } from "lucide-react";
+import { BadgeCheck, Users } from "lucide-react";
 import { formatCompact } from "@/lib/format";
 import { useI18n } from "@/lib/i18n";
 
@@ -16,21 +16,27 @@ const TWO_ROWS_FROM = 14;
 
 function ServerCard({ s, members }: { s: Server; members: (n: number) => string }) {
   return (
-    <li className="flex h-[76px] w-[256px] shrink-0 items-center gap-3.5 rounded-[0.875rem] border border-brand/20 bg-[linear-gradient(135deg,rgb(65_207_139/0.10),rgb(65_207_139/0.02)_60%)] px-4 transition-colors hover:border-brand/50 sm:w-[280px]">
+    <li className="relative flex h-[88px] w-[264px] shrink-0 items-center gap-3.5 overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0b0d0c] px-4 sm:w-[290px]">
+      {/* The server's own icon, blurred, tints its card so every card has its own color */}
+      {s.icon && (
+        <Image src={s.icon} alt="" aria-hidden width={64} height={64} className="pointer-events-none absolute -left-6 top-1/2 size-40 -translate-y-1/2 scale-150 object-cover opacity-30 blur-2xl saturate-150" />
+      )}
+      <span className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,transparent,#0b0d0c_75%)]" aria-hidden />
       {s.icon ? (
-        <Image src={s.icon} alt="" width={44} height={44} className="size-11 shrink-0 rounded-[0.625rem] object-cover ring-1 ring-brand/30" />
+        <Image src={s.icon} alt="" width={52} height={52} className="relative size-[52px] shrink-0 rounded-full object-cover shadow-[0_6px_20px_rgb(0_0_0/0.45)] ring-2 ring-white/10" />
       ) : (
-        <span className="flex size-11 shrink-0 items-center justify-center rounded-[0.625rem] bg-white/[0.06] text-base font-semibold text-soft">
+        <span className="relative flex size-[52px] shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-lg font-semibold text-soft ring-2 ring-white/[0.06]">
           {s.name.slice(0, 1).toUpperCase()}
         </span>
       )}
-      <div className="min-w-0">
-        <p className="flex items-center gap-1.5 truncate text-[0.95rem] font-semibold text-fg">
+      <div className="relative min-w-0">
+        <p className="flex items-center gap-1.5 truncate text-[0.98rem] font-semibold text-fg">
           <span className="truncate">{s.name}</span>
           {(s.verified || s.partnered) && <BadgeCheck className="size-4 shrink-0 text-brand" aria-label={s.verified ? "Verified" : "Partnered"} />}
         </p>
-        <p className="mt-0.5 flex items-center gap-1.5 text-[0.8rem] text-mute">
-          <span className="font-semibold text-brand-bright">{formatCompact(s.members)}</span> {members(s.members)}
+        <p className="mt-1 flex items-center gap-1.5 text-[0.82rem] text-mute">
+          <Users className="size-3.5" aria-hidden />
+          <span className="tabular-nums text-soft">{formatCompact(s.members)}</span> {members(s.members)}
         </p>
       </div>
     </li>
