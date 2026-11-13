@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { preload } from "react-dom";
 import Link from "@/components/locale-link";
 import { ArrowRight, Braces, DatabaseBackup, FileClock, KeyRound, LayoutDashboard, PlusCircle, ScrollText, ShieldAlert, UserCheck, Users } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
@@ -55,6 +56,11 @@ function SectionTitle({ title, children }: { title: string; children?: React.Rea
 
 export default function HomePage() {
   const { t } = useI18n();
+  // Start the live data requests with the HTML instead of after hydration.
+  if (typeof window === "undefined") {
+    preload("/api/stats", { as: "fetch", crossOrigin: "anonymous" });
+    preload("/api/showcase", { as: "fetch", crossOrigin: "anonymous" });
+  }
   return (
     <>
       {/* Hero: centered, one soft glow, nothing else in the background */}

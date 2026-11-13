@@ -226,7 +226,7 @@
 /* Reduced motion (e.g. Windows "Animation effects" off): stop decorative motion,
    but keep the server carousel and loading indicators working. */
 @media (prefers-reduced-motion: reduce) {
-  *:not(.animate-marquee, .animate-spin, .animate-pulse),
+  *:not(.animate-marquee, .animate-spin, .animate-pulse, .loader span),
   *::before,
   *::after {
     animation-duration: 0.001ms !important;
@@ -235,3 +235,39 @@
   }
 }
 
+
+/* Loader: six blinking squares, Drew green and white (after Uiverse.io, cosnametv). */
+.loader {
+  --size: 56px;
+  width: var(--size);
+  height: calc(var(--size) * 2 / 3);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+}
+.loader span {
+  width: 100%;
+  height: 100%;
+  border-radius: 3px;
+  background-color: var(--color-brand);
+  animation: loader-blink 0.6s alternate infinite linear;
+}
+.loader span:nth-child(even) {
+  background-color: #ffffff;
+}
+.loader span:nth-child(2) { animation-delay: 200ms; }
+.loader span:nth-child(3) { animation-delay: 300ms; }
+.loader span:nth-child(4) { animation-delay: 400ms; }
+.loader span:nth-child(5) { animation-delay: 500ms; }
+.loader span:nth-child(6) { animation-delay: 600ms; }
+@keyframes loader-blink {
+  0% { opacity: 0.3; transform: scale(0.5) rotate(5deg); }
+  50% { opacity: 1; transform: scale(1); }
+}
+/* If JavaScript never runs, the full-screen loader still gets out of the way. */
+.page-loader {
+  animation: page-loader-out 0.3s 5s forwards;
+}
+@keyframes page-loader-out {
+  to { opacity: 0; visibility: hidden; }
+}

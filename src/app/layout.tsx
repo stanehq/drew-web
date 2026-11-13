@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { PageLoader } from "@/components/page-loader";
 import { SITE } from "@/lib/site";
 import { headers } from "next/headers";
 import { I18nProvider } from "@/lib/i18n";
@@ -44,6 +45,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang={locale} className={`${sans.variable} ${display.variable} ${mono.variable}`}>
       <body className="min-h-dvh overflow-x-hidden">
+        <PageLoader />
         <I18nProvider initialLocale={locale}>
         <SiteHeader />
         <main className="relative">{children}</main>

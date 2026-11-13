@@ -17,7 +17,7 @@ import {
   Zap,
 } from "lucide-react";
 import type { PublicService, PublicShard, PublicStatus } from "@/lib/public-status";
-import { formatCompact, formatExact, formatUptime } from "@/lib/format";
+import { formatCompact, formatExact } from "@/lib/format";
 import { useI18n } from "@/lib/i18n";
 import { TwoTone } from "@/components/two-tone";
 import { UptimeHistory } from "./uptime-history";
@@ -174,7 +174,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
       label: "Shards online",
       value: data ? `${online.length}` : "...",
       suffix: data ? `/ ${shards.length}` : "",
-      note: data ? `up ${formatUptime(data.uptimeSeconds)}` : "",
+      note: "",
       health: shardHealth,
     },
     {
