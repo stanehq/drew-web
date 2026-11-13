@@ -75,34 +75,33 @@ export function PricingBoard() {
 
   return (
     <>
-      <section className="relative isolate overflow-hidden border-b border-line pt-[76px]">
-        <div className="line-grid absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_70%_70%_at_50%_0%,black,transparent)]" />
+      <section className="relative isolate overflow-hidden pt-[76px]">
         <div
           className="absolute left-1/2 top-0 -z-10 h-[420px] w-[820px] max-w-full -translate-x-1/2 bg-[radial-gradient(closest-side,rgb(65_207_139/0.18),transparent)] blur-2xl"
           aria-hidden
         />
-        <div className="mx-auto max-w-6xl border-x border-line px-4 pb-14 pt-20 text-center sm:px-6 sm:pt-24">
-          <h1 className="mx-auto mt-4 max-w-3xl text-balance text-5xl font-semibold leading-[1.03] tracking-[-0.02em] sm:text-6xl">
+        <div className="mx-auto max-w-6xl px-5 pb-12 pt-20 text-center">
+          <h1 className="mx-auto max-w-3xl text-balance text-4xl font-semibold tracking-[-0.02em] sm:text-5xl">
             {t("Protection for less than a coffee")}
           </h1>
-          <p className="mx-auto mt-5 max-w-xl text-lg text-soft">
+          <p className="mx-auto mt-4 max-w-lg text-balance text-soft">
             Try every Premium feature free for 5 days. Cancel before it ends and you won&apos;t pay a cent.
           </p>
 
-          <div role="radiogroup" aria-label={t("Billing period")} className="mx-auto mt-10 flex w-fit border border-line bg-night p-1">
+          <div role="radiogroup" aria-label={t("Billing period")} className="mx-auto mt-8 flex w-fit gap-1 rounded-xl border border-white/10 p-1">
             {(["monthly", "yearly"] as const).map((b) => (
               <button
                 key={b}
                 role="radio"
                 aria-checked={billing === b}
                 onClick={() => setBilling(b)}
-                className={`flex items-center gap-2 px-5 py-2 text-sm font-medium transition-colors ${
-                  billing === b ? "bg-white text-ink" : "text-soft hover:text-fg"
+                className={`flex items-center gap-2 rounded-lg px-5 py-2 text-sm font-medium transition-colors ${
+                  billing === b ? "bg-white/10 text-fg" : "text-soft hover:text-fg"
                 }`}
               >
                 {b === "monthly" ? t("Monthly") : t("Yearly")}
                 {b === "yearly" && (
-                  <span className={`px-1.5 py-0.5 font-mono text-[0.68rem] ${billing === b ? "bg-brand text-[#03110a]" : "bg-brand/15 text-brand"}`}>
+                  <span className="rounded-md bg-brand/15 px-1.5 py-0.5 text-[0.68rem] font-semibold text-brand-bright">
                     {t("2 MONTHS FREE")}
                   </span>
                 )}
@@ -111,19 +110,18 @@ export function PricingBoard() {
           </div>
         </div>
 
-        <div className="mx-auto grid max-w-6xl gap-px border-x border-t border-line bg-line md:grid-cols-2">
+        <div className="mx-auto grid max-w-5xl gap-4 px-5 md:grid-cols-2">
           {PLANS.map((p) => {
             const yearly = +(p.monthly * 10).toFixed(2);
             const perMonth = billing === "monthly" ? p.monthly : yearly / 12;
             const perDay = perMonth / 30;
             const popular = "popular" in p && p.popular;
             return (
-              <article key={p.id} className={`relative flex flex-col p-8 sm:p-10 ${popular ? "bg-[#08130e]" : "bg-ink"}`}>
-                {popular && <div className="absolute inset-x-0 top-0 h-0.5 bg-brand" aria-hidden />}
+              <article key={p.id} className={`surface relative flex flex-col p-8 sm:p-10 ${popular ? "!border-brand/50" : ""}`}>
                 <div className="flex items-center justify-between gap-3">
                   <h2 className="text-2xl font-semibold tracking-tight">{p.name}</h2>
                   {popular && (
-                    <span className="inline-flex items-center gap-1.5 bg-brand px-2.5 py-1 text-xs font-semibold text-[#03110a]">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-brand/15 px-2.5 py-1 text-xs font-semibold text-brand-bright">
                       <Sparkles className="size-3.5" /> {t("Most popular")}
                     </span>
                   )}
@@ -158,7 +156,7 @@ export function PricingBoard() {
                 </a>
                 <p className="mt-3 text-center text-xs text-mute">{t("No charge today. Cancel anytime.")}</p>
 
-                <ul className="mt-8 space-y-3 border-t border-line pt-8 text-[0.95rem]">
+                <ul className="mt-8 space-y-3 border-t border-white/10 pt-8 text-[0.95rem]">
                   {p.features.map((f) => (
                     <li key={f} className="flex gap-3 text-soft">
                       <Check className="mt-0.5 size-4 shrink-0 text-brand" />
@@ -171,7 +169,7 @@ export function PricingBoard() {
           })}
         </div>
 
-        <div className="mx-auto grid max-w-6xl gap-px border-x border-t border-line bg-line sm:grid-cols-3">
+        <div className="mx-auto mt-4 grid max-w-5xl gap-4 px-5 sm:grid-cols-3">
           {[
             [Clock3, "5 days free", "Test everything before you pay."],
             [ShieldCheck, "Cancel anytime", "Stop renewals whenever you want."],
@@ -179,7 +177,7 @@ export function PricingBoard() {
           ].map(([Icon, title, body]) => {
             const I = Icon as typeof Clock3;
             return (
-              <div key={title as string} className="flex items-start gap-3 bg-ink px-6 py-5">
+              <div key={title as string} className="surface flex items-start gap-3 px-6 py-5">
                 <I className="mt-0.5 size-5 shrink-0 text-brand" />
                 <div>
                   <p className="font-medium">{t(title as string)}</p>
@@ -192,24 +190,24 @@ export function PricingBoard() {
       </section>
 
       {/* Comparison */}
-      <section className="border-b border-line">
-        <div className="mx-auto max-w-6xl border-x border-line">
-          <h2 className="px-4 pb-8 pt-16 text-3xl font-semibold tracking-[-0.02em] sm:px-8 sm:text-4xl">{t("Compare plans")}</h2>
-          <div className="overflow-x-auto border-t border-line">
+      <section className="">
+        <div className="mx-auto max-w-5xl px-5">
+          <h2 className="pb-6 pt-20 text-center text-3xl font-semibold tracking-[-0.02em] sm:text-4xl">{t("Compare plans")}</h2>
+          <div className="surface overflow-x-auto">
             <table className="w-full min-w-[520px] text-left text-sm">
               <thead>
-                <tr className="border-b border-line text-mute">
-                  <th className="px-4 py-4 font-medium sm:px-8">{t("Feature")}</th>
+                <tr className="border-b border-white/10 text-mute">
+                  <th className="px-5 py-4 font-medium sm:px-6">{t("Feature")}</th>
                   <th className="w-40 px-4 py-4 font-medium">Standard</th>
-                  <th className="w-40 bg-[#08130e] px-4 py-4 font-medium text-brand-bright">Advanced</th>
+                  <th className="w-40 px-4 py-4 font-medium text-brand-bright">Advanced</th>
                 </tr>
               </thead>
               <tbody>
                 {COMPARE.map(([label, a, b]) => (
-                  <tr key={label} className="border-b border-line last:border-b-0">
-                    <td className="px-4 py-3.5 text-soft sm:px-8">{t(label)}</td>
+                  <tr key={label} className="border-b border-white/[0.06] last:border-b-0">
+                    <td className="px-5 py-3.5 text-soft sm:px-6">{t(label)}</td>
                     {[a, b].map((v, i) => (
-                      <td key={i} className={`px-4 py-3.5 ${i === 1 ? "bg-[#08130e]" : ""}`}>
+                      <td key={i} className="px-4 py-3.5">
                         {v === true ? (
                           <Check className="size-4 text-brand" aria-label={t("Included")} />
                         ) : v === false ? (
@@ -228,8 +226,8 @@ export function PricingBoard() {
       </section>
 
       {/* FAQ */}
-      <section className="border-b border-line">
-        <div className="mx-auto grid max-w-6xl gap-10 border-x border-line px-4 py-16 sm:px-8 md:grid-cols-[1fr_1.6fr]">
+      <section className="">
+        <div className="mx-auto grid max-w-5xl gap-10 px-5 pb-28 pt-20 md:grid-cols-[1fr_1.6fr]">
           <div>
             <h2 className="text-3xl font-semibold tracking-[-0.02em] sm:text-4xl">{t("Questions?")}</h2>
             <p className="mt-3 text-soft">
@@ -240,9 +238,9 @@ export function PricingBoard() {
               .
             </p>
           </div>
-          <div className="border-t border-line">
+          <div className="surface px-5">
             {FAQ.map(([q, a]) => (
-              <details key={t(q)} className="group border-b border-line">
+              <details key={t(q)} className="group border-b border-white/[0.06] last:border-b-0">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 font-medium [&::-webkit-details-marker]:hidden">
                   {t(q)}
                   <ChevronDown className="size-4 shrink-0 text-mute transition-transform group-open:rotate-180" />

@@ -83,9 +83,9 @@
   /* Glassy surface used by cards across the site. */
   /* Sharp, hairline-bordered panel (no radius anywhere on the site). */
   .surface {
-    background: var(--color-night);
-    border: 1px solid var(--color-line);
-    border-radius: 0;
+    background: rgb(255 255 255 / 0.02);
+    border: 1px solid rgb(255 255 255 / 0.1);
+    border-radius: 0.875rem;
   }
   .surface-hover {
     transition: border-color 0.25s ease, transform 0.25s ease, background 0.25s ease;
@@ -239,22 +239,6 @@
   font-size: 0.85em;
   background: rgb(255 255 255 / 0.06);
   padding: 0.1rem 0.35rem;
-}
-
-/* Closing CTA: several soft color spots over Drew green that drift slowly. */
-.cta-gradient {
-  background:
-    radial-gradient(60% 80% at 15% 20%, #35c98d 0%, transparent 60%),
-    radial-gradient(55% 75% at 85% 30%, #0fb5a6 0%, transparent 60%),
-    radial-gradient(70% 90% at 50% 110%, #7ee8b5 0%, transparent 55%),
-    radial-gradient(50% 70% at 70% 90%, #1f7a52 0%, transparent 60%),
-    linear-gradient(135deg, #1fae74, #128a7a);
-  background-size: 160% 160%;
-  animation: cta-drift 14s ease-in-out infinite alternate;
-}
-@keyframes cta-drift {
-  from { background-position: 0% 0%; }
-  to { background-position: 100% 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {

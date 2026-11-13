@@ -103,7 +103,7 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
         )}
       </svg>
       {h && (
-        <div className="pointer-events-none absolute right-2 top-0 border border-line bg-ink/90 px-2.5 py-1.5 text-right text-xs backdrop-blur">
+        <div className="pointer-events-none absolute right-2 top-0 rounded-lg border border-white/10 bg-ink/90 px-2.5 py-1.5 text-right text-xs backdrop-blur">
           <p className="font-mono text-[10px] text-mute">{fmtFull(h.t)}</p>
           <p className="font-medium text-fg">{fmt(Number(h[series.key]))}</p>
         </div>
@@ -222,22 +222,21 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
   ];
 
   return (
-    <section className="relative isolate overflow-hidden border-b border-line pt-[76px]">
-      <div className="line-grid absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_70%_50%_at_50%_0%,black,transparent)]" />
-      <div className="mx-auto max-w-6xl border-x border-line">
-        <div className="animate-fade-up flex flex-col gap-6 px-4 pb-10 pt-16 sm:flex-row sm:items-end sm:justify-between sm:px-8">
+    <section className="relative isolate overflow-hidden pt-[76px]">
+      <div className="mx-auto max-w-6xl px-5 pb-28">
+        <div className="animate-fade-up flex flex-col items-center gap-8 pb-10 pt-20 text-center">
           <div>
-            <h1 className="mt-3 text-5xl font-semibold tracking-[-0.02em] sm:text-6xl">{t("Drew in numbers")}</h1>
-            <p className="mt-3 max-w-xl text-soft">{t("Public, aggregate figures sampled every five minutes, no server or user data")}</p>
+            <h1 className="text-balance text-4xl font-semibold tracking-[-0.02em] sm:text-5xl">{t("Drew in numbers")}</h1>
+            <p className="mx-auto mt-4 max-w-lg text-balance text-soft">{t("Public, aggregate figures sampled every five minutes, no server or user data")}</p>
           </div>
-          <div role="tablist" aria-label="Time range" className="flex w-fit border border-line bg-night p-1">
+          <div role="tablist" aria-label="Time range" className="flex w-fit gap-1 rounded-xl border border-white/10 p-1">
             {RANGES.map((r) => (
               <button
                 key={r}
                 role="tab"
                 aria-selected={range === r}
                 onClick={() => pick(r)}
-                className={`px-4 py-1.5 font-mono text-xs transition-colors ${range === r ? "bg-brand text-[#03110a]" : "text-soft hover:text-fg"}`}
+                className={`rounded-lg px-4 py-1.5 text-sm font-medium transition-colors ${range === r ? "bg-white/10 text-fg" : "text-soft hover:text-fg"}`}
               >
                 {r}
               </button>
@@ -245,9 +244,9 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-px border-t border-line bg-line lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           {kpis.map(({ label, icon: Icon, value, note }) => (
-            <div key={label} className="min-w-0 bg-ink p-5 sm:p-6">
+            <div key={label} className="surface min-w-0 p-5 sm:p-6">
               <p className="flex items-center gap-2 text-xs text-mute">
                 <Icon className="size-3.5 text-brand" /> {label}
               </p>
@@ -258,7 +257,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
         </div>
 
         {points.length < 2 ? (
-          <div className="flex flex-col items-center gap-3 border-t border-line px-6 py-20 text-center">
+          <div className="surface mt-3 flex flex-col items-center gap-3 px-6 py-20 text-center">
             <Activity className="size-6 text-brand" />
             <p className="font-medium">{failed || !data ? t("Metrics are unavailable right now.") : "Collecting data..."}</p>
             <p className="max-w-sm text-sm text-mute">
@@ -268,9 +267,9 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
             </p>
           </div>
         ) : (
-          <div className="grid gap-px border-t border-line bg-line lg:grid-cols-2">
+          <div className="mt-3 grid gap-3 lg:grid-cols-2">
             {CHARTS.map((s) => (
-              <article key={s.key} className="min-w-0 bg-ink p-5 sm:p-6">
+              <article key={s.key} className="surface min-w-0 p-5 sm:p-6">
                 <header className="mb-3 flex items-center justify-between">
                   <h2 className="flex items-center gap-2 text-sm font-medium">
                     <s.icon className="size-4 text-brand" /> {s.label}
@@ -282,7 +281,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
             ))}
           </div>
         )}
-        {failed && data && <p className="border-t border-line py-3 text-center text-xs text-warn">Showing the last data we received. Retrying...</p>}
+        {failed && data && <p className="py-3 text-center text-xs text-warn">Showing the last data we received. Retrying...</p>}
       </div>
     </section>
   );

@@ -54,7 +54,7 @@ export function ServerShowcase() {
   const track = Array.from({ length: Math.ceil(MIN_CARDS / servers.length) }, () => servers).flat();
   const members = t("members");
   return (
-    <section className="w-full overflow-hidden border-b border-line" aria-label="Servers using Drew">
+    <section className="w-full overflow-hidden " aria-label="Servers using Drew">
       <div className="relative w-full overflow-hidden py-8 [mask-image:linear-gradient(90deg,transparent,black_3%,black_97%,transparent)]">
         <div className="flex w-max animate-marquee gap-5" style={{ animationDuration: `${track.length * SECONDS_PER_CARD}s` }}>
           {[0, 1].map((copy) => (

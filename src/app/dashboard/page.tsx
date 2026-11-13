@@ -27,9 +27,9 @@ function GuildCard({ guild, installed, apiUp }: { guild: DiscordGuild; installed
       {installed && <div className="absolute -right-16 -top-16 size-44 rounded-full bg-brand/10 blur-3xl" aria-hidden />}
       <div className="relative flex items-center gap-3.5">
         {icon ? (
-          <Image src={icon} alt="" width={48} height={48} className="size-12 border border-line" />
+          <Image src={icon} alt="" width={48} height={48} className="size-12 rounded-xl border border-white/10" />
         ) : (
-          <div className="flex size-12 items-center justify-center border border-line bg-white/[0.05] font-semibold text-soft">
+          <div className="flex size-12 items-center justify-center rounded-xl border border-white/10 bg-white/[0.05] font-semibold text-soft">
             {guild.name.slice(0, 1).toUpperCase()}
           </div>
         )}
@@ -119,7 +119,6 @@ export default async function DashboardPage() {
 
   return (
     <div className="relative isolate">
-      <div className="dot-grid absolute inset-x-0 top-0 -z-10 h-[520px] [mask-image:linear-gradient(to_bottom,black,transparent)]" />
       <div className="mx-auto max-w-6xl px-4 pb-24 pt-32 sm:px-6">
         <div className="flex flex-wrap items-center justify-between gap-6">
           <div className="flex items-center gap-4">

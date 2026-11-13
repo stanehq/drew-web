@@ -106,7 +106,7 @@ export default function HomePage() {
           {highlights.map(({ icon: Icon, title, body }) => (
             <article
               key={title}
-              className="relative overflow-hidden rounded-2xl border border-white/10 bg-[linear-gradient(180deg,rgb(65_207_139/0.08),transparent_60%)] p-8 sm:p-10"
+              className="surface relative overflow-hidden p-8 sm:p-10"
             >
               <Icon className="size-7 text-brand" strokeWidth={1.75} />
               <h3 className="mt-8 text-2xl font-semibold tracking-tight">{t(title)}</h3>
@@ -160,22 +160,21 @@ export default function HomePage() {
 
       {/* Closing CTA card, Wick/Kena style: centered, vivid multi-color gradient, joined buttons */}
       <section className="relative px-5 pb-28">
-        <div className="pointer-events-none absolute inset-x-0 top-10 -z-10 mx-auto h-72 max-w-4xl bg-[radial-gradient(closest-side,rgb(65_207_139/0.35),transparent)] blur-3xl" aria-hidden />
-        <div className="cta-gradient relative mx-auto max-w-4xl overflow-hidden rounded-2xl px-6 py-16 text-center shadow-[0_40px_100px_-40px_rgba(65,207,139,0.7)] sm:px-12 sm:py-20">
-          <Image src="/brand/drew-icon.svg" unoptimized alt="" width={56} height={56} className="mx-auto drop-shadow-[0_8px_20px_rgba(0,0,0,0.35)]" />
+        <div className="surface relative mx-auto max-w-4xl overflow-hidden px-6 py-16 text-center sm:px-12 sm:py-20">
+          <Image src="/brand/drew-icon.svg" unoptimized alt="" width={56} height={56} className="mx-auto" />
           <h2 className="mt-6 text-balance text-3xl font-semibold tracking-[-0.02em] text-white sm:text-5xl">{t("Protect your server in under a minute")}</h2>
-          <p className="mx-auto mt-5 max-w-xl text-pretty text-lg leading-relaxed text-white/90">{t("Invite Drew, run /opsec setup and sleep well tonight")}</p>
-          <div className="mx-auto mt-10 inline-flex overflow-hidden rounded-xl border border-white/70 text-white backdrop-blur-sm">
-            <a href={SITE.invite} className="inline-flex h-14 items-center gap-2.5 px-6 text-sm font-bold uppercase tracking-wider transition-colors hover:bg-white/15 sm:px-8">
+          <p className="mx-auto mt-5 max-w-xl text-pretty text-lg leading-relaxed text-soft">{t("Invite Drew, run /opsec setup and sleep well tonight")}</p>
+          <div className="mx-auto mt-10 inline-flex overflow-hidden rounded-xl border border-white/15 text-fg">
+            <a href={SITE.invite} className="inline-flex h-14 items-center gap-2.5 px-6 text-sm font-bold uppercase tracking-wider transition-colors hover:bg-white/[0.06] sm:px-8">
               <PlusCircle className="size-5" strokeWidth={1.75} /> {t("Invite")}
             </a>
-            <span className="w-px bg-white/70" aria-hidden />
-            <a href="/api/auth/discord" className="inline-flex h-14 items-center gap-2.5 px-6 text-sm font-bold uppercase tracking-wider transition-colors hover:bg-white/15 sm:px-8">
+            <span className="w-px bg-white/15" aria-hidden />
+            <a href="/api/auth/discord" className="inline-flex h-14 items-center gap-2.5 px-6 text-sm font-bold uppercase tracking-wider transition-colors hover:bg-white/[0.06] sm:px-8">
               <LayoutDashboard className="size-5" strokeWidth={1.75} /> {t("Dashboard")}
             </a>
           </div>
-          <p className="mt-6 text-sm text-white/80">
-            <a href={SITE.support} className="underline decoration-white/40 underline-offset-4 hover:decoration-white">
+          <p className="mt-6 text-sm text-mute">
+            <a href={SITE.support} className="underline decoration-white/30 underline-offset-4 hover:text-fg hover:decoration-white">
               {t("Join support")}
             </a>
           </p>

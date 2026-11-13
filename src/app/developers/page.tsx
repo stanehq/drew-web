@@ -59,7 +59,7 @@ export default function DevelopersPage() {
   const { t } = useI18n();
   return (
     <>
-      <PageHero eyebrow={t("Developers & AI agents")} title={<>{t("Configure Drew ")}<span className="brand-text">{t("with code")}</span></>}>
+      <PageHero eyebrow={t("Developers & AI agents")} title={<>{t("Configure Drew ")}<span className="text-brand">{t("with code")}</span></>}>
         Per-server tokens, a self-describing schema and dry runs, so scripts and AI assistants can set up your server
         safely, without the dashboard.
         <div className="mt-8 flex flex-wrap justify-center gap-3">
@@ -77,7 +77,7 @@ export default function DevelopersPage() {
               <p className="font-mono text-sm text-brand">{s.n}</p>
               <h2 className="mt-3 text-lg font-semibold tracking-tight">{t(s.title)}</h2>
               <p className="mt-2 flex-1 text-sm leading-relaxed text-mute">{t(s.body)}</p>
-              <code className="mt-5 block overflow-x-auto border border-line bg-[#030605] px-3 py-2 font-mono text-xs text-soft">{s.code}</code>
+              <code className="mt-5 block overflow-x-auto rounded-xl border border-white/10 bg-[#030605] px-3 py-2 font-mono text-xs text-soft">{s.code}</code>
             </article>
           ))}
         </section>
@@ -92,7 +92,7 @@ export default function DevelopersPage() {
         </section>
 
         <section className="surface overflow-hidden">
-          <div className="border-b border-line p-6 sm:p-8">
+          <div className="border-b border-white/10 p-6 sm:p-8">
             <h2 className="mt-2 text-2xl font-semibold tracking-tight">{t("Endpoints")}</h2>
             <p className="mt-2 text-sm text-mute">
               Base URL <code className="font-mono text-soft">{SITE.api}</code>, header{" "}

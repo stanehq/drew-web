@@ -34,7 +34,7 @@ export function LiveStats() {
 
   return (
     <div>
-      <div className="grid grid-cols-2 gap-px bg-line sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-px bg-white/[0.06] sm:grid-cols-4">
         {items.map((it) => (
           <div key={it.label} className="bg-ink px-6 py-7 text-left">
             <p className="font-display text-3xl font-semibold tabular-nums tracking-[-0.02em] text-fg sm:text-4xl">{it.value}</p>

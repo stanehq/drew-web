@@ -57,7 +57,7 @@ function Toggle({ checked, onChange, disabled, id }: { checked: boolean; onChang
 }
 
 const inputCls =
-  "h-10 w-full border border-line bg-white/[0.03] px-3 text-sm text-fg placeholder:text-mute focus:border-brand/60 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50";
+  "h-10 w-full rounded-xl border border-white/10 bg-white/[0.03] px-3 text-sm text-fg placeholder:text-mute focus:border-brand/60 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50";
 
 export function SettingsEditor({
   guild,
@@ -292,16 +292,15 @@ export function SettingsEditor({
 
   return (
     <div className="relative isolate">
-      <div className="dot-grid absolute inset-x-0 top-0 -z-10 h-[420px] [mask-image:linear-gradient(to_bottom,black,transparent)]" />
       <div className="mx-auto max-w-6xl px-4 pb-40 pt-28 sm:px-6">
         <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-sm text-mute hover:text-fg">
           <ArrowLeft className="size-4" /> Your servers
         </Link>
         <div className="mt-6 flex flex-wrap items-center gap-4">
           {guild.icon_url ? (
-            <Image src={guild.icon_url} alt="" width={64} height={64} className="size-16 border border-line" />
+            <Image src={guild.icon_url} alt="" width={64} height={64} className="size-16 rounded-xl border border-white/10" />
           ) : (
-            <div className="flex size-16 items-center justify-center border border-line bg-white/[0.05] text-2xl font-semibold">
+            <div className="flex size-16 items-center justify-center rounded-xl border border-white/10 bg-white/[0.05] text-2xl font-semibold">
               {guild.name.slice(0, 1).toUpperCase()}
             </div>
           )}
@@ -376,11 +375,11 @@ export function SettingsEditor({
                     </div>
                     <span className="text-xs text-mute group-open:hidden">{t("Show ")}{fields.length}</span>
                   </summary>
-                  <div className="border-t border-line">{body}</div>
+                  <div className="border-t border-white/10">{body}</div>
                 </details>
               ) : (
                 <section key={cat} id={`s-${cat}`} className="surface scroll-mt-24 overflow-hidden" aria-labelledby={`h-${cat}`}>
-                  <div className="flex items-center gap-3 border-b border-line px-6 py-5">
+                  <div className="flex items-center gap-3 border-b border-white/10 px-6 py-5">
                     <div className="flex size-9 items-center justify-center border border-brand/25 bg-brand/10 text-brand">
                       <Icon className="size-4" />
                     </div>
@@ -403,7 +402,7 @@ export function SettingsEditor({
         <div className="fixed inset-x-0 bottom-0 z-40 px-4 pb-4 sm:pb-6">
           <div className="mx-auto max-w-3xl border border-line-strong bg-panel/95 p-4 shadow-[0_20px_60px_-15px_rgb(0_0_0/0.8)] backdrop-blur-xl">
             {preview && (
-              <div className="mb-4 max-h-56 space-y-1.5 overflow-y-auto border border-line bg-black/30 p-3 font-mono text-xs">
+              <div className="mb-4 max-h-56 space-y-1.5 overflow-y-auto rounded-xl border border-white/10 bg-black/30 p-3 font-mono text-xs">
                 {Object.entries(preview).map(([k, c]) => (
                   <p key={k} className="flex flex-wrap gap-x-2">
                     <span className="text-fg">{k}</span>
