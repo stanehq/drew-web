@@ -114,10 +114,9 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
 }
 
 function Delta({ now, before, invert }: { now: number; before: number; invert?: boolean }) {
-  const { t } = useI18n();
   if (!before) return null;
   const d = now - before;
-  if (d === 0) return <span className="text-xs text-mute">{t("no change")}</span>;
+  if (d === 0) return null;
   const good = invert ? d < 0 : d > 0;
   const pct = Math.abs((d / before) * 100);
   return (
@@ -137,7 +136,6 @@ const CHARTS: Series[] = [
   { key: "shardsOnline", label: "Shards online", icon: Layers },
 ];
 
-const Muted = ({ children }: { children: React.ReactNode }) => <span className="text-xs text-mute">{children}</span>;
 
 export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics | null; initialRange: Range }) {
   const { t } = useI18n();
@@ -204,22 +202,22 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
       label: "Members per server",
       icon: TrendingUp,
       value: cur?.guilds ? formatExact(Math.round(cur.users / cur.guilds)) : "0",
-      note: <Muted>{t("on average")}</Muted>,
+      note: null,
     },
-    { label: `Commands (${range})`, icon: Terminal, value: formatCompact(stats.commands), note: <Muted>{stats.perHour.toFixed(1)} {t("per hour")}</Muted> },
+    { label: `Commands (${range})`, icon: Terminal, value: formatCompact(stats.commands), note: null },
     {
       label: "Avg latency",
       icon: Gauge,
       value: `${Math.round(stats.avgLatency || cur?.latencyMs || 0)} ms`,
-      note: <Muted>{stats.best ? `${stats.best} best, ${stats.worst} worst` : ""}</Muted>,
+      note: null,
     },
     {
       label: "Availability",
       icon: ShieldCheck,
       value: points.length ? `${stats.availability.toFixed(stats.availability === 100 ? 0 : 2)}%` : "...",
-      note: <Muted>{cur ? `${cur.shardsOnline}/${cur.shardsTotal} shards online` : ""}</Muted>,
+      note: null,
     },
-    { label: "Uptime", icon: Clock3, value: cur?.uptimeSeconds ? formatUptime(cur.uptimeSeconds) : "...", note: <Muted>{t("since last restart")}</Muted> },
+    { label: "Uptime", icon: Clock3, value: cur?.uptimeSeconds ? formatUptime(cur.uptimeSeconds) : "...", note: null },
   ];
 
   return (

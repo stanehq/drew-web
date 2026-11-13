@@ -52,7 +52,7 @@ function Card({ item, featured }: { item: Testimonial; featured: boolean }) {
       </blockquote>
       <figcaption className="relative flex items-end justify-between gap-4">
         <div>
-          <p className="font-semibold text-brand-bright">{author.name}</p>
+          <p className="font-semibold text-fg">{author.name}</p>
           <p className="text-sm text-mute">{t(author.role)}</p>
         </div>
         <Avatar src={author.avatar} name={author.name} className="size-11" />

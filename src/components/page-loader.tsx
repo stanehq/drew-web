@@ -5,14 +5,14 @@ import { usePathname } from "next/navigation";
 import { Loader } from "@/components/loader";
 
 // The first load always shows the loader at least this long.
-const FIRST_MS = 3500;
+const FIRST_MS = 4000;
 // Page changes inside the site show it at least this long.
 const NAV_MS = 700;
 const MAX_MS = 8000;
 
 /**
  * Full-screen loader over the whole site: on the first load until the page,
- * fonts and images are ready (at least 3.5 s), and again on every page change.
+ * fonts and images are ready (at least 4 s), and again on every page change.
  * Rendered on the server so it covers the page from the first paint. A CSS
  * fallback hides it if JavaScript fails.
  */
@@ -27,7 +27,7 @@ export function PageLoader() {
     const wait = Math.max(0, min - (performance.now() - shownAt.current));
     window.setTimeout(() => {
       setState("fade");
-      window.setTimeout(() => setState((s) => (s === "fade" ? "gone" : s)), 400);
+      window.setTimeout(() => setState((s) => (s === "fade" ? "gone" : s)), 900);
     }, wait);
   };
 
@@ -73,10 +73,12 @@ export function PageLoader() {
   if (state === "gone") return null;
   return (
     <div
-      className={`page-loader fixed inset-0 z-[200] flex h-dvh w-screen items-center justify-center bg-black transition-opacity duration-400 ${state === "fade" ? "pointer-events-none opacity-0" : "opacity-100"} ${nav ? "page-loader-nav" : ""}`}
+      className={`page-loader fixed inset-0 z-[200] flex h-dvh w-screen items-center justify-center bg-black ${state === "fade" ? "page-loader-leave pointer-events-none" : ""} ${nav ? "page-loader-nav" : ""}`}
       aria-hidden={state === "fade"}
     >
-      <Loader size={72} />
+      <div className="page-loader-mark">
+        <Loader size={150} />
+      </div>
     </div>
   );
 }

@@ -167,8 +167,8 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
     note: string;
     health?: { tone: Tone; label: string } | null;
   }[] = [
-    { icon: Server, label: "Servers", value: data ? formatExact(data.guilds) : "...", note: data ? `across ${data.shardCount} shard${data.shardCount === 1 ? "" : "s"}` : "" },
-    { icon: Users, label: "Members", value: data ? formatCompact(data.users) : "...", note: "across all servers" },
+    { icon: Server, label: "Servers", value: data ? formatExact(data.guilds) : "...", note: "" },
+    { icon: Users, label: "Members", value: data ? formatCompact(data.users) : "...", note: "" },
     {
       icon: Activity,
       label: "Shards online",

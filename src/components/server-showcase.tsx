@@ -46,7 +46,7 @@ function Row({ track, members, reverse = false }: { track: Server[]; members: (n
       style={{ animationDuration: `${track.length * SECONDS_PER_CARD}s` }}
     >
       {[0, 1].map((copy) => (
-        <ul key={copy} className="flex gap-10" aria-hidden={copy === 1 || reverse || undefined}>
+        <ul key={copy} className="flex gap-10" aria-hidden={copy === 1 || undefined}>
           {track.map((s, i) => (
             <ServerCard key={`${copy}-${i}`} s={s} members={members} />
           ))}
@@ -94,14 +94,7 @@ export function ServerShowcase() {
     <div className="w-full overflow-hidden pb-4 pt-12" aria-label="Servers using Drew">
       {totals.servers > 0 && totals.people > 0 && (
         <div className="mb-12 px-5 text-center">
-          <p className="inline-flex items-center gap-2 rounded-full border border-brand/25 bg-brand/[0.06] px-3 py-1 text-xs font-medium text-brand-bright">
-            <span className="relative flex size-2">
-              <span className="animate-pulse-ring absolute inline-flex size-full rounded-full bg-brand" />
-              <span className="relative inline-flex size-2 rounded-full bg-brand" />
-            </span>
-            {t("Live")}
-          </p>
-          <h2 className="mx-auto mt-5 max-w-4xl text-balance text-3xl font-semibold leading-[1.15] tracking-[-0.025em] text-fg sm:text-5xl">
+          <h2 className="mx-auto max-w-4xl text-balance text-3xl font-semibold leading-[1.15] tracking-[-0.025em] text-fg sm:text-5xl">
             {t("Protecting")} <span className="drew-wordmark"><CountUp value={totals.people} /></span> {t("people across")}{" "}
             <span className="drew-wordmark"><CountUp value={totals.servers} ms={900} /></span> {t("communities")}
           </h2>

@@ -226,7 +226,7 @@
 /* Reduced motion (e.g. Windows "Animation effects" off): stop decorative motion,
    but keep the server carousel and loading indicators working. */
 @media (prefers-reduced-motion: reduce) {
-  *:not(.animate-marquee, .animate-spin, .animate-pulse, .loader span),
+  *:not(.animate-marquee, .animate-spin, .animate-pulse, .loader span, .page-loader-leave, .page-loader-mark),
   *::before,
   *::after {
     animation-duration: 0.001ms !important;
@@ -243,12 +243,12 @@
   height: calc(var(--size) * 2 / 3);
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 5px;
+  gap: calc(var(--size) / 14);
 }
 .loader span {
   width: 100%;
   height: 100%;
-  border-radius: 3px;
+  border-radius: calc(var(--size) / 18);
   background-color: var(--color-brand);
   animation: loader-blink 0.6s alternate infinite linear;
 }
@@ -270,4 +270,19 @@
 }
 @keyframes page-loader-out {
   to { opacity: 0; visibility: hidden; }
+}
+
+/* Leaving: the squares shrink and blur away while the black curtain fades. */
+.page-loader-leave {
+  animation: page-loader-curtain 0.9s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+.page-loader-leave .page-loader-mark {
+  animation: page-loader-mark-out 0.55s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+@keyframes page-loader-curtain {
+  0%, 35% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes page-loader-mark-out {
+  to { opacity: 0; transform: scale(0.6); filter: blur(8px); }
 }

@@ -69,6 +69,8 @@ const FAQ = [
 ];
 
 const money = (n: number) => `$${n.toFixed(2)}`;
+// Monthly price shown for a plan: yearly billing is 10 months spread over 12.
+const monthlyPrice = (monthly: number, billing: Billing) => (billing === "monthly" ? monthly : +(monthly * 10).toFixed(2) / 12);
 
 export function PricingBoard() {
   const [billing, setBilling] = useState<Billing>("yearly");
@@ -147,8 +149,7 @@ export function PricingBoard() {
                   )}
                 </p>
                 {popular && (
-                  <p className="mt-3 inline-flex w-fit items-center gap-2 rounded-lg bg-brand/10 px-3 py-1.5 text-sm text-soft">
-                    <Zap className="size-4 text-brand-bright" />
+                  <p className="mt-3 w-fit rounded-lg bg-brand/10 px-3 py-1.5 text-sm text-soft">
                     <span>
                       {t("Only ")}<span className="font-semibold text-brand-bright">{money(diff)}</span>{t(" more a month than Standard")}
                     </span>
@@ -184,7 +185,7 @@ export function PricingBoard() {
           })}
         </div>
 
-        <div className="mx-auto mt-4 grid max-w-5xl gap-4 px-5 sm:grid-cols-3">
+        <div className="mx-auto mt-10 grid max-w-5xl gap-4 px-5 sm:grid-cols-3">
           {[
             [Clock3, "5 days free", "Test everything before you pay."],
             [ShieldCheck, "Cancel anytime", "Stop renewals whenever you want."],
@@ -215,11 +216,11 @@ export function PricingBoard() {
                   <th className="px-6 pb-5 pt-6 align-bottom text-sm font-medium text-mute">{t("Feature")}</th>
                   <th className="w-44 px-4 pb-5 pt-6 align-bottom">
                     <p className="text-lg font-semibold text-soft">{t("Standard")}</p>
-                    <p className="mt-0.5 text-sm font-normal text-mute">{money(PLANS[0].monthly)} {t("/ month")}</p>
+                    <p className="mt-0.5 text-sm font-normal text-mute">{money(monthlyPrice(PLANS[0].monthly, billing))} {t("/ month")}</p>
                   </th>
                   <th className="w-44 rounded-t-xl bg-brand/[0.07] px-4 pb-5 pt-6 align-bottom">
                     <p className="text-xl font-bold text-brand-bright">{t("Advanced")}</p>
-                    <p className="mt-0.5 text-sm font-normal text-mute">{money(PLANS[1].monthly)} {t("/ month")}</p>
+                    <p className="mt-0.5 text-sm font-normal text-mute">{money(monthlyPrice(PLANS[1].monthly, billing))} {t("/ month")}</p>
                   </th>
                 </tr>
               </thead>

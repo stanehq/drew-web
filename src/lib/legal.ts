@@ -32,12 +32,11 @@ export async function loadLegal(slug: LegalSlug) {
   const updated = body.match(/^\*\*(Last updated[^*]+)\*\*\s*\n+/);
   if (updated) body = body.slice(updated[0].length);
 
-  const toc: { id: string; text: string }[] = [];
   const renderer = new marked.Renderer();
   renderer.heading = function ({ tokens, depth }) {
     const text = this.parser.parseInline(tokens);
+    // Headings keep an id so sections can still be linked to directly.
     const id = slugify(text);
-    if (depth === 2) toc.push({ id, text: text.replace(/<[^>]+>/g, "") });
     return `<h${depth} id="${id}">${text}</h${depth}>\n`;
   };
   renderer.link = function ({ href, tokens }) {
@@ -46,5 +45,5 @@ export async function loadLegal(slug: LegalSlug) {
     return `<a href="${href}"${external ? ' target="_blank" rel="noreferrer"' : ""}>${text}</a>`;
   };
   const html = await marked.parse(body, { renderer, gfm: true });
-  return { ...doc, updated: updated?.[1].trim() ?? null, html, toc };
+  return { ...doc, updated: updated?.[1].trim() ?? null, html };
 }
