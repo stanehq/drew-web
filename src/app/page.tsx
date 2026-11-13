@@ -48,7 +48,7 @@ const secondary =
 function SectionTitle({ title, children }: { title: string; children?: React.ReactNode }) {
   return (
     <div className="mx-auto max-w-3xl text-center">
-      <h2 className="text-balance text-4xl font-semibold tracking-[-0.025em] sm:text-6xl">{title}</h2>
+      <h2 className="drew-title text-balance text-4xl font-semibold tracking-[-0.025em] sm:text-6xl">{title}</h2>
       {children && <p className="mx-auto mt-5 max-w-2xl text-pretty text-lg leading-relaxed text-soft">{children}</p>}
     </div>
   );
@@ -72,9 +72,9 @@ export default function HomePage() {
           aria-hidden
         />
         <div className="mx-auto max-w-4xl px-5 pb-24 pt-24 text-center sm:pt-32">
-          <h1 className="animate-fade-up text-balance text-[2.5rem] font-semibold leading-[1.05] tracking-[-0.02em] sm:text-[5.25rem]">
-            <span className="text-brand">{t("Discord security ")}</span>
-            <span className="text-fg">{t("that never sleeps")}</span>
+          <h1 className="drew-title animate-fade-up text-balance text-[2.5rem] font-semibold leading-[1.05] tracking-[-0.02em] sm:text-[5.25rem]">
+            {t("Discord security ")}
+            {t("that never sleeps")}
           </h1>
           <p className="animate-fade-up mx-auto mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-soft sm:text-xl [animation-delay:80ms]">
             {t("Anti-nuke, anti-raid, verification and logging in one bot. Set it up in a minute and let Drew do the watching")}
@@ -170,7 +170,7 @@ export default function HomePage() {
             height={340}
             className="pointer-events-none absolute -right-16 top-1/2 size-[240px] -translate-y-1/2 rotate-[-8deg] opacity-30 brightness-0 invert [mask-image:linear-gradient(90deg,transparent,black_55%)] sm:-right-10 sm:size-[380px] sm:opacity-40"
           />
-          <h2 className="relative text-balance text-4xl font-semibold tracking-[-0.025em] text-white sm:text-6xl">{t("Protect your server in under a minute")}</h2>
+          <h2 className="drew-title relative text-balance text-4xl font-semibold tracking-[-0.025em] sm:text-6xl">{t("Protect your server in under a minute")}</h2>
           <p className="relative mx-auto mt-5 max-w-xl text-pretty text-lg leading-relaxed text-white/90">{t("Invite Drew, run /opsec setup and sleep well tonight")}</p>
           <div className="relative mx-auto mt-10 inline-flex overflow-hidden rounded-xl border border-white/70 text-white">
             <a href={SITE.invite} className="inline-flex h-14 items-center gap-2.5 px-6 text-sm font-bold uppercase tracking-wider transition-colors hover:bg-white/15 sm:px-8">
