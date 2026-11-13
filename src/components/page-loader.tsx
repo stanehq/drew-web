@@ -4,36 +4,48 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Loader } from "@/components/loader";
 
-// The first load always shows the loader at least this long.
 const FIRST_MS = 4500;
-// Page changes inside the site show it at least this long.
 const NAV_MS = 700;
 const MAX_MS = 8000;
 
-/**
- * Full-screen loader over the whole site: on the first load until the page,
- * fonts and images are ready (at least 4.5 s), and again on every page change.
- * Rendered on the server so it covers the page from the first paint. A CSS
- * fallback hides it if JavaScript fails.
- */
+/** Shows on the English home page's first load and when the visitor changes language. */
 export function PageLoader() {
   const pathname = usePathname();
   const [state, setState] = useState<"show" | "fade" | "gone">("show");
+  const [visible, setVisible] = useState(false);
+  const [nav, setNav] = useState(false);
   const shownAt = useRef(0);
   const first = useRef(true);
-  const [nav, setNav] = useState(false);
+  const localeChange = useRef(false);
+  const timers = useRef<number[]>([]);
 
-  const hide = (min: number) => {
-    const wait = Math.max(0, min - (performance.now() - shownAt.current));
-    window.setTimeout(() => {
-      setState("fade");
-      window.setTimeout(() => setState((s) => (s === "fade" ? "gone" : s)), 900);
-    }, wait);
+  const clearTimers = () => {
+    timers.current.forEach(window.clearTimeout);
+    timers.current = [];
   };
 
-  // First load: wait for everything, never less than FIRST_MS.
+  const hide = (minimum: number) => {
+    clearTimers();
+    const wait = Math.max(0, minimum - (performance.now() - shownAt.current));
+    timers.current.push(window.setTimeout(() => {
+      setState("fade");
+      timers.current.push(window.setTimeout(() => {
+        setState("gone");
+        setVisible(false);
+      }, 900));
+    }, wait));
+  };
+
   useEffect(() => {
-    shownAt.current = 0;
+    if (pathname !== "/") {
+      first.current = false;
+      setVisible(false);
+      setState("gone");
+      return;
+    }
+
+    setVisible(true);
+    shownAt.current = performance.now();
     let done = false;
     const finish = () => {
       if (done) return;
@@ -41,36 +53,36 @@ export function PageLoader() {
       first.current = false;
       hide(FIRST_MS);
     };
-    const loaded = document.readyState === "complete" ? Promise.resolve() : new Promise((r) => window.addEventListener("load", r, { once: true }));
+    const loaded = document.readyState === "complete"
+      ? Promise.resolve()
+      : new Promise<void>((resolve) => window.addEventListener("load", () => resolve(), { once: true }));
     Promise.all([loaded, document.fonts?.ready]).then(finish, finish);
     const cap = window.setTimeout(finish, MAX_MS);
-    return () => window.clearTimeout(cap);
+    return () => {
+      window.clearTimeout(cap);
+      clearTimers();
+    };
   }, []);
 
-  // Show it as soon as an internal link is clicked.
   useEffect(() => {
-    const onClick = (e: MouseEvent) => {
-      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      const a = (e.target as Element)?.closest?.("a");
-      if (!a || a.target === "_blank" || a.hasAttribute("download")) return;
-      const url = new URL(a.href, location.href);
-      if (url.origin !== location.origin || url.pathname.startsWith("/api/")) return;
-      if (url.pathname === location.pathname) return; // same page or a #section
+    const onLocaleChange = () => {
+      localeChange.current = true;
       shownAt.current = performance.now();
       setNav(true);
       setState("show");
+      setVisible(true);
     };
-    document.addEventListener("click", onClick, true);
-    return () => document.removeEventListener("click", onClick, true);
+    window.addEventListener("drew:locale-change", onLocaleChange);
+    return () => window.removeEventListener("drew:locale-change", onLocaleChange);
   }, []);
 
-  // The new page is in place: let it go after the minimum.
   useEffect(() => {
-    if (first.current) return;
+    if (!localeChange.current) return;
+    localeChange.current = false;
     hide(NAV_MS);
   }, [pathname]);
 
-  if (state === "gone") return null;
+  if (!visible || state === "gone") return null;
   return (
     <div
       className={`page-loader fixed inset-0 z-[200] flex h-dvh w-screen items-center justify-center bg-black ${state === "fade" ? "page-loader-leave pointer-events-none" : ""} ${nav ? "page-loader-nav" : ""}`}
