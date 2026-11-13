@@ -87,6 +87,12 @@
     background-clip: text;
     color: transparent;
   }
+  .drew-title-green {
+    background: linear-gradient(180deg, #35c98d 0%, #5bd4a6 48%, #ddf8ea 78%, #ffffff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
   /* Same vertical gradient as the Drew logo (public/brand/drew-icon.svg). */
   .drew-wordmark {
     background: linear-gradient(180deg, #35c98d 0%, #5bd4a6 48%, #ddf8ea 78%, #ffffff 100%);
