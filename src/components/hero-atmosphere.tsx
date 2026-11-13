@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef } from "react";
 
 export function HeroAtmosphere() {
@@ -103,16 +102,6 @@ export function HeroAtmosphere() {
   return (
     <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
       <canvas ref={canvasRef} className="absolute inset-0 block size-full" />
-      <div className="absolute left-1/2 top-[58%] -translate-x-1/2 -translate-y-1/2">
-        <Image
-          src="/brand/drew-icon.svg"
-          alt=""
-          width={104}
-          height={104}
-          priority
-          className="h-[clamp(4.5rem,8vw,7rem)] w-[clamp(4.5rem,8vw,7rem)] opacity-80 drop-shadow-[0_0_32px_rgb(65_207_139/0.3)]"
-        />
-      </div>
     </div>
   );
 }
