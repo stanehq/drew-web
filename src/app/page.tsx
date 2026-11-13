@@ -63,6 +63,15 @@ export default function HomePage() {
   }
   return (
     <>
+      <svg aria-hidden="true" className="pointer-events-none absolute size-0 overflow-hidden">
+        <defs>
+          <linearGradient id="drew-icon-gradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#35c98d" />
+            <stop offset="52%" stopColor="#7ee8b5" />
+            <stop offset="100%" stopColor="#ffffff" />
+          </linearGradient>
+        </defs>
+      </svg>
       {/* Hero: centered, one soft glow, nothing else in the background */}
       <section className="relative isolate overflow-hidden pt-[76px]">
         <HeroAtmosphere />
@@ -72,11 +81,11 @@ export default function HomePage() {
           aria-hidden
         />
         <div className="mx-auto max-w-4xl px-5 pb-24 pt-24 text-center sm:pt-32">
-          <h1 className="drew-title animate-fade-up text-balance text-[2.5rem] font-semibold leading-[1.05] tracking-[-0.02em] sm:text-[5.25rem]">
+          <h1 className="drew-title animate-fade-up mx-auto max-w-[14ch] text-balance text-[clamp(2.4rem,7.2vw,7rem)] font-semibold leading-[1.04] tracking-[-0.035em]">
             {t("Discord security ")}
             {t("that never sleeps")}
           </h1>
-          <p className="animate-fade-up mx-auto mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-soft sm:text-xl [animation-delay:80ms]">
+          <p className="animate-fade-up mx-auto mt-6 max-w-2xl px-2 text-pretty text-[clamp(1rem,1.5vw,1.3rem)] leading-relaxed text-soft [animation-delay:80ms]">
             {t("Anti-nuke, anti-raid, verification and logging in one bot. Set it up in a minute and let Drew do the watching")}
           </p>
           <div className="animate-fade-up mt-10 flex flex-wrap items-center justify-center gap-3 [animation-delay:140ms]">
@@ -107,7 +116,7 @@ export default function HomePage() {
               key={title}
               className="surface relative overflow-hidden p-8 sm:p-10"
             >
-              <Icon className="size-7 text-brand" strokeWidth={1.75} />
+              <Icon className="drew-icon-gradient size-7" strokeWidth={1.75} />
               <h3 className="mt-8 text-2xl font-semibold tracking-tight text-white">{t(title)}</h3>
               <p className="mt-3 max-w-md leading-relaxed text-soft">{t(body)}</p>
             </article>
@@ -117,7 +126,7 @@ export default function HomePage() {
           {features.map(({ icon: Icon, title, body, href }) => {
             const inner = (
               <>
-                <Icon className="size-5 text-soft" strokeWidth={1.75} />
+                <Icon className="drew-icon-gradient size-5" strokeWidth={1.75} />
                 <h3 className="mt-5 text-lg font-semibold tracking-tight text-white">{t(title)}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-mute">{t(body)}</p>
                 {href && (
