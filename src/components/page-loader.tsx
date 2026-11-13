@@ -3,21 +3,22 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Loader } from "@/components/loader";
+import { splitLocale } from "@/lib/locales";
 
-const FIRST_MS = 4500;
-const NAV_MS = 700;
+const FIRST_MS = 1800;
+const LOCALE_MS = 700;
 const MAX_MS = 8000;
 
-/** Shows on the English home page's first load and when the visitor changes language. */
+/** Shows only on an initial homepage load and explicit language changes. */
 export function PageLoader() {
   const pathname = usePathname();
-  const [state, setState] = useState<"show" | "fade" | "gone">("show");
-  const [visible, setVisible] = useState(() => pathname === "/");
-  const [nav, setNav] = useState(false);
-  const shownAt = useRef(0);
-  const initialPath = useRef(pathname);
+  const isHome = splitLocale(pathname)[1] === "/";
+  const initialHome = useRef(isHome);
   const localeChange = useRef(false);
+  const shownAt = useRef(0);
   const timers = useRef<number[]>([]);
+  const [visible, setVisible] = useState(() => isHome);
+  const [fading, setFading] = useState(false);
 
   const clearTimers = () => {
     timers.current.forEach(window.clearTimeout);
@@ -28,27 +29,25 @@ export function PageLoader() {
     clearTimers();
     const wait = Math.max(0, minimum - (performance.now() - shownAt.current));
     timers.current.push(window.setTimeout(() => {
-      setState("fade");
+      setFading(true);
       timers.current.push(window.setTimeout(() => {
-        setState("gone");
         setVisible(false);
-      }, 900));
+        setFading(false);
+      }, 450));
     }, wait));
   };
 
   useEffect(() => {
-    if (initialPath.current !== "/") {
+    if (!initialHome.current) {
       setVisible(false);
-      setState("gone");
       return;
     }
 
-    setVisible(true);
     shownAt.current = performance.now();
-    let done = false;
+    let finished = false;
     const finish = () => {
-      if (done) return;
-      done = true;
+      if (finished) return;
+      finished = true;
       hide(FIRST_MS);
     };
     const loaded = document.readyState === "complete"
@@ -56,6 +55,7 @@ export function PageLoader() {
       : new Promise<void>((resolve) => window.addEventListener("load", () => resolve(), { once: true }));
     Promise.all([loaded, document.fonts?.ready]).then(finish, finish);
     const cap = window.setTimeout(finish, MAX_MS);
+
     return () => {
       window.clearTimeout(cap);
       clearTimers();
@@ -66,9 +66,17 @@ export function PageLoader() {
     const onLocaleChange = () => {
       localeChange.current = true;
       shownAt.current = performance.now();
-      setNav(true);
-      setState("show");
+      setFading(false);
       setVisible(true);
+      // Failsafe in case navigation is interrupted.
+      timers.current.push(window.setTimeout(() => {
+        localeChange.current = false;
+        setFading(true);
+        timers.current.push(window.setTimeout(() => {
+          setVisible(false);
+          setFading(false);
+        }, 450));
+      }, MAX_MS));
     };
     window.addEventListener("drew:locale-change", onLocaleChange);
     return () => window.removeEventListener("drew:locale-change", onLocaleChange);
@@ -77,14 +85,16 @@ export function PageLoader() {
   useEffect(() => {
     if (!localeChange.current) return;
     localeChange.current = false;
-    hide(NAV_MS);
+    hide(LOCALE_MS);
   }, [pathname]);
 
-  if (!visible || state === "gone") return null;
+  useEffect(() => () => clearTimers(), []);
+
+  if (!visible) return null;
   return (
     <div
-      className={`page-loader fixed inset-0 z-[200] flex h-dvh w-screen items-center justify-center bg-black ${state === "fade" ? "page-loader-leave pointer-events-none" : ""} ${nav ? "page-loader-nav" : ""}`}
-      aria-hidden={state === "fade"}
+      className={`page-loader fixed inset-0 z-[200] flex h-dvh w-screen items-center justify-center bg-black ${fading ? "page-loader-leave pointer-events-none" : ""}`}
+      aria-hidden={fading}
     >
       <div className="page-loader-mark">
         <Loader />
