@@ -69,7 +69,7 @@ export function SiteHeader() {
       <div className="flex h-[76px] w-full items-center gap-5 px-4 sm:px-6 xl:gap-6 lg:px-8">
         <div className="inline-flex shrink-0 items-center gap-3">
           <a href="https://stanelabs.com/?utm_source=drewbot.xyz" target="_blank" rel="noopener" aria-label="Stane Labs" className="transition-opacity hover:opacity-85">
-            <Image src="/brand/stane-mark.webp" alt="Stane" width={40} height={40} priority className="size-10 rounded-lg object-cover" />
+            <Image src="/brand/stane-mark.webp" alt="Stane" width={48} height={48} priority className="size-12 rounded-xl object-cover" />
           </a>
           <span aria-hidden className="text-2xl font-light text-white/55">×</span>
           <Link href="/" aria-label="Drew home" className="inline-flex items-center gap-2">

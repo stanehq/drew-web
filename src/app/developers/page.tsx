@@ -74,7 +74,7 @@ export default function DevelopersPage() {
         <section id="quickstart" className="grid scroll-mt-24 gap-4 md:grid-cols-3">
           {steps.map((s) => (
             <article key={s.n} className="surface flex flex-col p-6">
-              <p className="font-mono text-sm text-brand">{s.n}</p>
+              <p className="text-sm font-semibold text-brand">{s.n}</p>
               <h2 className="mt-3 text-lg font-semibold tracking-tight">{t(s.title)}</h2>
               <p className="mt-2 flex-1 text-sm leading-relaxed text-mute">{t(s.body)}</p>
               <code className="mt-5 block overflow-x-auto rounded-xl border border-white/10 bg-[#030605] px-3 py-2 font-mono text-xs text-soft">{s.code}</code>
@@ -102,7 +102,7 @@ export default function DevelopersPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-left font-mono text-[0.68rem] uppercase tracking-[0.18em] text-mute">
+                <tr className="text-left text-xs font-medium text-mute">
                   <th className="px-6 py-3 font-normal">{t("Method")}</th>
                   <th className="px-6 py-3 font-normal">{t("Path")}</th>
                   <th className="px-6 py-3 font-normal">{t("Scope")}</th>
