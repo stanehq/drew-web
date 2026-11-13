@@ -108,7 +108,7 @@ export default function HomePage() {
               className="surface relative overflow-hidden p-8 sm:p-10"
             >
               <Icon className="size-7 text-brand" strokeWidth={1.75} />
-              <h3 className="mt-8 text-2xl font-semibold tracking-tight">{t(title)}</h3>
+              <h3 className="mt-8 text-2xl font-semibold tracking-tight text-white">{t(title)}</h3>
               <p className="mt-3 max-w-md leading-relaxed text-soft">{t(body)}</p>
             </article>
           ))}
@@ -118,7 +118,7 @@ export default function HomePage() {
             const inner = (
               <>
                 <Icon className="size-5 text-soft" strokeWidth={1.75} />
-                <h3 className="mt-5 text-lg font-semibold tracking-tight">{t(title)}</h3>
+                <h3 className="mt-5 text-lg font-semibold tracking-tight text-white">{t(title)}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-mute">{t(body)}</p>
                 {href && (
                   <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-fg">
