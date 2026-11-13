@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { ChevronDown, Crown, ExternalLink, LayoutDashboard, Menu, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ExternalLink, LayoutDashboard, Menu, X } from "lucide-react";
 import { SITE } from "@/lib/site";
 import { DiscordIcon } from "./discord-icon";
 import { LanguageSelector } from "./language-selector";
@@ -13,15 +13,10 @@ const LOGIN = "/api/auth/discord";
 
 const DASHBOARD_BTN =
   "inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-lg border border-brand/50 bg-brand/[0.08] px-4 text-[0.95rem] font-semibold text-brand-bright transition-colors hover:border-brand hover:bg-brand/[0.16]";
-// Gold, glowing and with a slow shine so Premium stands out from the green buttons.
-const PREMIUM_BTN =
-  "premium-btn relative inline-flex h-11 items-center gap-2 overflow-hidden whitespace-nowrap rounded-lg bg-[linear-gradient(135deg,#ffe08a_0%,#f5b84b_45%,#e08a1e_100%)] px-4 text-[0.95rem] font-bold text-[#2b1600] shadow-[0_0_0_1px_rgba(255,214,120,0.55),0_8px_28px_-6px_rgba(245,184,75,0.65)] transition-transform hover:-translate-y-px hover:shadow-[0_0_0_1px_rgba(255,224,138,0.8),0_10px_34px_-6px_rgba(245,184,75,0.85)]";
 
 // Header copy with its translations (falls back to English).
 const COPY: Record<string, Partial<Record<Locale, string>>> = {
-  "Get Premium": { es: "Conseguir Premium", pt: "Obter Premium", fr: "Obtenir Premium", de: "Premium holen", ru: "Получить Premium" },
   "Add to Discord": { es: "Añadir a Discord", pt: "Adicionar ao Discord", fr: "Ajouter à Discord", de: "Zu Discord hinzufügen", ru: "Добавить в Discord" },
-  "Stane products": { es: "Productos de Stane", pt: "Produtos Stane", fr: "Produits Stane", de: "Stane-Produkte", ru: "Продукты Stane" },
 };
 
 type Item = { label: string; href: string; hint?: string; keywords?: string };
@@ -39,21 +34,6 @@ const MORE: Item[] = [
 
 const isExternal = (href: string) => /^https?:\/\//.test(href);
 
-function useOutside(open: boolean, close: () => void) {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!open) return;
-    const onDown = (e: PointerEvent) => !ref.current?.contains(e.target as Node) && close();
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
-    document.addEventListener("pointerdown", onDown);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("pointerdown", onDown);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [open, close]);
-  return ref;
-}
 
 function MenuLink({ item, onPick, label }: { item: Item; onPick: () => void; label: string }) {
   const cls = "flex items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-sm text-soft transition-colors hover:bg-white/[0.06] hover:text-fg";
@@ -70,24 +50,6 @@ function MenuLink({ item, onPick, label }: { item: Item; onPick: () => void; lab
   );
 }
 
-function Dropdown({ label, children, className = "" }: { label: React.ReactNode; children: (close: () => void) => React.ReactNode; className?: string }) {
-  const [open, setOpen] = useState(false);
-  const close = () => setOpen(false);
-  const ref = useOutside(open, close);
-  return (
-    <div ref={ref} className="relative">
-      <button type="button" aria-expanded={open} onClick={() => setOpen((v) => !v)} className={className}>
-        {label}
-        <ChevronDown className={`size-4 transition-transform ${open ? "rotate-180" : ""}`} strokeWidth={1.75} />
-      </button>
-      {open && (
-        <div className="absolute left-0 z-50 mt-2 w-56 overflow-hidden rounded-xl border border-line bg-[#0d1311] p-1 shadow-[0_16px_40px_rgba(0,0,0,0.45)]">
-          {children(close)}
-        </div>
-      )}
-    </div>
-  );
-}
 
 
 export function SiteHeader() {
@@ -108,25 +70,13 @@ export function SiteHeader() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-[#101113] text-fg">
       <div className="flex h-[76px] w-full items-center gap-5 px-4 sm:px-6 xl:gap-6 lg:px-8">
-        {/* Stane mark with a products menu, then the Drew wordmark */}
-        <Dropdown
-          className="inline-flex items-center gap-1.5 text-soft hover:text-fg"
-          label={
-            <span className="inline-flex size-10 items-center justify-center overflow-hidden rounded-md bg-white">
-              <Image src="/brand/stane-mark.webp" alt="Stane" width={40} height={40} priority className="size-10 object-cover" />
-            </span>
-          }
-        >
-          {(close) => (
-            <>
-              <p className="px-3 pb-1 pt-2 font-mono text-[10px] uppercase tracking-wider text-mute">{tr("Stane products")}</p>
-              <MenuLink item={{ label: "StaneLabs", href: "https://stanelabs.com" }} label="StaneLabs" onPick={close} />
-              <MenuLink item={{ label: "Drew", href: "/" }} label="Drew" onPick={close} />
-            </>
-          )}
-        </Dropdown>
-        <Link href="/" aria-label="Drew home" className="inline-flex shrink-0 items-center gap-2">
-          <Image src="/brand/drew-icon.svg" unoptimized alt="Drew" width={38} height={38} priority />
+        <Link href="/" aria-label="Stane × Drew home" className="inline-flex shrink-0 items-center gap-3">
+          <Image src="/brand/stane-mark.svg" alt="Stane" width={43} height={43} priority className="size-[43px] object-contain" />
+          <span aria-hidden className="text-2xl font-light text-white/55">×</span>
+          <span className="inline-flex items-center gap-2">
+            <Image src="/brand/drew-icon.svg" unoptimized alt="" width={39} height={39} priority />
+            <span className="font-display text-[1.35rem] font-semibold tracking-[-0.03em] text-fg">Drew</span>
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-0.5 xl:flex" aria-label={t("Main")}>
@@ -148,9 +98,6 @@ export function SiteHeader() {
           <a href={LOGIN} className={DASHBOARD_BTN}>
             <LayoutDashboard className="size-4" /> {label("Dashboard")}
           </a>
-          <Link href="/pricing" className={PREMIUM_BTN}>
-            <Crown className="size-4" fill="currentColor" /> {tr("Get Premium")}
-          </Link>
           <a href={SITE.invite} className="inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-lg bg-brand px-4 text-[0.95rem] font-semibold text-[#03110a] transition-colors hover:bg-brand-bright">
             {tr("Add to Discord")} <DiscordIcon />
           </a>
@@ -178,9 +125,6 @@ export function SiteHeader() {
             <a href={LOGIN} className={`${DASHBOARD_BTN} h-12 justify-center`}>
               <LayoutDashboard className="size-4" /> {label("Dashboard")}
             </a>
-            <Link href="/pricing" onClick={() => setOpen(false)} className={`${PREMIUM_BTN} h-12 justify-center`}>
-              <Crown className="size-4" fill="currentColor" /> {tr("Get Premium")}
-            </Link>
             <a href={SITE.invite} className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-brand font-semibold text-[#03110a]">
               {tr("Add to Discord")} <DiscordIcon />
             </a>
