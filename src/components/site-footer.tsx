@@ -73,25 +73,7 @@ export function SiteFooter() {
             </ul>
           </div>
         ))}
-        <div className="md:col-span-4">
-          <div className="border-t border-line pt-7">
-            <h3 className="text-sm font-semibold text-fg">{t("Platforms & support")}</h3>
-            <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-              <div className="flex min-h-14 items-center justify-center rounded-xl border border-line bg-white/[0.025] px-3">
-                <span className="drew-wordmark text-base font-bold tracking-tight">Patreon</span>
-              </div>
-              <div className="flex min-h-14 items-center justify-center rounded-xl border border-line bg-white/[0.025] px-3">
-                <span className="drew-wordmark text-sm font-bold tracking-[-0.045em]">Lemon Squeezy</span>
-              </div>
-              <div className="flex min-h-14 items-center justify-center rounded-xl border border-line bg-white/[0.025] px-3">
-                <span className="drew-wordmark text-sm font-semibold">Apple App Store</span>
-              </div>
-              <div className="flex min-h-14 items-center justify-center rounded-xl border border-line bg-white/[0.025] px-3">
-                <span className="drew-wordmark text-sm font-semibold">Google Play</span>
-              </div>
-            </div>
-          </div>
-        </div>
+
       </div>
       <div className="border-t border-line">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-6 sm:px-6">
