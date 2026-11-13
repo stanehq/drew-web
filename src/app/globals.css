@@ -44,7 +44,7 @@
   }
   @keyframes marquee {
     from { transform: translateX(0); }
-    to { transform: translateX(calc(-50% - 0.5rem)); }
+    to { transform: translateX(calc(-50% - 0.375rem)); }
   }
   @keyframes fade-up {
     from { opacity: 0; transform: translateY(14px); }

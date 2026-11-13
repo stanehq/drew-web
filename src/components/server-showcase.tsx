@@ -16,20 +16,20 @@ const TWO_ROWS_FROM = 14;
 
 function ServerCard({ s, members }: { s: Server; members: (n: number) => string }) {
   return (
-    <li className="group flex h-[84px] w-[300px] shrink-0 items-center gap-4 rounded-2xl border border-white/[0.08] bg-white/[0.025] px-4 transition-colors hover:border-brand/40 hover:bg-white/[0.04] sm:w-[320px]">
+    <li className="flex h-[72px] w-[248px] shrink-0 items-center gap-3 rounded-[0.875rem] border border-white/10 bg-[#0b0d0c] px-3.5 transition-colors hover:border-white/20 sm:w-[272px]">
       {s.icon ? (
-        <Image src={s.icon} alt="" width={52} height={52} className="size-[52px] shrink-0 rounded-xl object-cover ring-1 ring-white/10" />
+        <Image src={s.icon} alt="" width={44} height={44} className="size-11 shrink-0 rounded-[0.625rem] object-cover" />
       ) : (
-        <span className="flex size-[52px] shrink-0 items-center justify-center rounded-xl bg-white/[0.06] text-lg font-semibold text-soft ring-1 ring-white/10">
+        <span className="flex size-11 shrink-0 items-center justify-center rounded-[0.625rem] bg-white/[0.06] text-base font-semibold text-soft">
           {s.name.slice(0, 1).toUpperCase()}
         </span>
       )}
       <div className="min-w-0">
-        <p className="flex items-center gap-1.5 truncate font-semibold text-fg">
+        <p className="flex items-center gap-1.5 truncate text-[0.95rem] font-semibold text-fg">
           <span className="truncate">{s.name}</span>
           {(s.verified || s.partnered) && <BadgeCheck className="size-4 shrink-0 text-brand" aria-label={s.verified ? "Verified" : "Partnered"} />}
         </p>
-        <p className="mt-0.5 flex items-center gap-1.5 text-sm text-mute">
+        <p className="mt-0.5 flex items-center gap-1.5 text-[0.8rem] text-mute">
           <span className="size-1.5 rounded-full bg-brand" aria-hidden /> {formatCompact(s.members)} {members(s.members)}
         </p>
       </div>
@@ -40,11 +40,11 @@ function ServerCard({ s, members }: { s: Server; members: (n: number) => string 
 function Row({ track, members, reverse = false }: { track: Server[]; members: (n: number) => string; reverse?: boolean }) {
   return (
     <div
-      className={`flex w-max animate-marquee gap-4 ${reverse ? "[animation-direction:reverse]" : ""}`}
+      className={`flex w-max animate-marquee gap-3 ${reverse ? "[animation-direction:reverse]" : ""}`}
       style={{ animationDuration: `${track.length * SECONDS_PER_CARD}s` }}
     >
       {[0, 1].map((copy) => (
-        <ul key={copy} className="flex gap-4" aria-hidden={copy === 1 || reverse || undefined}>
+        <ul key={copy} className="flex gap-3" aria-hidden={copy === 1 || reverse || undefined}>
           {track.map((s, i) => (
             <ServerCard key={`${copy}-${i}`} s={s} members={members} />
           ))}
@@ -75,12 +75,12 @@ export function ServerShowcase() {
   const rows = servers.length >= TWO_ROWS_FROM ? [servers.filter((_, i) => i % 2 === 0), servers.filter((_, i) => i % 2 === 1)] : [servers];
   const members = (n: number) => (n === 1 ? t("member") : t("members"));
   return (
-    <section className="w-full overflow-hidden py-10" aria-label="Servers using Drew">
-      <div className="flex flex-col gap-4 [mask-image:linear-gradient(90deg,transparent,black_12%,black_88%,transparent)]">
+    <div className="w-full overflow-hidden pb-20 pt-10" aria-label="Servers using Drew">
+      <div className="mx-auto flex max-w-[1400px] flex-col gap-3 [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
         {rows.map((list, i) => (
           <Row key={i} track={fill(list)} members={members} reverse={i === 1} />
         ))}
       </div>
-    </section>
+    </div>
   );
 }

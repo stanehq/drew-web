@@ -59,8 +59,9 @@ export default function HomePage() {
     <>
       {/* Hero: centered, one soft glow, nothing else in the background */}
       <section className="relative isolate overflow-hidden pt-[76px]">
+        {/* Soft glow behind the stats, fully faded before any edge so no seam shows */}
         <div
-          className="absolute inset-x-0 bottom-0 -z-10 h-[520px] bg-[radial-gradient(60%_70%_at_50%_100%,rgb(65_207_139/0.16),transparent_70%)]"
+          className="pointer-events-none absolute inset-x-0 top-[38%] -z-10 h-[560px] bg-[radial-gradient(45%_50%_at_50%_50%,rgb(65_207_139/0.13),transparent_100%)]"
           aria-hidden
         />
         <div className="mx-auto max-w-4xl px-5 pb-24 pt-24 text-center sm:pt-32">
@@ -80,14 +81,13 @@ export default function HomePage() {
             </a>
           </div>
         </div>
-        <div className="mx-auto max-w-5xl px-5 pb-16">
+        <div className="mx-auto max-w-5xl px-5 pb-6">
           <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#0b0f0d]/80 backdrop-blur">
             <LiveStats />
           </div>
         </div>
+        <ServerShowcase />
       </section>
-
-      <ServerShowcase />
 
       {/* Features */}
       <section id="features" className="scroll-mt-24 px-5 py-28">
