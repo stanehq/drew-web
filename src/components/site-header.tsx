@@ -12,7 +12,7 @@ import { useI18n } from "@/lib/i18n";
 const LOGIN = "/api/auth/discord";
 
 const DASHBOARD_BTN =
-  "inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-lg border border-brand/50 bg-brand/[0.08] px-4 text-[0.95rem] font-semibold text-brand-bright transition-colors hover:border-brand hover:bg-brand/[0.16]";
+  "inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-lg border border-white bg-white px-4 text-[0.95rem] font-semibold text-[#07110c] transition-colors hover:border-white/85 hover:bg-white/90";
 
 type Item = { label: string; href: string };
 
