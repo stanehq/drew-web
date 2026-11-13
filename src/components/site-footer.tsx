@@ -89,7 +89,7 @@ export function SiteFooter() {
               { href: SITE.stane.instagram, label: "Stane on Instagram", Icon: InstagramIcon },
             ].map(({ href, label, Icon }) => (
               <a key={href} href={href} target="_blank" rel="noopener" aria-label={label} title={label} className="inline-flex size-9 items-center justify-center rounded-lg text-mute transition-colors hover:bg-white/[0.06] hover:text-fg">
-                <Icon className="size-[18px]" />
+                {Icon === DiscordIcon ? <DiscordIcon className="size-[18px]" color="#5865F2" /> : <Icon className="size-[18px]" />}
               </a>
             ))}
           </div>
