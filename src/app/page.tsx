@@ -9,6 +9,7 @@ import { DiscordIcon } from "@/components/discord-icon";
 import { LiveStats } from "@/components/live-stats";
 import { ServerShowcase } from "@/components/server-showcase";
 import { SITE } from "@/lib/site";
+import { HeroAtmosphere } from "@/components/hero-atmosphere";
 
 // Two highlighted protections, then the rest in a quieter grid (GitHub-style).
 const highlights = [
@@ -64,6 +65,7 @@ export default function HomePage() {
     <>
       {/* Hero: centered, one soft glow, nothing else in the background */}
       <section className="relative isolate overflow-hidden pt-[76px]">
+        <HeroAtmosphere />
         {/* Soft glow behind the stats, fully faded before any edge so no seam shows */}
         <div
           className="pointer-events-none absolute inset-x-0 top-[38%] -z-10 h-[560px] bg-[radial-gradient(45%_50%_at_50%_50%,rgb(65_207_139/0.13),transparent_100%)]"
