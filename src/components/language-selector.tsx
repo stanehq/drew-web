@@ -13,7 +13,7 @@ function Flag({ code, className = "" }: { code: Locale; className?: string }) {
   // Clipped by a wrapper: rounding an <svg> directly leaves light edge pixels.
   return (
     <span aria-hidden className={`inline-block shrink-0 overflow-hidden rounded-[5px] shadow-[0_0_0_1px_rgba(255,255,255,0.08)] ${className}`}>
-      <F className="block size-full" preserveAspectRatio="xMidYMid slice" />
+      <F className="block size-full" width="100%" height="100%" preserveAspectRatio="none" />
     </span>
   );
 }
