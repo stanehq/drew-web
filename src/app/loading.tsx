@@ -1,10 +1,5 @@
-import { Loader } from "@/components/loader";
-
-// While a page's server data loads during navigation, cover the whole screen.
+// Route-level loading is intentionally empty. The global PageLoader is
+// reserved for the initial homepage visit and explicit language changes.
 export default function Loading() {
-  return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black">
-      <Loader />
-    </div>
-  );
+  return null;
 }
