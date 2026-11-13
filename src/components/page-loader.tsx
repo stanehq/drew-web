@@ -15,6 +15,7 @@ export function PageLoader() {
   const [visible, setVisible] = useState(() => pathname === "/");
   const [nav, setNav] = useState(false);
   const shownAt = useRef(0);
+  const initialPath = useRef(pathname);
   const localeChange = useRef(false);
   const timers = useRef<number[]>([]);
 
@@ -36,7 +37,7 @@ export function PageLoader() {
   };
 
   useEffect(() => {
-    if (pathname !== "/") {
+    if (initialPath.current !== "/") {
       setVisible(false);
       setState("gone");
       return;
