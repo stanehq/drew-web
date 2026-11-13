@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { Loader } from "@/components/loader";
 import { splitLocale } from "@/lib/locales";
 
-const FIRST_MS = 1800;
+const FIRST_MS = 3500;
 const LOCALE_MS = 700;
 const MAX_MS = 8000;
 
