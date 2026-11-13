@@ -81,7 +81,7 @@ export default function HomePage() {
           className="pointer-events-none absolute inset-x-0 top-[38%] -z-10 h-[560px] bg-[radial-gradient(45%_50%_at_50%_50%,rgb(65_207_139/0.13),transparent_100%)]"
           aria-hidden
         />
-        <div className="mx-auto max-w-4xl px-5 pb-24 pt-24 text-center sm:pt-32">
+        <div className="mx-auto max-w-4xl px-5 pb-24 pt-8 text-center sm:pt-12">
           <h1 className="animate-fade-up mx-auto max-w-[14ch] text-balance text-[clamp(2.4rem,7.2vw,7rem)] font-semibold leading-[1.04] tracking-[-0.035em]">
             <TwoTone text={`${t("Discord security")} ${t("that never sleeps")}`} greenWords={2} />
           </h1>
