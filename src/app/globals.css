@@ -29,7 +29,7 @@
   }
   @keyframes marquee {
     from { transform: translateX(0); }
-    to { transform: translateX(calc(-50% - 0.5rem)); }
+    to { transform: translateX(calc(-50% - 1.25rem)); }
   }
   @keyframes fade-up {
     from { opacity: 0; transform: translateY(14px); }
@@ -226,7 +226,7 @@
 /* Reduced motion (e.g. Windows "Animation effects" off): stop decorative motion,
    but keep the server carousel and loading indicators working. */
 @media (prefers-reduced-motion: reduce) {
-  *:not(.animate-marquee, .animate-spin, .animate-pulse, .slime, .slime-ring),
+  *:not(.animate-marquee, .animate-spin, .animate-pulse),
   *::before,
   *::after {
     animation-duration: 0.001ms !important;
@@ -235,21 +235,3 @@
   }
 }
 
-/* Server carousel "slime" cards: the outline is the server icon (or a soft light),
-   blurred and spinning behind a 2px gap, while the corners wobble like jelly. */
-.slime {
-  border-radius: 26px 34px 28px 38px / 34px 26px 38px 28px;
-  animation: slime-wobble 7s ease-in-out infinite;
-}
-@keyframes slime-wobble {
-  0%, 100% { border-radius: 26px 34px 28px 38px / 34px 26px 38px 28px; }
-  25% { border-radius: 38px 24px 36px 26px / 26px 38px 26px 36px; }
-  50% { border-radius: 30px 40px 24px 34px / 40px 28px 34px 24px; }
-  75% { border-radius: 24px 30px 40px 28px / 30px 40px 24px 38px; }
-}
-.slime-ring {
-  animation: slime-spin 6s linear infinite;
-}
-@keyframes slime-spin {
-  to { transform: rotate(360deg); }
-}

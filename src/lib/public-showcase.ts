@@ -1,8 +1,14 @@
 import "server-only";
 import { getShowcase, isApiConfigured } from "./drew";
 
-export type PublicServer = { name: string; icon: string | null; members: number; verified: boolean; partnered: boolean };
-export type PublicShowcase = { total: number; servers: PublicServer[] };
+export const BADGES = ["verified", "partnered", "discoverable", "community"] as const;
+export type Badge = (typeof BADGES)[number];
+export type PublicServer = { name: string; icon: string | null; members: number; badge: Badge | null };
+export type PublicShowcase = { total: number; totalMembers: number; servers: PublicServer[] };
+
+// Older bot builds only send verified/partnered booleans.
+const badgeOf = (g: { badge?: unknown; verified?: unknown; partnered?: unknown }): Badge | null =>
+  BADGES.includes(g.badge as Badge) ? (g.badge as Badge) : g.verified === true ? "verified" : g.partnered === true ? "partnered" : null;
 
 const TTL_MS = 5 * 60_000;
 let cached: { at: number; data: PublicShowcase } | null = null;
@@ -21,12 +27,12 @@ export async function getPublicShowcase(): Promise<PublicShowcase | null> {
     const raw = await getShowcase();
     const data: PublicShowcase = {
       total: Number(raw.total_guilds) || 0,
+      totalMembers: Number(raw.total_members) || 0,
       servers: (Array.isArray(raw.guilds) ? raw.guilds : []).slice(0, 15).map((g) => ({
         name: String(g.name ?? "").slice(0, 100),
         icon: safeIcon(g.icon_url),
         members: Number(g.member_count) || 0,
-        verified: g.verified === true,
-        partnered: g.partnered === true,
+        badge: badgeOf(g),
       })),
     };
     cached = { at: Date.now(), data };

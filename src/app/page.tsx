@@ -7,6 +7,7 @@ import { useI18n } from "@/lib/i18n";
 import { DiscordIcon } from "@/components/discord-icon";
 import { LiveStats } from "@/components/live-stats";
 import { ServerShowcase } from "@/components/server-showcase";
+import { Testimonials } from "@/components/testimonials";
 import { SITE } from "@/lib/site";
 
 // Two highlighted protections, then the rest in a quieter grid (GitHub-style).
@@ -148,6 +149,8 @@ export default function HomePage() {
           ))}
         </ol>
       </section>
+
+      <Testimonials />
 
       {/* Closing CTA card, Wick/Kena style: centered, vivid multi-color gradient, joined buttons */}
       <section className="relative px-5 pb-28">

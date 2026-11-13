@@ -20,6 +20,7 @@ import type { PublicService, PublicShard, PublicStatus } from "@/lib/public-stat
 import { formatCompact, formatExact, formatUptime } from "@/lib/format";
 import { useI18n } from "@/lib/i18n";
 import { TwoTone } from "@/components/two-tone";
+import { UptimeHistory } from "./uptime-history";
 
 const REFRESH = 30;
 
@@ -108,6 +109,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
   // Without server-rendered data, the first tick (after 1s) loads it.
   const [countdown, setCountdown] = useState(initial ? REFRESH : 1);
   const [query, setQuery] = useState(initialQuery);
+  const [view, setView] = useState<"days" | "shards">("days");
 
   const load = useCallback(async () => {
     try {
@@ -192,6 +194,8 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
     bad: "bg-bad/[0.08] ring-bad/30 text-bad",
   }[tone];
 
+  const shownView = target !== null ? "shards" : view;
+
   return (
     <div className="relative isolate">
       <div className="absolute inset-x-0 top-0 -z-10 h-[420px] bg-[radial-gradient(50%_60%_at_50%_0%,rgb(65_207_139/0.12),transparent_70%)]" aria-hidden />
@@ -230,6 +234,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
           </div>
         </div>
 
+        {/* A server lookup jumps to the shard view so its shard is highlighted. */}
         {/* Overall */}
         <section className={`mt-10 rounded-2xl p-6 ring-1 ring-inset sm:p-8 ${banner}`} aria-labelledby="overall">
           <div className="flex flex-wrap items-center justify-between gap-4">
@@ -244,15 +249,35 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
               {countdown}s
             </span>
           </div>
-          <div className="mt-6 flex h-2 gap-1" role="img" aria-label={`${online.length} of ${shards.length} shards online`}>
+          <div className="mt-6 flex w-fit gap-1 rounded-lg border border-white/10 p-0.5 text-xs" role="tablist" aria-label={t("History view")}>
+            {(["days", "shards"] as const).map((v) => (
+              <button
+                key={v}
+                type="button"
+                role="tab"
+                aria-selected={shownView === v}
+                onClick={() => setView(v)}
+                className={`rounded-md px-3 py-1 transition-colors ${shownView === v ? "bg-white/10 text-fg" : "text-mute hover:text-fg"}`}
+              >
+                {v === "days" ? t("Last 30 days") : t("Shards")}
+              </button>
+            ))}
+          </div>
+          {shownView === "days" ? (
+            <div className="mt-4">
+              <UptimeHistory />
+            </div>
+          ) : (
+          <div className="mt-4 flex h-9 gap-1" role="img" aria-label={`${online.length} of ${shards.length} shards online`}>
             {(shards.length ? shards : Array.from({ length: 12 }, (_, i) => ({ id: i, status: "offline" as const, latencyMs: 0, guilds: 0, users: 0 }))).map((s) => (
               <span
                 key={s.id}
                 title={data ? `Shard ${s.id}, ${t(STATE[s.status].text)}${s.status === "online" ? `, ${s.latencyMs}ms` : ""}` : undefined}
-                className={`h-full flex-1 rounded-full ${!data ? "bg-white/[0.08]" : s.status === "online" ? (s.latencyMs >= LATENCY_WARN_MS ? "bg-warn" : "bg-brand") : s.status === "connecting" ? "bg-warn" : "bg-bad"} ${target === s.id ? "ring-2 ring-white ring-offset-2 ring-offset-ink" : ""}`}
+                className={`h-full flex-1 rounded-[3px] ${!data ? "bg-white/[0.08]" : s.status === "online" ? (s.latencyMs >= LATENCY_WARN_MS ? "bg-warn" : "bg-brand") : s.status === "connecting" ? "bg-warn" : "bg-bad"} ${target === s.id ? "ring-2 ring-white ring-offset-2 ring-offset-ink" : ""}`}
               />
             ))}
           </div>
+          )}
         </section>
 
         {/* Numbers: one quiet panel */}

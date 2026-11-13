@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { BadgeCheck, Users } from "lucide-react";
-import { formatCompact } from "@/lib/format";
+import { formatExact } from "@/lib/format";
 import { useI18n } from "@/lib/i18n";
+import { ServerBadge } from "@/components/server-badge";
+import type { Badge } from "@/lib/public-showcase";
 
-type Server = { name: string; icon: string | null; members: number; verified: boolean; partnered: boolean };
+type Server = { name: string; icon: string | null; members: number; badge: Badge | null };
 
 const SECONDS_PER_CARD = 3.2;
 // Enough cards per row to cover a wide screen without the same server showing twice.
@@ -14,40 +15,24 @@ const MIN_CARDS = 7;
 // Two rows only when each row gets its own servers, otherwise one row.
 const TWO_ROWS_FROM = 14;
 
-function ServerCard({ s, members, delay }: { s: Server; members: (n: number) => string; delay: number }) {
-  const style = { animationDelay: `${-delay}s` };
+function ServerCard({ s, members }: { s: Server; members: (n: number) => string }) {
   return (
-    <li className="slime relative h-[112px] w-[300px] shrink-0 overflow-hidden sm:h-[124px] sm:w-[360px]" style={style}>
-      {/* Outline: the server icon blurred and spinning, or a soft white light without one */}
-      <span className="slime-ring pointer-events-none absolute left-1/2 top-1/2 aspect-square w-[150%] -translate-x-1/2 -translate-y-1/2" style={style} aria-hidden>
-        {s.icon ? (
-          <Image src={s.icon} alt="" width={64} height={64} className="size-full object-cover blur-xl saturate-150" />
-        ) : (
-          <span className="block size-full bg-[conic-gradient(from_0deg,transparent_0%,rgb(255_255_255/0.35)_12%,transparent_30%,transparent_55%,rgb(255_255_255/0.2)_68%,transparent_85%)]" />
-        )}
-      </span>
-      <div className="absolute inset-[2px] flex items-center gap-4 overflow-hidden rounded-[inherit] bg-[#0a0c0b] px-5">
-        {s.icon && (
-          <Image src={s.icon} alt="" aria-hidden width={64} height={64} className="pointer-events-none absolute -left-10 top-1/2 size-48 -translate-y-1/2 object-cover opacity-25 blur-2xl saturate-150" />
-        )}
-        <span className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,transparent,#0a0c0b_70%)]" aria-hidden />
-        {s.icon ? (
-          <Image src={s.icon} alt="" width={68} height={68} className="relative size-[60px] shrink-0 rounded-full object-cover shadow-[0_8px_24px_rgb(0_0_0/0.5)] ring-2 ring-white/10 sm:size-[68px]" />
-        ) : (
-          <span className="relative flex size-[60px] shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-xl font-semibold text-soft ring-2 ring-white/[0.06] sm:size-[68px]">
-            {s.name.slice(0, 1).toUpperCase()}
-          </span>
-        )}
-        <div className="relative min-w-0">
-          <p className="flex items-center gap-1.5 truncate text-[1.05rem] font-semibold text-fg sm:text-lg">
-            <span className="truncate">{s.name}</span>
-            {(s.verified || s.partnered) && <BadgeCheck className="size-[18px] shrink-0 text-brand" aria-label={s.verified ? "Verified" : "Partnered"} />}
-          </p>
-          <p className="mt-1 flex items-center gap-1.5 text-sm text-mute">
-            <Users className="size-4" aria-hidden />
-            <span className="tabular-nums text-soft">{formatCompact(s.members)}</span> {members(s.members)}
-          </p>
-        </div>
+    <li className="flex w-[300px] shrink-0 items-center gap-4 px-2 sm:w-[340px]">
+      {s.icon ? (
+        <Image src={s.icon} alt="" width={84} height={84} className="size-[72px] shrink-0 rounded-full object-cover sm:size-[84px]" />
+      ) : (
+        <span className="flex size-[72px] shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-2xl font-semibold text-soft sm:size-[84px]">
+          {s.name.slice(0, 1).toUpperCase()}
+        </span>
+      )}
+      <div className="min-w-0">
+        <p className="flex items-center gap-2 text-lg font-semibold text-fg sm:text-xl">
+          <span className="truncate">{s.name}</span>
+          {s.badge && <ServerBadge badge={s.badge} />}
+        </p>
+        <p className="mt-0.5 text-[0.95rem] text-mute">
+          <span className="tabular-nums">{formatExact(s.members)}</span> {members(s.members)}
+        </p>
       </div>
     </li>
   );
@@ -56,13 +41,13 @@ function ServerCard({ s, members, delay }: { s: Server; members: (n: number) => 
 function Row({ track, members, reverse = false }: { track: Server[]; members: (n: number) => string; reverse?: boolean }) {
   return (
     <div
-      className={`flex w-max animate-marquee gap-4 ${reverse ? "[animation-direction:reverse]" : ""}`}
+      className={`flex w-max animate-marquee gap-10 ${reverse ? "[animation-direction:reverse]" : ""}`}
       style={{ animationDuration: `${track.length * SECONDS_PER_CARD}s` }}
     >
       {[0, 1].map((copy) => (
-        <ul key={copy} className="flex gap-4" aria-hidden={copy === 1 || reverse || undefined}>
+        <ul key={copy} className="flex gap-10" aria-hidden={copy === 1 || reverse || undefined}>
           {track.map((s, i) => (
-            <ServerCard key={`${copy}-${i}`} s={s} members={members} delay={(i * 1.7) % 7} />
+            <ServerCard key={`${copy}-${i}`} s={s} members={members} />
           ))}
         </ul>
       ))}
@@ -74,12 +59,17 @@ function Row({ track, members, reverse = false }: { track: Server[]; members: (n
 export function ServerShowcase() {
   const { t } = useI18n();
   const [servers, setServers] = useState<Server[]>([]);
+  const [totals, setTotals] = useState({ servers: 0, people: 0 });
 
   useEffect(() => {
     let alive = true;
     fetch("/api/showcase")
       .then((r) => (r.ok ? r.json() : null))
-      .then((d: { servers?: Server[] } | null) => alive && Array.isArray(d?.servers) && setServers(d.servers))
+      .then((d: { servers?: Server[]; total?: number; totalMembers?: number } | null) => {
+        if (!alive || !Array.isArray(d?.servers)) return;
+        setServers(d.servers);
+        setTotals({ servers: Number(d.total) || 0, people: Number(d.totalMembers) || 0 });
+      })
       .catch(() => {});
     return () => {
       alive = false;
@@ -92,7 +82,13 @@ export function ServerShowcase() {
   const members = (n: number) => (n === 1 ? t("member") : t("members"));
   return (
     <div className="w-full overflow-hidden pb-24 pt-12" aria-label="Servers using Drew">
-      <div className="mx-auto flex max-w-[1600px] flex-col gap-4 py-2 [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
+      {totals.servers > 0 && totals.people > 0 && (
+        <p className="mb-8 px-5 text-center text-lg text-mute sm:text-xl">
+          {t("Protecting")} <strong className="font-semibold tabular-nums text-fg">{formatExact(totals.people)}</strong> {t("people across")}{" "}
+          <strong className="font-semibold tabular-nums text-fg">{formatExact(totals.servers)}</strong> {t("communities")}
+        </p>
+      )}
+      <div className="mx-auto flex max-w-[1600px] flex-col gap-8 py-2 [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
         {rows.map((list, i) => (
           <Row key={i} track={fill(list)} members={members} reverse={i === 1} />
         ))}
