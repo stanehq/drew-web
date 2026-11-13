@@ -226,7 +226,7 @@
 /* Reduced motion (e.g. Windows "Animation effects" off): stop decorative motion,
    but keep the server carousel and loading indicators working. */
 @media (prefers-reduced-motion: reduce) {
-  *:not(.animate-marquee, .animate-spin, .animate-pulse, .loader span, .page-loader-leave, .page-loader-mark),
+  *,
   *::before,
   *::after {
     animation-duration: 0.001ms !important;
@@ -285,4 +285,10 @@
 }
 @keyframes page-loader-mark-out {
   to { opacity: 0; transform: scale(0.6); filter: blur(8px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none !important;
+  }
 }
