@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Loader } from "@/components/loader";
 import { splitLocale } from "@/lib/locales";
@@ -20,12 +20,12 @@ export function PageLoader() {
   const [visible, setVisible] = useState(() => isHome);
   const [fading, setFading] = useState(false);
 
-  const clearTimers = () => {
+  const clearTimers = useCallback(() => {
     timers.current.forEach(window.clearTimeout);
     timers.current = [];
-  };
+  }, []);
 
-  const hide = (minimum: number) => {
+  const hide = useCallback((minimum: number) => {
     clearTimers();
     const wait = Math.max(0, minimum - (performance.now() - shownAt.current));
     timers.current.push(window.setTimeout(() => {
@@ -35,7 +35,7 @@ export function PageLoader() {
         setFading(false);
       }, 450));
     }, wait));
-  };
+  }, [clearTimers]);
 
   useEffect(() => {
     if (!initialHome.current) {
@@ -60,7 +60,7 @@ export function PageLoader() {
       window.clearTimeout(cap);
       clearTimers();
     };
-  }, []);
+  }, [clearTimers, hide]);
 
   useEffect(() => {
     const onLocaleChange = () => {
@@ -86,9 +86,9 @@ export function PageLoader() {
     if (!localeChange.current) return;
     localeChange.current = false;
     hide(LOCALE_MS);
-  }, [pathname]);
+  }, [hide, pathname]);
 
-  useEffect(() => () => clearTimers(), []);
+  useEffect(() => () => clearTimers(), [clearTimers]);
 
   if (!visible) return null;
   return (
