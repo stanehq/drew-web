@@ -287,8 +287,10 @@
   to { background-position: 100% 100%; }
 }
 
+/* Reduced motion (e.g. Windows "Animation effects" off): stop decorative motion,
+   but keep the server carousel and loading indicators working. */
 @media (prefers-reduced-motion: reduce) {
-  *:not(.animate-marquee),
+  *:not(.animate-marquee, .animate-spin, .animate-pulse),
   *::before,
   *::after {
     animation-duration: 0.001ms !important;
