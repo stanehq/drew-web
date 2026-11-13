@@ -190,33 +190,29 @@ export function PricingBoard() {
             <h2 className="text-center text-2xl font-semibold tracking-tight text-white sm:text-3xl">{t("Accepted Payments")}</h2>
             <div className="mt-7 grid grid-cols-2 items-center gap-6 sm:grid-cols-4 sm:gap-8">
               <div className="flex min-h-16 items-center justify-center gap-3">
-                <svg viewBox="0 0 48 48" role="img" aria-label="Patreon" className="size-9 shrink-0" fill="none">
-                  <path d="M8 7h7v34H8z" fill="#FF424D" />
-                  <path d="M31 7c-8.3 0-15 6.7-15 15s6.7 15 15 15 15-6.7 15-15S39.3 7 31 7Z" fill="#FF424D" />
-                  <path d="M31 14.5a7.5 7.5 0 1 0 0 15 7.5 7.5 0 0 0 0-15Z" fill="#0e1412" />
+                <svg viewBox="0 0 24 24" role="img" aria-label="Patreon" className="size-9 shrink-0" fill="#FF424D">
+                  <path d="M22.957 7.21c-.004-3.064-2.391-5.576-5.191-6.482-3.478-1.125-8.064-.962-11.384.604C2.357 3.231 1.093 7.391 1.046 11.54c-.039 3.411.302 12.396 5.369 12.46 3.765.047 4.326-4.804 6.068-7.141 1.24-1.662 2.836-2.132 4.801-2.618 3.376-.836 5.678-3.501 5.673-7.031Z" />
                 </svg>
                 <span className="text-lg font-bold tracking-tight text-white">Patreon</span>
               </div>
               <div className="flex min-h-16 items-center justify-center gap-3">
-                <svg viewBox="0 0 48 48" role="img" aria-label="Lemon Squeezy" className="size-9 shrink-0" fill="none">
-                  <path d="M10.1 29.8C7.8 21.7 14.2 12.2 25 8.9c7.1-2.2 13.1-.3 14.4 4.9 2.1 8.3-4.2 18.3-14.4 21.6-7.2 2.3-13.3-.1-14.9-5.6Z" fill="#FFC233" />
-                  <path d="M15.4 29.2c4.3-7.1 10.3-12.1 17.4-14.8" stroke="#FFF4C2" strokeWidth="2.7" strokeLinecap="round" />
-                  <path d="M25.4 8.8c.4-3 2.6-5.3 5.8-6.1" stroke="#FFC233" strokeWidth="2.6" strokeLinecap="round" />
+                <svg viewBox="0 0 24 24" role="img" aria-label="Lemon Squeezy" className="size-9 shrink-0" fill="#FFC233">
+                  <path d="m7.4916 10.835 2.3748-6.5114a3.1497 3.1497 0 0 0-.065-2.3418C9.0315.183 6.9427-.398 5.2928.265 3.643.929 2.71 2.4348 3.512 4.3046l2.8197 6.5615c.219.509.97.489 1.16-.03m1.6798 1.0969 6.5334-2.7758c2.1699-.9219 2.7218-3.6907 1.022-5.2905l-.068-.063c-1.6669-1.5469-4.4217-1.002-5.3706 1.0359L8.3566 11.135c-.234.503.295 1.0199.8159.7979m.373.87 6.6454-2.5119c2.2078-.8349 4.6206.745 4.5886 3.0398l-.002.09c-.048 2.2358-2.3938 3.7376-4.5536 2.9467l-6.6724-2.4418a.595.595 0 0 1-.006-1.1229m-.386 1.9269 6.4375 2.9767a3.2997 3.2997 0 0 1 1.6658 1.6989c.769 1.7998-.283 3.6396-1.9328 4.3016-1.6499.662-3.4097.235-4.2097-1.6359l-2.8027-6.5694c-.217-.509.328-1.009.8419-.772" />
                 </svg>
                 <span className="text-base font-bold tracking-tight text-white">Lemon Squeezy</span>
               </div>
               <div className="flex min-h-16 items-center justify-center gap-3">
-                <svg viewBox="0 0 48 48" role="img" aria-label="Apple" className="size-9 shrink-0" fill="#FFFFFF">
-                  <path d="M31.7 25.1c0-5 4.1-7.4 4.3-7.5-2.3-3.4-5.9-3.9-7.2-4-3.1-.3-6 1.8-7.6 1.8s-4.1-1.8-6.8-1.7c-3.5.1-6.7 2-8.5 5.1-3.7 6.4-.9 15.8 2.7 21 1.8 2.5 3.8 5.3 6.5 5.2 2.6-.1 3.6-1.7 6.8-1.7s4.1 1.7 6.9 1.7c2.8 0 4.5-2.5 6.2-5.1 2-2.9 2.8-5.8 2.8-5.9-.1 0-5.1-2-5.1-8.9ZM26.7 10.4c1.4-1.7 2.4-4 2.1-6.3-2 .1-4.5 1.3-6 3-1.3 1.5-2.5 3.8-2.2 6 2.3.2 4.7-1 6.1-2.7Z" transform="translate(4 1) scale(.86)" />
+                <svg viewBox="0 0 24 24" role="img" aria-label="Apple" className="size-9 shrink-0" fill="#FFFFFF">
+                  <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701" />
                 </svg>
                 <span className="text-sm font-semibold text-white">Apple App Store</span>
               </div>
               <div className="flex min-h-16 items-center justify-center gap-3">
-                <svg viewBox="0 0 48 48" role="img" aria-label="Google Play" className="size-9 shrink-0">
-                  <path d="M7.8 5.1c-.7.5-1.1 1.4-1.1 2.7v32.4c0 1.2.4 2.1 1.1 2.7L26.5 24 7.8 5.1Z" fill="#34A853" />
-                  <path d="m7.8 5.1 23.1 13.4-4.4 5.5L7.8 5.1Z" fill="#4285F4" />
-                  <path d="m26.5 24 4.4-5.5 10.4 6c2 1.2 2 2.8 0 4l-10.4 6-4.4-10.5Z" fill="#FBBC04" />
-                  <path d="m7.8 42.9 23.1-13.4-4.4-5.5L7.8 42.9Z" fill="#EA4335" />
+                <svg viewBox="0 0 24 24" role="img" aria-label="Google Play" className="size-9 shrink-0">
+                  <path d="M1.337.924a1.486 1.486 0 0 0-.112.568v21.017c0 .217.045.419.124.6l11.155-11.087L1.337.924Z" fill="#34A853" />
+                  <path d="m13.544 10.989 3.258-3.238L3.45.195a1.466 1.466 0 0 0-.946-.179l11.04 10.973Z" fill="#4285F4" />
+                  <path d="m13.544 13.056 3.23-3.21 5.244 2.966a1.49 1.49 0 0 1 0 2.594l-5.238 2.964-3.236-3.214Z" fill="#FBBC04" />
+                  <path d="m13.544 13.056-11 10.933c.298.036.612-.016.906-.183l13.324-7.54-3.23-3.21Z" fill="#EA4335" />
                 </svg>
                 <span className="text-sm font-bold text-white">Google Play</span>
               </div>
