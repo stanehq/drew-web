@@ -41,7 +41,12 @@ export function HeroAtmosphere() {
           const distance = Math.abs(y - (0.5 + waveA * 0.12 + waveB * 0.035));
           const field = Math.max(0, 1 - distance * 4.2) * 0.66 + ridge * 0.28;
           const shimmer = 0.5 + 0.5 * Math.sin(column * 0.21 + row * 0.13 - motion * 3);
-          const intensity = Math.min(1, Math.max(0, field * (0.72 + shimmer * 0.28)));
+          // Shape the lower edge into a moving ASCII wave instead of a flat cutoff.
+          const waveEdge = 0.72
+            + Math.sin(x * 8.4 + motion * 0.9) * 0.045
+            + Math.sin(x * 16.2 - motion * 0.55) * 0.014;
+          const edgeFade = Math.min(1, Math.max(0, (waveEdge - y) / 0.075));
+          const intensity = Math.min(1, Math.max(0, field * (0.72 + shimmer * 0.28) * edgeFade));
           if (intensity < 0.09) continue;
 
           const glyphIndex = Math.min(glyphs.length - 1, Math.floor(intensity * (glyphs.length - 1)));
