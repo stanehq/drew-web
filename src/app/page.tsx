@@ -83,7 +83,7 @@ export default function HomePage() {
         />
         <div className="mx-auto max-w-4xl px-5 pb-24 pt-24 text-center sm:pt-32">
           <h1 className="animate-fade-up mx-auto max-w-[14ch] text-balance text-[clamp(2.4rem,7.2vw,7rem)] font-semibold leading-[1.04] tracking-[-0.035em]">
-            <TwoTone text={`\u0024{t("Discord security")} ${t("that never sleeps")}`} greenWords={2} />
+            <TwoTone text={`${t("Discord security")} ${t("that never sleeps")}`} greenWords={2} />
           </h1>
           <p className="animate-fade-up mx-auto mt-6 max-w-2xl px-2 text-pretty text-[clamp(1rem,1.5vw,1.3rem)] leading-relaxed text-white [animation-delay:80ms]">
             {t("Anti-nuke, anti-raid, verification and logging in one bot. Set it up in a minute and let Drew do the watching")}
