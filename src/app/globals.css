@@ -106,9 +106,29 @@
 
 /* Long-form legal text rendered from content/legal. */
 .legal {
+  width: 100%;
   max-width: 46rem;
+  min-width: 0;
   color: var(--color-soft);
   line-height: 1.75;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+.legal * {
+  min-width: 0;
+  max-width: 100%;
+}
+.legal p,
+.legal li,
+.legal blockquote {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.legal pre {
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 .legal h2 {
   margin: 2.75rem 0 0.9rem;
@@ -135,8 +155,23 @@
   margin: 0.9rem 0;
 }
 .legal ul {
-  list-style: square;
-  padding-left: 1.25rem;
+  list-style: none;
+  padding-left: 0;
+}
+.legal ul > li {
+  position: relative;
+  padding-left: 1.35rem;
+}
+.legal ul > li::before {
+  content: "";
+  position: absolute;
+  left: 0.12rem;
+  top: 0.78em;
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #35c98d 0%, #7ee8b5 55%, #ffffff 100%);
+  box-shadow: 0 0 10px rgb(65 207 139 / 0.18);
 }
 .legal ol {
   list-style: decimal;
@@ -145,8 +180,9 @@
 .legal li {
   margin: 0.3rem 0;
 }
-.legal li::marker {
-  color: var(--color-brand);
+.legal ol > li::marker {
+  color: #41cf8b;
+  font-weight: 700;
 }
 .legal strong {
   color: var(--color-fg);
