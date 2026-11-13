@@ -51,7 +51,7 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
-  h1, h2 {
+  h1, h2, h3 {
     font-family: var(--font-display);
     background: linear-gradient(180deg, #35c98d 0%, #5bd4a6 48%, #ddf8ea 78%, #ffffff 100%);
     -webkit-background-clip: text;
@@ -248,9 +248,7 @@
   position: relative;
   display: block;
   flex: 0 0 auto;
-  background: linear-gradient(180deg, #35c98d 0%, #5bd4a6 48%, #ddf8ea 78%, #ffffff 100%);
-  -webkit-mask: radial-gradient(19px, #000 94%, transparent);
-  mask: radial-gradient(19px, #000 94%, transparent);
+  background: radial-gradient(19px, currentColor 94%, transparent);
 }
 .loader::before {
   content: "";
