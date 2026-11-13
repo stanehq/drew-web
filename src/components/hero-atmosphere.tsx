@@ -36,8 +36,8 @@ export function HeroAtmosphere() {
       context.clearRect(0, 0, width, height);
 
       const glow = context.createRadialGradient(width * 0.52, height * 0.5, 0, width * 0.52, height * 0.5, width * 0.78);
-      glow.addColorStop(0, "rgba(7, 35, 91, 0.48)");
-      glow.addColorStop(0.48, "rgba(3, 19, 55, 0.32)");
+      glow.addColorStop(0, "rgba(7, 55, 35, 0.48)");
+      glow.addColorStop(0.48, "rgba(3, 31, 20, 0.32)");
       glow.addColorStop(1, "rgba(2, 5, 20, 0)");
       context.fillStyle = glow;
       context.fillRect(0, 0, width, height);
@@ -69,7 +69,7 @@ export function HeroAtmosphere() {
           if (step === 0) context.moveTo(point.x, point.y);
           else context.lineTo(point.x, point.y);
         }
-        context.strokeStyle = `rgba(28, 105, 231, ${0.035 + z * 0.055})`;
+        context.strokeStyle = `rgba(65, 207, 139, ${0.035 + z * 0.055})`;
         context.lineWidth = 0.55 + z * 0.45;
         context.stroke();
       }
@@ -79,13 +79,13 @@ export function HeroAtmosphere() {
         if (point.y < -10 || point.y > height + 10) continue;
         const pulse = reducedMotion.matches ? 1 : 0.72 + Math.sin(speed * 5 + particle.phase) * 0.22;
         const alpha = particle.alpha * pulse * (0.38 + particle.z * 0.62);
-        context.fillStyle = `rgba(92, 160, 255, ${alpha})`;
+        context.fillStyle = `rgba(126, 232, 181, ${alpha})`;
         context.beginPath();
         context.arc(point.x, point.y, particle.size * point.scale, 0, Math.PI * 2);
         context.fill();
       }
 
-      context.fillStyle = "rgba(60, 115, 210, 0.035)";
+      context.fillStyle = "rgba(65, 207, 139, 0.035)";
       for (let y = 0; y < height; y += 5) context.fillRect(0, y, width, 0.6);
 
       const vignette = context.createLinearGradient(0, 0, 0, height);
