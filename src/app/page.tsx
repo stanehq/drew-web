@@ -144,8 +144,8 @@ export default function HomePage() {
         <ol className="mx-auto mt-14 grid max-w-5xl gap-10 md:grid-cols-3">
           {steps.map((s) => (
             <li key={s.n} className="text-center md:text-left">
-              <span className="inline-flex size-9 items-center justify-center rounded-full border border-white/15 text-sm font-semibold text-soft">
-                {s.n}
+              <span className="inline-flex size-12 items-center justify-center rounded-full border border-brand/40 bg-brand/[0.08] text-2xl font-bold">
+                <span className="drew-title-green leading-none">{s.n}</span>
               </span>
               <h3 className="mt-5 text-xl font-semibold tracking-tight">{t(s.title)}</h3>
               <p className="mt-2 text-soft">{t(s.body)}</p>

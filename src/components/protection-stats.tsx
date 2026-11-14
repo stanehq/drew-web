@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ArrowUp, Flag, Hand, ShieldCheck, UserX } from "lucide-react";
+import { Flag, Hand, ShieldCheck, UserX } from "lucide-react";
 import { formatCompact } from "@/lib/format";
 import { useI18n } from "@/lib/i18n";
 
-type Stat = { key: string; total: number; last7d: number };
+type Stat = { key: string; total: number };
 
 // Known counters get a proper name and icon. Any other counter the API returns
 // is shown too, with its key turned into a title ("spam_blocked" -> "Spam Blocked").
@@ -54,19 +54,10 @@ export function ProtectionStats() {
           return (
             <li key={s.key} className="min-w-0 bg-[#0b0f0d] px-5 py-6 text-left sm:px-6 sm:py-7">
               <Icon className="drew-icon-gradient size-6 sm:size-7" strokeWidth={1.6} aria-hidden />
-              <p className="mt-4 flex flex-wrap items-center gap-x-2.5 gap-y-1">
+              <p className="mt-4">
                 <span className="text-3xl font-bold tabular-nums leading-none tracking-[-0.02em] text-fg sm:text-[2.5rem]" title={s.total.toLocaleString("en")}>
                   {formatCompact(s.total)}
                 </span>
-                {s.last7d > 0 && (
-                  <span
-                    className="inline-flex items-center gap-1 rounded-full bg-white/[0.08] px-2 py-0.5 text-xs font-medium tabular-nums text-fg"
-                    title={t("in the last 7 days")}
-                  >
-                    <ArrowUp className="size-3 text-brand" strokeWidth={2.5} aria-hidden />
-                    {formatCompact(s.last7d)}
-                  </span>
-                )}
               </p>
               <p className="mt-2 text-sm text-mute">{label}</p>
             </li>
