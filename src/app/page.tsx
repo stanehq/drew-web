@@ -43,7 +43,7 @@ const steps = [
 ];
 
 const primary =
-  "inline-flex h-12 items-center gap-2 rounded-md border border-[#7ee8b5] bg-[linear-gradient(110deg,#35c98d_0%,#41cf8b_58%,#7ee8b5_100%)] px-6 text-[0.98rem] font-semibold text-white transition-all hover:bg-[linear-gradient(110deg,#41cf8b_0%,#65dda9_58%,#a5f3cf_100%)]";
+  "inline-flex h-12 items-center gap-2 rounded-md border border-[#41cf8b] bg-[#41cf8b] px-6 text-[0.98rem] font-semibold text-white transition-all hover:bg-[#5bd9a0]";
 const secondary =
   "inline-flex h-12 items-center gap-2 rounded-md border border-white/15 px-6 text-[0.98rem] font-semibold text-fg transition-colors hover:border-white/30 hover:bg-white/[0.04]";
 
