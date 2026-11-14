@@ -42,35 +42,33 @@ export function ProtectionStats() {
   // Nothing to show until the bot reports counters (older bot builds don't).
   if (!stats) return null;
 
+  // The cells are separated by 1px lines (the grid gap over a lighter background),
+  // like the old stats panel: big number, name underneath, icon on top.
   return (
     <div className="mx-auto max-w-5xl px-5 pb-6">
-      {/* One row on desktop (up to 4 across, then it wraps), two columns on tablets, one on phones */}
-      <ul
-        className="grid grid-cols-1 gap-x-8 gap-y-6 rounded-2xl border border-white/10 bg-[#0b0f0d]/80 px-6 py-6 backdrop-blur sm:grid-cols-2 sm:px-8 sm:py-7 lg:[grid-template-columns:repeat(var(--cols),minmax(0,1fr))]"
-        style={{ ["--cols" as string]: Math.min(stats.length, 4) }}
-      >
+      <ul className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/[0.06] sm:grid-cols-4">
         {stats.map((s) => {
           const meta = KNOWN[s.key];
           const Icon = meta?.icon ?? ShieldCheck;
           const label = meta ? t(meta.label) : titleCase(s.key);
           return (
-            <li key={s.key} className="flex min-w-0 items-center gap-3.5">
-              <Icon className="drew-icon-gradient size-8 shrink-0 sm:size-9" strokeWidth={1.5} aria-hidden />
-              <div className="min-w-0">
-                <p className="text-balance text-base font-medium leading-tight text-fg sm:text-lg">{label}</p>
-                <p className="mt-1 flex items-center gap-2">
-                  <span className="text-2xl font-bold tabular-nums leading-none tracking-tight text-fg">{formatCompact(s.total)}</span>
-                  {s.last7d > 0 && (
-                    <span
-                      className="inline-flex items-center gap-1 rounded-full bg-white/[0.08] px-2 py-0.5 text-xs font-medium tabular-nums text-fg"
-                      title={t("in the last 7 days")}
-                    >
-                      <ArrowUp className="size-3 text-brand" strokeWidth={2.5} aria-hidden />
-                      {formatCompact(s.last7d)}
-                    </span>
-                  )}
-                </p>
-              </div>
+            <li key={s.key} className="min-w-0 bg-[#0b0f0d] px-5 py-6 text-left sm:px-6 sm:py-7">
+              <Icon className="drew-icon-gradient size-6 sm:size-7" strokeWidth={1.6} aria-hidden />
+              <p className="mt-4 flex flex-wrap items-center gap-x-2.5 gap-y-1">
+                <span className="text-3xl font-bold tabular-nums leading-none tracking-[-0.02em] text-fg sm:text-[2.5rem]" title={s.total.toLocaleString("en")}>
+                  {formatCompact(s.total)}
+                </span>
+                {s.last7d > 0 && (
+                  <span
+                    className="inline-flex items-center gap-1 rounded-full bg-white/[0.08] px-2 py-0.5 text-xs font-medium tabular-nums text-fg"
+                    title={t("in the last 7 days")}
+                  >
+                    <ArrowUp className="size-3 text-brand" strokeWidth={2.5} aria-hidden />
+                    {formatCompact(s.last7d)}
+                  </span>
+                )}
+              </p>
+              <p className="mt-2 text-sm text-mute">{label}</p>
             </li>
           );
         })}
