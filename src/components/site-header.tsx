@@ -92,8 +92,8 @@ export function SiteHeader() {
           <a href={LOGIN} className={DASHBOARD_BTN}>
             <LayoutDashboard className="size-4" /> {label("Dashboard")}
           </a>
-          <a href={SITE.invite} className="inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-lg border border-[#e8fff3] bg-[linear-gradient(110deg,#35c98d_0%,#7ee8b5_58%,#ffffff_100%)] px-4 text-[0.95rem] font-semibold text-[#052b1b] shadow-[0_5px_18px_rgba(65,207,139,0.2)] transition-all hover:border-white hover:bg-[linear-gradient(110deg,#41cf8b_0%,#a5f3cf_58%,#ffffff_100%)] hover:shadow-[0_7px_22px_rgba(65,207,139,0.3)]">
-            {t("Add to Discord")} <DiscordIcon color="#052b1b" />
+          <a href={SITE.invite} className="inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-lg border border-[#7ee8b5] bg-[linear-gradient(110deg,#35c98d_0%,#41cf8b_58%,#7ee8b5_100%)] px-4 text-[0.95rem] font-semibold text-white transition-all hover:bg-[linear-gradient(110deg,#41cf8b_0%,#65dda9_58%,#a5f3cf_100%)]">
+            {t("Add to Discord")} <DiscordIcon />
           </a>
         </div>
 
@@ -119,8 +119,8 @@ export function SiteHeader() {
             <a href={LOGIN} className={`${DASHBOARD_BTN} h-12 justify-center`}>
               <LayoutDashboard className="size-4" /> {label("Dashboard")}
             </a>
-            <a href={SITE.invite} className="inline-flex h-12 items-center justify-center gap-2 rounded-lg border border-[#e8fff3] bg-[linear-gradient(110deg,#35c98d_0%,#7ee8b5_58%,#ffffff_100%)] font-semibold text-[#052b1b] shadow-[0_5px_18px_rgba(65,207,139,0.2)]">
-              {t("Add to Discord")} <DiscordIcon color="#052b1b" />
+            <a href={SITE.invite} className="inline-flex h-12 items-center justify-center gap-2 rounded-lg border border-[#7ee8b5] bg-[linear-gradient(110deg,#35c98d_0%,#41cf8b_58%,#7ee8b5_100%)] font-semibold text-white">
+              {t("Add to Discord")} <DiscordIcon />
             </a>
             <div className="flex justify-center">
               <LanguageSelector />
