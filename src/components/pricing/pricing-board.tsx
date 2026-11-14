@@ -198,9 +198,9 @@ export function PricingBoard() {
               </div>
               <div className="flex min-h-16 items-center justify-center gap-3">
                 <svg viewBox="0 0 48 48" role="img" aria-label="Lemon Squeezy" className="size-9 shrink-0" fill="none">
-                  <path d="M10.1 29.8C7.8 21.7 14.2 12.2 25 8.9c7.1-2.2 13.1-.3 14.4 4.9 2.1 8.3-4.2 18.3-14.4 21.6-7.2 2.3-13.3-.1-14.9-5.6Z" fill="#FFC233" />
-                  <path d="M16.2 29.5c4.2-6.8 10.1-11.6 17.1-14.3" stroke="#FFF8E5" strokeWidth="3" strokeLinecap="round" />
-                  <path d="M25.4 8.8c.4-3 2.6-5.3 5.8-6.1" stroke="#FFC233" strokeWidth="2.6" strokeLinecap="round" />
+                  <path d="M12 34c-5-5-5-13 0-19 5-6 15-8 23-3 6 4 7 12 2 19-5 7-18 9-25 3Z" fill="#FFC233" />
+                  <path d="M18 30c4-7 10-12 17-15" stroke="#FFF4C2" strokeWidth="3" strokeLinecap="round" />
+                  <path d="M25 8c1-3 4-5 7-5" stroke="#FFC233" strokeWidth="2.5" strokeLinecap="round" />
                 </svg>
                 <span className="text-base font-bold tracking-tight text-white">Lemon Squeezy</span>
               </div>
@@ -212,10 +212,10 @@ export function PricingBoard() {
               </div>
               <div className="flex min-h-16 items-center justify-center gap-3">
                 <svg viewBox="0 0 24 24" role="img" aria-label="Google Play" className="size-9 shrink-0">
-                  <path d="M1.337.924a1.486 1.486 0 0 0-.112.568v21.017c0 .217.045.419.124.6l11.155-11.087L1.337.924Z" fill="#34A853" />
-                  <path d="m13.544 10.989 3.258-3.238L3.45.195a1.466 1.466 0 0 0-.946-.179l11.04 10.973Z" fill="#4285F4" />
-                  <path d="m13.544 13.056 3.23-3.21 5.244 2.966a1.49 1.49 0 0 1 0 2.594l-5.238 2.964-3.236-3.214Z" fill="#FBBC04" />
-                  <path d="m13.544 13.056-11 10.933c.298.036.612-.016.906-.183l13.324-7.54-3.23-3.21Z" fill="#EA4335" />
+                  <path d="M3 2.5 12 12 3 21.5c-.2-.3-.3-.7-.3-1.2V3.7c0-.5.1-.9.3-1.2Z" fill="#34A853" />
+                  <path d="M3 2.5c.5-.6 1.4-.7 2.2-.2L17.8 9 12 12 3 2.5Z" fill="#4285F4" />
+                  <path d="m12 12 5.8-3 4.1 2.3c.9.5.9 1.9 0 2.4l-4.1 2.3L12 12Z" fill="#FBBC04" />
+                  <path d="m3 21.5 9-9 5.8 3-12.6 6.7c-.8.4-1.7.2-2.2-.7Z" fill="#EA4335" />
                 </svg>
                 <span className="text-sm font-bold text-white">Google Play</span>
               </div>
