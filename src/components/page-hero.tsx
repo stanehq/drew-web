@@ -8,7 +8,7 @@ export function PageHero({ title, children }: { eyebrow?: string; title: ReactNo
         className="absolute left-1/2 top-0 -z-10 h-[360px] w-[760px] max-w-full -translate-x-1/2 bg-[radial-gradient(closest-side,rgb(65_207_139/0.16),transparent)] blur-2xl"
         aria-hidden
       />
-      <div className="animate-fade-up mx-auto max-w-3xl px-4 text-center sm:px-6">
+      <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
         <h1 className="text-balance text-4xl font-semibold tracking-[-0.025em] sm:text-6xl">{typeof title === "string" ? <TwoTone text={title} /> : title}</h1>
         {children && <div className="mx-auto mt-4 max-w-lg text-balance text-soft">{children}</div>}
       </div>
