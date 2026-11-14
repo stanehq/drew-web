@@ -190,33 +190,47 @@ export function PricingBoard() {
             <h2 className="text-center text-2xl font-semibold tracking-tight text-white sm:text-3xl">{t("Accepted Payments")}</h2>
             <div className="mt-7 grid grid-cols-2 items-center gap-6 sm:grid-cols-4 sm:gap-8">
               <div className="flex min-h-16 items-center justify-center gap-3">
-                <svg viewBox="0 0 48 48" role="img" aria-label="Patreon" className="size-9 shrink-0" fill="#FF424D">
-                  <path d="M8 7h7v34H8z" />
-                  <circle cx="31" cy="17" r="10" />
+                <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Patreon" className="size-9 shrink-0" fill="#FF424D" fillRule="evenodd" clipRule="evenodd" strokeLinejoin="round" strokeMiterlimit={2}>
+                  <g transform="matrix(.47407 0 0 .47407 .383 .422)">
+                    <defs>
+                      <clipPath id="drew-patreon-clip">
+                        <path d="M0 0h1080v1080H0z" />
+                      </clipPath>
+                    </defs>
+                    <g clipPath="url(#drew-patreon-clip)">
+                      <path d="M1033.05 324.45c-.19-137.9-107.59-250.92-233.6-291.7-156.48-50.64-362.86-43.3-512.28 27.2-181.1 85.46-237.99 272.66-240.11 459.36-1.74 153.5 13.58 557.79 241.62 560.67 169.44 2.15 194.67-216.18 273.07-321.33 55.78-74.81 127.6-95.94 216.01-117.82 151.95-37.61 255.51-157.53 255.29-316.38z" fillRule="nonzero" />
+                    </g>
+                  </g>
                 </svg>
                 <span className="text-lg font-bold tracking-tight text-white">Patreon</span>
               </div>
               <div className="flex min-h-16 items-center justify-center gap-3">
-                <svg viewBox="0 0 48 48" role="img" aria-label="Lemon Squeezy" className="size-9 shrink-0" fill="none">
-                  <path d="M12 34c-5-5-5-13 0-19 5-6 15-8 23-3 6 4 7 12 2 19-5 7-18 9-25 3Z" fill="#FFC233" />
-                  <path d="M18 30c4-7 10-12 17-15" stroke="#FFF4C2" strokeWidth="3" strokeLinecap="round" />
-                  <path d="M25 8c1-3 4-5 7-5" stroke="#FFC233" strokeWidth="2.5" strokeLinecap="round" />
+                <svg viewBox="0 0 21 28" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Lemon Squeezy" className="size-9 shrink-0" fill="none">
+                  <path fill="#FFC233" fillRule="evenodd" d="m6.92882 17.1856 7.51128 3.4727c.931.4306 1.5881 1.1533 1.943 1.9823.8976 2.0993-.3292 4.2463-2.255 5.0185-1.9262.7718-3.979.2751-4.91242-1.908l-3.26891-7.6645c-.25331-.5941.38303-1.1779.98205-.901Zm.45024-2.248 7.75364-2.931c2.5769-.9741 5.3918.869 5.3538 3.547-.0006.035-.0012.0699-.0021.1052-.0557 2.6078-2.7923 4.3606-5.3126 3.438l-7.7854-2.8495c-.62104-.2272-.62563-1.076-.00734-1.3097Zm-.43407-1.0152 7.62211-3.2387c2.5328-1.07634 3.1756-4.30675 1.1919-6.17327a9.026257 9.026257 0 0 0-.0783-.07315c-1.9449-1.80521-5.1599-1.16961-6.26712 1.20811L5.99323 12.9915c-.2729.5858.34387 1.1891.95176.9309Zm-1.9615-1.2798 2.77116-7.59845c.34357-.94215.27993-1.90295-.07526-2.73195C6.77994.21378 4.34409-.463579 2.41853.309741.493284 1.08336-.594621 2.84029.340622 5.02253L3.63095 12.6787c.25515.5933 1.13166.5699 1.35254-.0361Z" clipRule="evenodd" />
                 </svg>
                 <span className="text-base font-bold tracking-tight text-white">Lemon Squeezy</span>
               </div>
               <div className="flex min-h-16 items-center justify-center gap-3">
-                <svg viewBox="0 0 48 48" role="img" aria-label="App Store" className="size-9 shrink-0">
-                  <rect x="2" y="2" width="44" height="44" rx="10" fill="#147CE5" />
-                  <path d="M24.9 12.2 13.5 32.1a1.8 1.8 0 0 0 3.1 1.8L28 14a1.8 1.8 0 0 0-3.1-1.8ZM18.7 29.1h18.1a1.8 1.8 0 0 0 0-3.6H20.8l-2.1 3.6ZM25.4 19.1l9.7 16.8a1.8 1.8 0 0 0 3.1-1.8l-9.7-16.8a1.8 1.8 0 0 0-3.1 1.8Z" fill="#FFFFFF" />
+                <svg viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="App Store" className="size-9 shrink-0">
+                  <defs>
+                    <linearGradient id="drew-app-store-gradient" gradientUnits="userSpaceOnUse" x1="400.05" y1="798.7717" x2="400.05" y2="-1.2283" gradientTransform="matrix(1 0 0 -1 0 798.7717)">
+                      <stop offset="0" stopColor="#18BFFB" />
+                      <stop offset="1" stopColor="#2072F3" />
+                    </linearGradient>
+                  </defs>
+                  <path fill="url(#drew-app-store-gradient)" d="M638.4,0H161.6C72.3,0,0,72.3,0,161.6v476.9C0,727.7,72.3,800,161.6,800h476.9c89.2,0,161.6-72.3,161.6-161.6V161.6C800,72.3,727.7,0,638.4,0z" />
+                  <path fill="#FFFFFF" d="M396.6,183.8l16.2-28c10-17.5,32.3-23.4,49.8-13.4s23.4,32.3,13.4,49.8L319.9,462.4h112.9c36.6,0,57.1,43,41.2,72.8H143c-20.2,0-36.4-16.2-36.4-36.4c0-20.2,16.2-36.4,36.4-36.4h92.8l118.8-205.9l-37.1-64.4c-10-17.5-4.1-39.6,13.4-49.8c17.5-10,39.6-4.1,49.8,13.4L396.6,183.8L396.6,183.8z M256.2,572.7l-35,60.7c-10,17.5-32.3,23.4-49.8,13.4S148,614.5,158,597l26-45C213.4,542.9,237.3,549.9,256.2,572.7L256.2,572.7z M557.6,462.6h94.7c20.2,0,36.4,16.2,36.4,36.4c0,20.2-16.2,36.4-36.4,36.4h-52.6l35.5,61.6c10,17.5,4.1,39.6-13.4,49.8c-17.5,10-39.6,4.1-49.8-13.4c-59.8-103.7-104.7-181.3-134.5-233c-30.5-52.6-8.7-105.4,12.8-123.3C474.2,318.1,509.9,380,557.6,462.6L557.6,462.6z" />
                 </svg>
                 <span className="text-sm font-semibold text-white">App Store</span>
               </div>
               <div className="flex min-h-16 items-center justify-center gap-3">
-                <svg viewBox="0 0 24 24" role="img" aria-label="Google Play" className="size-9 shrink-0">
-                  <path d="M3 2.5 12 12 3 21.5c-.2-.3-.3-.7-.3-1.2V3.7c0-.5.1-.9.3-1.2Z" fill="#34A853" />
-                  <path d="M3 2.5c.5-.6 1.4-.7 2.2-.2L17.8 9 12 12 3 2.5Z" fill="#4285F4" />
-                  <path d="m12 12 5.8-3 4.1 2.3c.9.5.9 1.9 0 2.4l-4.1 2.3L12 12Z" fill="#FBBC04" />
-                  <path d="m3 21.5 9-9 5.8 3-12.6 6.7c-.8.4-1.7.2-2.2-.7Z" fill="#EA4335" />
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 466 511.98" role="img" aria-label="Google Play" className="size-9 shrink-0" shapeRendering="geometricPrecision" fillRule="evenodd" clipRule="evenodd">
+                  <g>
+                    <path fill="#EA4335" fillRule="nonzero" d="M199.9 237.8l-198.5 232.37c7.22,24.57 30.16,41.81 55.8,41.81 11.16,0 20.93,-2.79 29.3,-8.37l0 0 244.16 -139.46 -130.76 -126.35z" />
+                    <path fill="#FBBC04" fillRule="nonzero" d="M433.91 205.1l0 0 -104.65 -60 -111.61 110.22 113.01 108.83 104.64 -58.6c18.14,-9.77 30.7,-29.3 30.7,-50.23 -1.4,-20.93 -13.95,-40.46 -32.09,-50.22z" />
+                    <path fill="#34A853" fillRule="nonzero" d="M199.42 273.45l129.85 -128.35 -241.37 -136.73c-8.37,-5.58 -19.54,-8.37 -30.7,-8.37 -26.5,0 -50.22,18.14 -55.8,41.86 0,0 0,0 0,0l198.02 231.59z" />
+                    <path fill="#4285F4" fillRule="nonzero" d="M1.39 41.86c-1.39,4.18 -1.39,9.77 -1.39,15.34l0 397.64c0,5.57 0,9.76 1.4,15.34l216.27 -214.86 -216.28 -213.46z" />
+                  </g>
                 </svg>
                 <span className="text-sm font-bold text-white">Google Play</span>
               </div>
