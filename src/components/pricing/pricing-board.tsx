@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { CurrencyPicker } from "@/components/pricing/currency-picker";
+import { CURRENCY_CODES, FALLBACK_RATES, type CurrencyCode } from "@/lib/currency";
 import { Highlight } from "@/components/highlight";
-import { Check, Minus, Plus, ChevronDown } from "lucide-react";
+import { Check, Minus, Plus } from "lucide-react";
 import { buttonClass } from "@/components/button";
 import { SITE } from "@/lib/site";
 import { useI18n } from "@/lib/i18n";
@@ -68,11 +70,7 @@ const FAQ = [
   ],
 ];
 
-// Display currencies. Prices are set in USD; the others are converted with
-// approximate rates (update CURRENCY_RATES when they drift) and shown as such.
-const CURRENCY_RATES = { USD: 1, EUR: 0.92, GBP: 0.79, BRL: 5.4, MXN: 18.5, CAD: 1.38, AUD: 1.53 } as const;
-type Currency = keyof typeof CURRENCY_RATES;
-const CURRENCIES = Object.keys(CURRENCY_RATES) as Currency[];
+type Currency = CurrencyCode;
 const CURRENCY_KEY = "drew-currency";
 const DEFAULT_CURRENCY: Record<string, Currency> = { en: "USD", es: "EUR", fr: "EUR", de: "EUR", pt: "EUR", ru: "USD" };
 // Monthly price shown for a plan: yearly billing is 10 months spread over 12.
@@ -87,7 +85,7 @@ export function PricingBoard() {
   useEffect(() => {
     try {
       const saved = localStorage.getItem(CURRENCY_KEY) as Currency | null;
-      if (saved && saved in CURRENCY_RATES) requestAnimationFrame(() => setCurrency(saved));
+      if (saved && (CURRENCY_CODES as readonly string[]).includes(saved)) requestAnimationFrame(() => setCurrency(saved));
     } catch {}
   }, []);
   const pickCurrency = (c: Currency) => {
@@ -96,8 +94,30 @@ export function PricingBoard() {
       localStorage.setItem(CURRENCY_KEY, c);
     } catch {}
   };
+  // Live rates (cached server side for 6 hours); fallback rates until they load.
+  const [rates, setRates] = useState<Record<Currency, number>>(FALLBACK_RATES);
+  useEffect(() => {
+    let alive = true;
+    fetch("/api/rates")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: { rates?: Record<Currency, number> } | null) => alive && d?.rates && setRates({ ...FALLBACK_RATES, ...d.rates }))
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, []);
   const money = (usd: number) =>
-    new Intl.NumberFormat(locale, { style: "currency", currency, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(usd * CURRENCY_RATES[currency]);
+    new Intl.NumberFormat(locale, { style: "currency", currency, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(usd * rates[currency]);
+
+  // Sliding highlight behind the selected billing period, like the legal tabs.
+  const billingRefs = useRef<Record<Billing, HTMLButtonElement | null>>({ monthly: null, yearly: null });
+  const [pill, setPill] = useState<{ left: number; width: number } | null>(null);
+  useEffect(() => {
+    const el = billingRefs.current[billing];
+    if (!el) return;
+    const raf = requestAnimationFrame(() => setPill({ left: el.offsetLeft, width: el.offsetWidth }));
+    return () => cancelAnimationFrame(raf);
+  }, [billing, locale]);
 
 
   return (
@@ -114,15 +134,25 @@ export function PricingBoard() {
           </p>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <div role="radiogroup" aria-label={t("Billing period")} className="flex w-fit gap-1 rounded-xl border border-white/10 p-1">
+          <div role="radiogroup" aria-label={t("Billing period")} className="relative flex w-fit gap-1 rounded-xl border border-white/10 p-1">
+            {pill && (
+              <span
+                aria-hidden
+                className="pointer-events-none absolute bottom-1 top-1 rounded-lg bg-white/10 transition-[left,width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                style={{ left: pill.left, width: pill.width }}
+              />
+            )}
             {(["monthly", "yearly"] as const).map((b) => (
               <button
                 key={b}
+                ref={(el) => {
+                  billingRefs.current[b] = el;
+                }}
                 role="radio"
                 aria-checked={billing === b}
                 onClick={() => setBilling(b)}
-                className={`flex items-center gap-2 rounded-lg px-5 py-2 text-sm font-medium transition-colors ${
-                  billing === b ? "bg-white/10 text-fg" : "text-soft hover:text-fg"
+                className={`relative flex items-center gap-2 rounded-lg px-5 py-2 text-sm font-medium transition-colors ${
+                  billing === b ? "text-fg" : "text-soft hover:text-fg"
                 }`}
               >
                 {b === "monthly" ? t("Monthly") : t("Yearly")}
@@ -134,21 +164,7 @@ export function PricingBoard() {
               </button>
             ))}
           </div>
-          <label className="relative flex items-center rounded-xl border border-white/10 p-1 text-sm">
-            <span className="sr-only">{t("Currency")}</span>
-            <select
-              value={currency}
-              onChange={(e) => pickCurrency(e.target.value as Currency)}
-              className="cursor-pointer appearance-none rounded-lg bg-transparent py-2 pl-4 pr-9 font-medium text-fg outline-none transition-colors hover:bg-white/[0.06] focus-visible:ring-2 focus-visible:ring-brand/60"
-            >
-              {CURRENCIES.map((c) => (
-                <option key={c} value={c} className="bg-[#0a0a0a] text-fg">
-                  {c}
-                </option>
-              ))}
-            </select>
-            <ChevronDown className="pointer-events-none absolute right-3 size-4 text-mute" />
-          </label>
+          <CurrencyPicker value={currency} onChange={pickCurrency} />
           </div>
           {currency !== "USD" && <p className="mt-3 text-xs text-mute">{t("Approximate prices. You are charged in USD.")}</p>}
         </div>

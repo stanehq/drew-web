@@ -260,22 +260,18 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
           </div>
         </section>
 
-        {/* Numbers: two columns of three, counts on the left and latencies on the right */}
-        <section className="mt-6 grid grid-cols-2 overflow-hidden rounded-2xl border border-white/10" aria-label="Summary">
-          {[kpis.slice(0, 3), kpis.slice(3)].map((column, c) => (
-            <div key={c} className={`divide-y divide-white/10 ${c === 1 ? "border-l border-white/10" : ""}`}>
-              {column.map(({ icon: Icon, label, value, suffix, health }) => (
-                <div key={label} className="min-w-0 p-4 sm:p-5">
-                  <p className="flex items-center gap-1.5 text-sm text-mute">
-                    <Icon className="size-4 shrink-0" strokeWidth={1.75} /> <span className="truncate">{t(label)}</span>
-                  </p>
-                  {/* White while healthy, coloured only when shards or latency need attention */}
-                  <p className={`mt-3 text-2xl font-semibold leading-none tabular-nums tracking-tight sm:text-3xl ${health && health.tone !== "good" ? TONE[health.tone].text : "text-fg"}`}>
-                    {value}
-                    {suffix && <span className="ml-1 text-base font-normal text-mute">{suffix}</span>}
-                  </p>
-                </div>
-              ))}
+        {/* Numbers: read left to right, counts on the first row and latencies on the second */}
+        <section className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-3" aria-label="Summary">
+          {kpis.map(({ icon: Icon, label, value, suffix, health }) => (
+            <div key={label} className="min-w-0 bg-ink p-4 sm:p-5">
+              <p className="flex items-center gap-1.5 text-sm text-mute">
+                <Icon className="size-4 shrink-0" strokeWidth={1.75} /> <span className="truncate">{t(label)}</span>
+              </p>
+              {/* White while healthy, coloured only when shards or latency need attention */}
+              <p className={`mt-3 text-2xl font-semibold leading-none tabular-nums tracking-tight sm:text-3xl ${health && health.tone !== "good" ? TONE[health.tone].text : "text-fg"}`}>
+                {value}
+                {suffix && <span className="ml-1 text-base font-normal text-mute">{suffix}</span>}
+              </p>
             </div>
           ))}
         </section>
