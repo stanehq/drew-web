@@ -21,9 +21,3 @@ export const SITE = {
     "https://discord.com/oauth2/authorize?client_id=1441457111409103010&permissions=8&integration_type=0&scope=bot+applications.commands",
 };
 
-export const NAV = [
-  { href: "/#features", label: "Features" },
-  { href: "/pricing", label: "Pricing" },
-  { href: "/status", label: "Status" },
-  { href: "/metrics", label: "Metrics" },
-];
