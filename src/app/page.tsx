@@ -6,7 +6,7 @@ import Link from "@/components/locale-link";
 import { ArrowRight, Braces, DatabaseBackup, FileClock, KeyRound, LayoutDashboard, PlusCircle, ScrollText, ShieldAlert, UserCheck, Users } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { DiscordIcon } from "@/components/discord-icon";
-import { LiveStats } from "@/components/live-stats";
+import { ProtectionStats } from "@/components/protection-stats";
 import { ServerShowcase } from "@/components/server-showcase";
 import { Testimonials } from "@/components/testimonials";
 import { SITE } from "@/lib/site";
@@ -89,11 +89,7 @@ export default function HomePage() {
             </a>
           </div>
         </div>
-        <div className="mx-auto max-w-5xl px-5 pb-6">
-          <div className="relative rounded-2xl border border-white/10 bg-[#0b0f0d]/80 backdrop-blur">
-            <LiveStats />
-          </div>
-        </div>
+        <ProtectionStats />
         <ServerShowcase />
       </section>
 
