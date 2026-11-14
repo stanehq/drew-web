@@ -58,7 +58,7 @@ export function LanguageSelector({ compact = false, up = false, block = false }:
         <div className={`lang-panel-in absolute z-50 w-[min(21rem,calc(100vw-2rem))] ${block ? "inset-x-0 top-full mx-auto mt-2 origin-top" : up ? "bottom-full left-0 mb-2 origin-bottom-left" : "right-0 mt-2 origin-top-right"} rounded-2xl border border-white/10 bg-[#0a0a0a] p-2 shadow-[0_20px_50px_rgba(0,0,0,0.55)]`}>
           <p className="px-2 pb-2 pt-1 text-xs capitalize text-mute">{t("language")}</p>
           <ul role="listbox" aria-label={t("language")} className="relative grid grid-cols-2 gap-1" {...slide.containerProps}>
-            {slide.highlight("bg-white/[0.08]")}
+            {slide.highlight("bg-white/[0.12]")}
             {LOCALES.map((item, i) => {
               const active = item.code === locale;
               return (
@@ -72,12 +72,12 @@ export function LanguageSelector({ compact = false, up = false, block = false }:
                     }}
                     style={{ animationDelay: `${i * 25}ms` }}
                     className={`lang-item-in relative flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[0.95rem] transition-colors duration-200 active:scale-[0.97] ${
-                      active ? "text-fg" : "text-soft hover:text-fg"
+                      active ? "text-fg" : "text-soft hover:bg-brand/10 hover:text-brand-bright"
                     }`}
                   >
                     <Flag code={item.code} className="h-[24px] w-[36px]" />
                     <span className="flex-1 truncate">{item.label}</span>
-                    {active && <Check className="size-3.5 text-brand" strokeWidth={2.25} />}
+                    {active && <Check className="size-3.5 text-white" strokeWidth={2.25} />}
                   </button>
                 </li>
               );
