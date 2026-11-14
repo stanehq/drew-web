@@ -205,9 +205,9 @@ export function PricingBoard() {
                 <span className="text-base font-bold tracking-tight text-white">Lemon Squeezy</span>
               </div>
               <div className="flex min-h-16 items-center justify-center gap-3">
-                <svg viewBox="0 0 24 24" role="img" aria-label="App Store" className="size-9 shrink-0" fill="#FFFFFF">
-                  <path d="M12.9 5.2 7.1 15.3a1.15 1.15 0 0 1-2-.0 1.15 1.15 0 0 1 0-1.15L10.9 4a1.15 1.15 0 0 1 2 1.2ZM18.8 15.2H5.2a1.15 1.15 0 0 1 0-2.3h13.6a1.15 1.15 0 0 1 0 2.3ZM15.2 8.4l5.6 9.7a1.15 1.15 0 0 1-2 1.15l-5.6-9.7a1.15 1.15 0 0 1 2-1.15Z" />
-                  <path d="M8.2 17.3h7.6l1.3 2.2H6.9l1.3-2.2Z" />
+                <svg viewBox="0 0 48 48" role="img" aria-label="App Store" className="size-9 shrink-0">
+                  <rect x="2" y="2" width="44" height="44" rx="10" fill="#147CE5" />
+                  <path d="M24.9 12.2 13.5 32.1a1.8 1.8 0 0 0 3.1 1.8L28 14a1.8 1.8 0 0 0-3.1-1.8ZM18.7 29.1h18.1a1.8 1.8 0 0 0 0-3.6H20.8l-2.1 3.6ZM25.4 19.1l9.7 16.8a1.8 1.8 0 0 0 3.1-1.8l-9.7-16.8a1.8 1.8 0 0 0-3.1 1.8Z" fill="#FFFFFF" />
                 </svg>
                 <span className="text-sm font-semibold text-white">App Store</span>
               </div>
