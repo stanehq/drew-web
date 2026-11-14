@@ -8,6 +8,7 @@ import { SITE } from "@/lib/site";
 import { DiscordIcon } from "./discord-icon";
 import { LanguageSelector } from "./language-selector";
 import { useI18n } from "@/lib/i18n";
+import { localizePath, type LocaleCode } from "@/lib/locales";
 
 const LOGIN = "/api/auth/discord";
 
@@ -18,7 +19,6 @@ type Item = { label: string; href: string };
 
 const MORE: Item[] = [
   { label: "Features", href: "/#features" },
-  { label: "Commands", href: "/commands" },
   { label: "Pricing", href: "/pricing" },
   { label: "Status", href: "/status" },
   { label: "Metrics", href: "/metrics" },
@@ -31,7 +31,7 @@ const MORE: Item[] = [
 const isExternal = (href: string) => /^https?:\/\//.test(href);
 
 
-function MenuLink({ item, onPick, label }: { item: Item; onPick: () => void; label: string }) {
+function MenuLink({ item, onPick, label, locale }: { item: Item; onPick: () => void; label: string; locale: LocaleCode }) {
   const cls = "flex items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-sm text-soft transition-colors hover:bg-white/[0.06] hover:text-fg";
   const body = (
     <>
@@ -39,6 +39,9 @@ function MenuLink({ item, onPick, label }: { item: Item; onPick: () => void; lab
       {isExternal(item.href) && <ExternalLink className="size-3.5 text-mute" />}
     </>
   );
+  if (item.href.startsWith("/#")) {
+    return <a href={localizePath(item.href, locale)} onClick={onPick} className={cls}>{body}</a>;
+  }
   return isExternal(item.href) || item.href.startsWith("/api/") ? (
     <a href={item.href} onClick={onPick} className={cls}>{body}</a>
   ) : (
@@ -49,7 +52,7 @@ function MenuLink({ item, onPick, label }: { item: Item; onPick: () => void; lab
 
 
 export function SiteHeader() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const label = (k: string) => t(k);
   const [open, setOpen] = useState(false);
 
@@ -75,7 +78,11 @@ export function SiteHeader() {
 
         <nav className="hidden items-center gap-0.5 xl:flex" aria-label={t("Main")}>
           {MORE.map((item) =>
-            isExternal(item.href) ? (
+            item.href.startsWith("/#") ? (
+              <a key={item.href} href={localizePath(item.href, locale)} className="whitespace-nowrap rounded-lg px-2.5 py-2 text-[1rem] font-medium text-fg/85 transition-colors hover:bg-white/[0.06] hover:text-fg">
+                {label(item.label)}
+              </a>
+            ) : isExternal(item.href) ? (
               <a key={item.href} href={item.href} className="whitespace-nowrap rounded-lg px-2.5 py-2 text-[1rem] font-medium text-fg/85 transition-colors hover:bg-white/[0.06] hover:text-fg">
                 {label(item.label)}
               </a>
@@ -112,7 +119,7 @@ export function SiteHeader() {
         <div className="border-t border-line bg-[#101113] px-4 pb-6 pt-4 xl:hidden">
           <nav className="grid" aria-label={t("Mobile")}>
             {MORE.map((item) => (
-              <MenuLink key={item.href} item={item} label={label(item.label)} onPick={() => setOpen(false)} />
+              <MenuLink key={item.href} item={item} label={label(item.label)} locale={locale} onPick={() => setOpen(false)} />
             ))}
           </nav>
           <div className="mt-4 grid gap-2.5">
