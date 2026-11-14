@@ -43,7 +43,7 @@ const steps = [
 ];
 
 const primary =
-  "inline-flex h-12 items-center gap-2 rounded-md border border-[#7ee8b5] bg-[linear-gradient(110deg,#35c98d_0%,#41cf8b_58%,#7ee8b5_100%)] px-6 text-[0.98rem] font-semibold text-white transition-all hover:bg-[linear-gradient(110deg,#41cf8b_0%,#65dda9_58%,#a5f3cf_100%)]";
+  "inline-flex h-12 items-center gap-2 rounded-md border border-[#e8fff3] bg-[linear-gradient(110deg,#35c98d_0%,#7ee8b5_58%,#ffffff_100%)] px-6 text-[0.98rem] font-semibold text-[#052b1b] shadow-[0_5px_18px_rgba(65,207,139,0.2)] transition-all hover:border-white hover:bg-[linear-gradient(110deg,#41cf8b_0%,#a5f3cf_58%,#ffffff_100%)] hover:shadow-[0_7px_22px_rgba(65,207,139,0.3)]";
 const secondary =
   "inline-flex h-12 items-center gap-2 rounded-md border border-white/15 px-6 text-[0.98rem] font-semibold text-fg transition-colors hover:border-white/30 hover:bg-white/[0.04]";
 
@@ -91,7 +91,7 @@ export default function HomePage() {
           </p>
           <div className="animate-fade-up mt-10 flex flex-wrap items-center justify-center gap-3 [animation-delay:140ms]">
             <a href={SITE.invite} className={primary}>
-              <DiscordIcon /> {t("Add to Discord")}
+              <DiscordIcon color="#052b1b" /> {t("Add to Discord")}
             </a>
             <a href="/api/auth/discord" className={secondary}>
               <LayoutDashboard className="size-4" /> {t("Open dashboard")}
