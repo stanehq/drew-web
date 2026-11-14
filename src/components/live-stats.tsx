@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { formatCompact, formatUptime } from "@/lib/format";
 import { useI18n } from "@/lib/i18n";
 
@@ -34,8 +33,7 @@ export function LiveStats() {
   ];
 
   return (
-    <div className="relative isolate">
-      <Image src="/brand/drew-icon.svg" alt="" aria-hidden width={144} height={144} priority className="pointer-events-none absolute left-1/2 top-1/2 z-0 size-24 -translate-x-1/2 -translate-y-1/2 rotate-[-9deg] opacity-[0.10] sm:size-32" />
+    <div className="relative">
       <div className="relative z-10 grid grid-cols-2 gap-px overflow-hidden rounded-2xl bg-white/[0.06] sm:grid-cols-4">
         {items.map((it) => (
           <div key={it.label} className="min-w-0 bg-[#050907]/85 px-6 py-7 text-left backdrop-blur-[2px]">
