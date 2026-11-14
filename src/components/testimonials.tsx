@@ -71,7 +71,7 @@ export function Testimonials() {
   return (
     <section className="px-5 pb-28">
       <h2 className="mx-auto max-w-3xl text-balance text-center text-4xl font-semibold tracking-[-0.025em] sm:text-6xl">
-        {t("Community feedback")}
+        {t("Loved by the communities that use it")}
       </h2>
       <p className="mx-auto mt-4 max-w-2xl text-center text-sm text-mute">{t("Illustrative testimonial copy, not verified customer reviews.")}</p>
       <div className="mx-auto mt-14 max-w-5xl columns-1 gap-5 md:columns-2">
