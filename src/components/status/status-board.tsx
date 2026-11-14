@@ -265,7 +265,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
           {kpis.map(({ icon: Icon, label, value, suffix, health }) => (
             <div key={label} className="min-w-0 bg-ink p-4 sm:p-5">
               <p className="flex items-center gap-1.5 text-sm text-mute">
-                <Icon className="size-4 shrink-0" strokeWidth={1.75} /> <span className="truncate">{t(label)}</span>
+                <Icon className="drew-icon-gradient size-4 shrink-0" strokeWidth={1.75} /> <span className="truncate">{t(label)}</span>
               </p>
               {/* White while healthy, coloured only when shards or latency need attention */}
               <p className={`mt-3 text-2xl font-semibold leading-none tabular-nums tracking-tight sm:text-3xl ${health && health.tone !== "good" ? TONE[health.tone].text : "text-fg"}`}>
