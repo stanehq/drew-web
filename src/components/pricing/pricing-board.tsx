@@ -191,7 +191,7 @@ export function PricingBoard() {
                 <p className="mt-2 min-h-5 text-sm text-mute">
                   {billing === "yearly" ? (
                     <>
-                      {t("Billed ")}{money(yearly)}{t(" yearly. ")} {popular && <span className="drew-gradient-x">{t("You save ")}{money(p.monthly * 12 - yearly)}.</span>}
+                      {t("Billed ")}{money(yearly)}{t(" yearly. ")} {popular && <span className="text-fg">{t("You save ")}{money(p.monthly * 12 - yearly)}.</span>}
                     </>
                   ) : (
                     <>{t("That's just ")}{money(perDay)}{t(" a day.")}</>
