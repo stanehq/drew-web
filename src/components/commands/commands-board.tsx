@@ -27,6 +27,14 @@ const CATEGORY_ICONS: Record<string, LucideIcon> = {
   default: Bot,
 };
 
+const normalizeQuery = (value: string) => value.trim().toLowerCase().replace(/^\//, "");
+
+function matchesQuery(command: Command, query: string) {
+  return `${command.name} ${command.description} ${command.notes.join(" ")} ${command.options.map((option) => option.name + " " + option.description).join(" ")}`
+    .toLowerCase()
+    .includes(query);
+}
+
 function groupCommands(commands: Command[]): CommandGroup[] {
   const groups = new Map<string, Command[]>();
   for (const command of commands) {
@@ -111,17 +119,36 @@ export function CommandsBoard() {
   const [active, setActive] = useState(CATEGORIES[0]?.id ?? "all");
   const [open, setOpen] = useState<string | null>(null);
 
-  const counts = useMemo(() => new Map(CATEGORIES.map((category) => [category.id, category.commands.length])), []);
+  // With a search typed, each category shows how many of its commands match, so
+  // it is clear where the results are instead of only searching the open one.
+  const counts = useMemo(() => {
+    const q = normalizeQuery(query);
+    return new Map(CATEGORIES.map((category) => [category.id, q ? category.commands.filter((command) => matchesQuery(command, q)).length : category.commands.length]));
+  }, [query]);
   const selected = CATEGORIES.find((category) => category.id === active) ?? CATEGORIES[0];
 
   const groups = useMemo(() => {
     if (!selected) return [];
-    const q = query.trim().toLowerCase().replace(/^\//, "");
-    const filtered = selected.commands.filter((command) =>
-      `${command.name} ${command.description} ${command.notes.join(" ")} ${command.options.map((option) => option.name + " " + option.description).join(" ")}`.toLowerCase().includes(q)
-    );
-    return groupCommands(filtered);
+    const q = normalizeQuery(query);
+    return groupCommands(selected.commands.filter((command) => matchesQuery(command, q)));
   }, [selected, query]);
+
+  const updateQuery = (value: string) => {
+    setQuery(value);
+    setOpen(null);
+    // Move to the best category when the open one has no results: a match in a
+    // command name counts for more than one in its description or notes.
+    const q = normalizeQuery(value);
+    if (!q || !selected) return;
+    if (selected.commands.some((command) => matchesQuery(command, q))) return;
+    const score = (category: Category) =>
+      category.commands.reduce((n, command) => n + (command.name.toLowerCase().includes(q) ? 10 : matchesQuery(command, q) ? 1 : 0), 0);
+    let best: Category | undefined;
+    for (const category of CATEGORIES) {
+      if (score(category) > (best ? score(best) : 0)) best = category;
+    }
+    if (best) setActive(best.id);
+  };
 
   const chooseCategory = (id: string) => {
     setActive(id);
@@ -140,12 +167,12 @@ export function CommandsBoard() {
             <Search className="size-4 shrink-0 text-mute" />
             <input
               value={query}
-              onChange={(event) => { setQuery(event.target.value); setOpen(null); }}
+              onChange={(event) => updateQuery(event.target.value)}
               placeholder={t("Search commands")}
               aria-label={t("Search commands")}
               className="h-full min-w-0 flex-1 bg-transparent text-[0.95rem] text-fg outline-none placeholder:text-mute"
             />
-            {query && <button type="button" onClick={() => setQuery("")} aria-label={t("Clear")} className="text-mute hover:text-fg"><X className="size-4" /></button>}
+            {query && <button type="button" onClick={() => updateQuery("")} aria-label={t("Clear")} className="text-mute hover:text-fg"><X className="size-4" /></button>}
           </label>
         </div>
 
@@ -162,7 +189,7 @@ export function CommandsBoard() {
                     type="button"
                     onClick={() => chooseCategory(category.id)}
                     aria-current={selectedCategory ? "page" : undefined}
-                    className={`flex min-h-[48px] shrink-0 items-center gap-2.5 rounded-2xl border px-2.5 text-left lg:min-h-[58px] lg:min-w-0 lg:shrink lg:gap-3 lg:px-3 transition-colors ${selectedCategory ? "border-brand/20 bg-brand/[0.12] text-fg" : "border-transparent text-soft hover:border-white/[0.06] hover:bg-white/[0.035]"}`}
+                    className={`flex min-h-[48px] shrink-0 items-center gap-2.5 rounded-2xl border px-2.5 text-left lg:min-h-[58px] lg:min-w-0 lg:shrink lg:gap-3 lg:px-3 transition-colors ${query && counts.get(category.id) === 0 ? "opacity-45" : ""} ${selectedCategory ? "border-brand/20 bg-brand/[0.12] text-fg" : "border-transparent text-soft hover:border-white/[0.06] hover:bg-white/[0.035]"}`}
                   >
                     <span className={`flex size-8 shrink-0 items-center justify-center rounded-xl border sm:size-10 ${selectedCategory ? "border-brand/15 bg-brand/[0.10] text-brand-bright" : "border-white/[0.06] bg-white/[0.035] text-mute"}`}>
                       <Icon className="size-4 sm:size-[19px]" strokeWidth={1.9} />

@@ -44,6 +44,11 @@ export async function loadLegal(slug: LegalSlug) {
     const external = /^https?:\/\//.test(href) && !href.startsWith("https://drewbot.xyz");
     return `<a href="${href}"${external ? ' target="_blank" rel="noreferrer"' : ""}>${text}</a>`;
   };
-  const html = await marked.parse(body, { renderer, gfm: true });
+  const rendered = await marked.parse(body, { renderer, gfm: true });
+  // Cloudflare's Email Address Obfuscation would rewrite these addresses to
+  // "[email protected]" and decode them with an injected script, which the
+  // nonce-based CSP blocks, leaving the placeholder on screen. The markers are
+  // Cloudflare's documented way to leave a region of the page untouched.
+  const html = `<!--email_off-->${rendered}<!--/email_off-->`;
   return { ...doc, updated: updated?.[1].trim() ?? null, html };
 }

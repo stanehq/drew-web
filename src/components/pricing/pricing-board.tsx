@@ -82,12 +82,15 @@ export function PricingBoard() {
   const [open, setOpen] = useState<number | null>(0);
   const { t, locale } = useI18n();
   const [currency, setCurrency] = useState<Currency>(DEFAULT_CURRENCY[locale] ?? "USD");
-  // Remember the visitor's pick (falls back to the language default).
+  // Remember the visitor's pick (falls back to the language default). It has to
+  // be read after mount: localStorage does not exist on the server, so a lazy
+  // initial state would not match the server-rendered HTML.
   useEffect(() => {
     try {
       const cookieValue = document.cookie.split("; ").find((part) => part.startsWith(`${CURRENCY_KEY}=`))?.split("=")[1];
       const saved = (localStorage.getItem(CURRENCY_KEY) ?? cookieValue) as Currency | null;
       if (saved && (CURRENCY_CODES as readonly string[]).includes(saved)) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setCurrency(saved);
         localStorage.setItem(CURRENCY_KEY, saved);
       }
