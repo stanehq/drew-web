@@ -62,7 +62,7 @@ function Row({ track, members, reverse = false }: { track: Server[]; members: (n
 export function ServerShowcase() {
   const { t } = useI18n();
   const [servers, setServers] = useState<Server[]>([]);
-  // "loading" shows a placeholder of the same size, "empty" hides the section.
+  // Keep the section out of the layout until real server data is available.
   const [state, setState] = useState<"loading" | "ready" | "empty">("loading");
   const [totals, setTotals] = useState({ servers: 0, people: 0 });
 
@@ -96,26 +96,7 @@ export function ServerShowcase() {
   }, []);
 
   if (state === "empty") return null;
-  if (state === "loading")
-    return (
-      <div className="w-full overflow-hidden pb-4 pt-12" aria-busy="true" aria-label="Loading servers">
-        <div className="mb-12 flex flex-col items-center gap-3 px-5">
-          <span className="skeleton h-9 w-[min(36rem,90%)] rounded-xl sm:h-12" />
-          <span className="skeleton h-9 w-[min(26rem,70%)] rounded-xl sm:h-12" />
-        </div>
-        <div className="mx-auto flex max-w-[1600px] gap-10 overflow-hidden px-5 py-2 [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
-          {Array.from({ length: 6 }, (_, i) => (
-            <div key={i} className="flex w-[300px] shrink-0 items-center gap-4 px-2 sm:w-[340px]">
-              <span className="skeleton size-[72px] shrink-0 rounded-full sm:size-[84px]" />
-              <span className="flex flex-1 flex-col gap-2">
-                <span className="skeleton h-5 w-3/4 rounded-md" />
-                <span className="skeleton h-4 w-1/2 rounded-md" />
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
+  if (state === "loading") return null;
   const fill = (list: Server[]) => Array.from({ length: Math.ceil(MIN_CARDS / list.length) }, () => list).flat();
   const rows = servers.length >= TWO_ROWS_FROM ? [servers.filter((_, i) => i % 2 === 0), servers.filter((_, i) => i % 2 === 1)] : [servers];
   const members = (n: number) => (n === 1 ? t("member") : t("members"));
