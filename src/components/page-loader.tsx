@@ -5,24 +5,33 @@ import { usePathname } from "next/navigation";
 import { Loader } from "@/components/loader";
 import { splitLocale } from "@/lib/locales";
 
-const FIRST_MS = 3500;
+const FIRST_MIN_MS = 3500;
+const FIRST_MAX_MS = 4500;
 const LOCALE_MS = 700;
 const MAX_MS = 8000;
+const ROUTE_FADE_MS = 900;
 
-/** Shows only on an initial homepage load and explicit language changes. */
 export function PageLoader() {
   const pathname = usePathname();
   const isHome = splitLocale(pathname)[1] === "/";
   const initialHome = useRef(isHome);
   const localeChange = useRef(false);
+  const routeTiming = useRef<{ startedAt: number; minimumMs: number } | null>(null);
+  const routeEverStarted = useRef(false);
   const shownAt = useRef(0);
   const timers = useRef<number[]>([]);
+  const routeTimers = useRef<number[]>([]);
   const [visible, setVisible] = useState(() => isHome);
   const [fading, setFading] = useState(false);
 
   const clearTimers = useCallback(() => {
     timers.current.forEach(window.clearTimeout);
     timers.current = [];
+  }, []);
+
+  const clearRouteTimers = useCallback(() => {
+    routeTimers.current.forEach(window.clearTimeout);
+    routeTimers.current = [];
   }, []);
 
   const hide = useCallback((minimum: number) => {
@@ -38,17 +47,63 @@ export function PageLoader() {
   }, [clearTimers]);
 
   useEffect(() => {
+    const onRouteStart = () => {
+      routeEverStarted.current = true;
+      clearRouteTimers();
+      routeTiming.current = {
+        startedAt: performance.now(),
+        minimumMs: FIRST_MIN_MS + Math.random() * (FIRST_MAX_MS - FIRST_MIN_MS),
+      };
+      setFading(false);
+      setVisible(false);
+    };
+
+    const onRouteEnd = () => {
+      const timing = routeTiming.current;
+      routeTiming.current = null;
+      if (!timing) return;
+
+      const remaining = timing.startedAt + timing.minimumMs - performance.now();
+      if (remaining <= 0) {
+        setVisible(false);
+        setFading(false);
+        return;
+      }
+
+      setFading(false);
+      setVisible(true);
+      routeTimers.current.push(window.setTimeout(() => {
+        setFading(true);
+        routeTimers.current.push(window.setTimeout(() => {
+          setVisible(false);
+          setFading(false);
+        }, ROUTE_FADE_MS));
+      }, remaining));
+    };
+
+    window.addEventListener("drew:route-loading-start", onRouteStart);
+    window.addEventListener("drew:route-loading-end", onRouteEnd);
+    return () => {
+      window.removeEventListener("drew:route-loading-start", onRouteStart);
+      window.removeEventListener("drew:route-loading-end", onRouteEnd);
+      clearRouteTimers();
+    };
+  }, [clearRouteTimers]);
+
+  useEffect(() => {
     if (!initialHome.current) {
       setVisible(false);
       return;
     }
 
     shownAt.current = performance.now();
+    const firstMinimum = FIRST_MIN_MS + Math.random() * (FIRST_MAX_MS - FIRST_MIN_MS);
     let finished = false;
     const finish = () => {
       if (finished) return;
       finished = true;
-      hide(FIRST_MS);
+      if (routeEverStarted.current) return;
+      hide(firstMinimum);
     };
     const loaded = document.readyState === "complete"
       ? Promise.resolve()
@@ -68,7 +123,6 @@ export function PageLoader() {
       shownAt.current = performance.now();
       setFading(false);
       setVisible(true);
-      // Failsafe in case navigation is interrupted.
       timers.current.push(window.setTimeout(() => {
         localeChange.current = false;
         setFading(true);
@@ -88,12 +142,15 @@ export function PageLoader() {
     hide(LOCALE_MS);
   }, [hide, pathname]);
 
-  useEffect(() => () => clearTimers(), [clearTimers]);
+  useEffect(() => () => {
+    clearTimers();
+    clearRouteTimers();
+  }, [clearRouteTimers, clearTimers]);
 
   if (!visible) return null;
   return (
     <div
-      className={`page-loader fixed inset-0 z-[200] flex h-dvh w-screen items-center justify-center bg-black ${fading ? "page-loader-leave pointer-events-none" : ""}`}
+      className={"page-loader fixed inset-0 z-[200] flex h-dvh w-screen items-center justify-center bg-black " + (fading ? "page-loader-leave pointer-events-none" : "")}
       aria-hidden={fading}
     >
       <div className="page-loader-mark">
