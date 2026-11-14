@@ -49,6 +49,7 @@ export function PageLoader() {
   useEffect(() => {
     const onRouteStart = () => {
       routeEverStarted.current = true;
+      clearTimers();
       clearRouteTimers();
       routeTiming.current = {
         startedAt: performance.now(),
