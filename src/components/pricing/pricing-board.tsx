@@ -175,7 +175,7 @@ export function PricingBoard() {
                 key={p.id}
                 className={
                   popular
-                    ? "relative flex flex-col rounded-[0.875rem] border border-brand/35 bg-[linear-gradient(180deg,rgb(65_207_139/0.05),transparent_45%)] p-8 shadow-[0_30px_90px_-40px_rgb(65_207_139/0.25)] sm:p-10 md:-my-4 md:py-14"
+                    ? "relative flex flex-col rounded-[0.875rem] drew-gradient-border p-8 shadow-[0_30px_90px_-40px_rgb(65_207_139/0.25)] sm:p-10 md:-my-4 md:py-14"
                     : "surface relative flex flex-col p-8 opacity-90 sm:p-10"
                 }
               >

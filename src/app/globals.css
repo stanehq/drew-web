@@ -88,6 +88,14 @@
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
   }
+  /* A 1px border that fades from green to white. The inner fill (a faint green
+     tint over black) is painted in the padding box so the border shows through. */
+  .drew-gradient-border {
+    border: 1px solid transparent;
+    background:
+      linear-gradient(180deg, #040b08 0%, #000 45%) padding-box,
+      linear-gradient(160deg, #35c98d 0%, #7ee8b5 45%, rgb(255 255 255 / 0.92) 100%) border-box;
+  }
   /* Same vertical gradient as the Drew logo (public/brand/drew-icon.svg). */
   .drew-wordmark {
     background: linear-gradient(180deg, #35c98d 0%, #5bd4a6 48%, #ddf8ea 78%, #ffffff 100%);
