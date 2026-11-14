@@ -212,6 +212,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
               {countdown}s
             </span>
           </div>
+          {!data && error && <p className="mt-4 text-sm text-soft">{t("We couldn't reach the bot. This page retries automatically.")}</p>}
           <div className="mt-6">
             <UptimeHistory />
           </div>
@@ -253,7 +254,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
                     {svc && key !== "database" && key !== "cache" && svc.status === "operational" && svc.latencyMs > 0 && <span className="hidden text-xs text-mute sm:inline">{svc.latencyMs}ms</span>}
                     <span className={`inline-flex items-center gap-2 text-sm ${STATE[state].ring}`}>
                       <Dot state={state} />
-                      {data ? t(STATE[state].text) : "..."}
+                      {data ? t(STATE[state].text) : error ? t("Unavailable") : "..."}
                     </span>
                   </div>
                 </li>
@@ -263,7 +264,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
         </section>
 
         {/* Shards */}
-        <section className="mt-14" aria-labelledby="shards">
+        <section className={`mt-14 ${!shards.length && error ? "hidden" : ""}`} aria-labelledby="shards">
           <div className="flex items-end justify-between">
             <h2 id="shards" className="font-sans text-lg font-semibold tracking-tight">
               {t("Shards")}
@@ -295,7 +296,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
                 </p>
               </article>
             ))}
-            {!shards.length && Array.from({ length: 4 }, (_, i) => <div key={i} className="h-[108px] animate-pulse rounded-xl border border-white/10" />)}
+            {!shards.length && !error && Array.from({ length: 4 }, (_, i) => <div key={i} className="h-[108px] animate-pulse rounded-xl border border-white/10" />)}
           </div>
         </section>
       </div>

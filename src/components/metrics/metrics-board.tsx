@@ -297,9 +297,9 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
         {points.length < 2 ? (
           <div className="surface mt-3 flex flex-col items-center gap-3 px-6 py-20 text-center">
             <Activity className="drew-icon-gradient size-6" />
-            <p className="font-medium">{failed || !data ? t("Metrics are unavailable right now.") : "Collecting data..."}</p>
+            <p className="font-medium">{failed || !data ? t("Metrics are unavailable right now.") : t("Collecting data...")}</p>
             {(failed || !data) && (
-              <p className="max-w-sm text-sm text-mute">We couldn&apos;t reach the bot. This page retries automatically.</p>
+              <p className="max-w-sm text-sm text-mute">{t("We couldn't reach the bot. This page retries automatically.")}</p>
             )}
           </div>
         ) : (
@@ -320,7 +320,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
             </div>
           </section>
         )}
-        {failed && data && <p className="py-3 text-center text-xs text-warn">Showing the last data we received. Retrying...</p>}
+        {failed && data && <p className="py-3 text-center text-xs text-warn">{t("Showing the last data we received. Retrying...")}</p>}
       </div>
     </section>
   );
