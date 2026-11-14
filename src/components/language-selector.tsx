@@ -72,7 +72,7 @@ export function LanguageSelector({ compact = false, up = false, block = false }:
                     }}
                     style={{ animationDelay: `${i * 25}ms` }}
                     className={`lang-item-in relative flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[0.95rem] transition-colors duration-200 active:scale-[0.97] ${
-                      active ? "text-fg" : "text-soft hover:bg-brand/10 hover:text-brand-bright"
+                      active ? "text-fg" : "text-soft hover:text-fg"
                     }`}
                   >
                     <Flag code={item.code} className="h-[24px] w-[36px]" />
