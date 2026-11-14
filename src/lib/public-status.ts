@@ -6,12 +6,14 @@ const SERVICE_STATES = new Set(["operational", "degraded", "down", "not_configur
 
 export type PublicShard = { id: number; status: "online" | "connecting" | "offline"; latencyMs: number; guilds: number; users: number };
 export type PublicService = { status: "operational" | "degraded" | "down" | "not_configured"; latencyMs: number };
+export type PublicProtection = { key: string; total: number; last7d: number };
 export type PublicStatus = {
   available: true;
   ready: boolean;
   guilds: number;
   users: number;
   commandsUsed: number;
+  protection: PublicProtection[];
   shardCount: number;
   latencyMs: number;
   uptimeSeconds: number;
@@ -29,6 +31,10 @@ export async function getPublicStatus(): Promise<PublicStatus> {
     guilds: Number(s.guilds) || 0,
     users: Number(s.users) || 0,
     commandsUsed: Number(s.commands_used) || 0,
+    protection: (Array.isArray(s.protection) ? s.protection : [])
+      .filter((p) => typeof p?.key === "string" && /^[a-z0-9_]{1,40}$/.test(p.key))
+      .slice(0, 8)
+      .map((p) => ({ key: p.key, total: Math.max(0, Math.round(Number(p.total) || 0)), last7d: Math.max(0, Math.round(Number(p.last_7d) || 0)) })),
     shardCount: Number(s.shards) || 0,
     latencyMs: Math.round(Number(s.latency) || 0),
     uptimeSeconds: Number(s.uptime_seconds) || 0,

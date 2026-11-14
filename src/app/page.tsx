@@ -6,6 +6,7 @@ import Link from "@/components/locale-link";
 import { ArrowRight, Braces, DatabaseBackup, FileClock, KeyRound, LayoutDashboard, PlusCircle, ScrollText, ShieldAlert, UserCheck, Users } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { DiscordIcon } from "@/components/discord-icon";
+import { ProtectionStats } from "@/components/protection-stats";
 import { ServerShowcase } from "@/components/server-showcase";
 import { Testimonials } from "@/components/testimonials";
 import { SITE } from "@/lib/site";
@@ -88,6 +89,7 @@ export default function HomePage() {
             </a>
           </div>
         </div>
+        <ProtectionStats />
         <ServerShowcase />
       </section>
 

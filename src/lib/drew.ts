@@ -108,6 +108,8 @@ export type BotStatus = {
   latency: number;
   uptime_seconds: number;
   commands_used: number;
+  /** Public protection counters (raids stopped...). Absent on older bot builds. */
+  protection?: { key: string; total: number; last_7d: number }[];
   ready: boolean;
   shard_stats: Record<string, ShardStat>;
   services: Record<string, ServiceInfo>;
