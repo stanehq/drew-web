@@ -131,7 +131,7 @@ export function PricingBoard() {
         <div className="mx-auto max-w-6xl px-5 pb-12 pt-20 text-center">
           <h1 className="mx-auto max-w-3xl text-balance text-4xl font-semibold tracking-[-0.025em] sm:text-6xl"><TwoTone text={t("Protection for less than a coffee")} greenWords={2} /></h1>
           <p className="mx-auto mt-4 max-w-lg text-balance text-soft">
-            <Highlight text={t("Try every Premium feature free for 5 days. Cancel before it ends and you won't pay a cent.")} />
+            {t("Try every Premium feature free for 5 days. Cancel before it ends and you won't pay a cent.")}
           </p>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
