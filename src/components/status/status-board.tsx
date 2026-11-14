@@ -2,15 +2,14 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-  Activity,
   CheckCircle2,
   Cloud,
   Database,
-  Gauge,
   Layers,
   Search,
   Server,
   Terminal,
+  Clock3,
   TriangleAlert,
   Users,
   Wifi,
@@ -18,7 +17,7 @@ import {
   Zap,
 } from "lucide-react";
 import type { PublicService, PublicShard, PublicStatus } from "@/lib/public-status";
-import { formatCompact, formatExact } from "@/lib/format";
+import { formatCompact, formatExact, formatUptime } from "@/lib/format";
 import { useI18n } from "@/lib/i18n";
 import { TwoTone } from "@/components/two-tone";
 import { UptimeHistory } from "./uptime-history";
@@ -160,42 +159,11 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
   const shardHealth = data ? shardTone(online.length, shards.length) : null;
   const latencyHealth = data ? latencyTone(data.latencyMs) : null;
 
-  const kpis: {
-    icon: typeof Server;
-    label: string;
-    value: string;
-    suffix?: string;
-    note: string;
-    health?: { tone: Tone; label: string } | null;
-  }[] = [
-    { icon: Server, label: "Servers", value: data ? formatExact(data.guilds) : "...", note: "" },
-    { icon: Users, label: "Members", value: data ? formatCompact(data.users) : "...", note: "" },
-    { icon: Terminal, label: "Commands used", value: data ? formatCompact(data.commandsUsed) : "...", note: "" },
-    {
-      icon: Activity,
-      label: "Shards online",
-      value: data ? `${online.length}` : "...",
-      suffix: data ? `/ ${shards.length}` : "",
-      note: "",
-      health: shardHealth,
-    },
-    {
-      icon: Gauge,
-      label: "Gateway latency",
-      value: data ? `${data.latencyMs}ms` : "...",
-      note: "",
-      health: latencyHealth,
-    },
-    ...(["database", "cache"] as const).map((key) => {
-      const svc = data?.services[key];
-      return {
-        icon: key === "database" ? Database : Layers,
-        label: key === "database" ? "Database latency" : "Cache latency",
-        value: svc && svc.latencyMs > 0 ? `${svc.latencyMs}ms` : data ? "N/A" : "...",
-        note: "",
-        health: svc && svc.latencyMs > 0 ? latencyTone(svc.latencyMs) : null,
-      };
-    }),
+  const kpis = [
+    { icon: Server, label: "Servers", value: data ? formatExact(data.guilds) : "..." },
+    { icon: Users, label: "Members", value: data ? formatCompact(data.users) : "..." },
+    { icon: Terminal, label: "Commands used", value: data ? formatCompact(data.commandsUsed) : "..." },
+    { icon: Clock3, label: "Uptime", value: data ? formatUptime(data.uptimeSeconds) : "..." },
   ];
 
   const tone = overall === "operational" ? "good" : overall === "degraded" ? "warn" : "bad";
@@ -264,16 +232,12 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
 
         {/* Numbers: read left to right, counts on the first row and latencies on the second */}
         <section className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-4" aria-label="Summary">
-          {kpis.map(({ icon: Icon, label, value, suffix, health }) => (
+          {kpis.map(({ icon: Icon, label, value }) => (
             <div key={label} className="min-w-0 bg-ink p-4 sm:p-5">
               <p className="flex items-center gap-1.5 text-sm text-mute">
                 <Icon className="drew-icon-gradient size-4 shrink-0" strokeWidth={1.75} /> <span className="truncate">{t(label)}</span>
               </p>
-              {/* White while healthy, coloured only when shards or latency need attention */}
-              <p className={`mt-3 text-2xl font-semibold leading-none tabular-nums tracking-tight sm:text-3xl ${health && health.tone !== "good" ? TONE[health.tone].text : "text-fg"}`}>
-                {value}
-                {suffix && <span className="ml-1 text-base font-normal text-mute">{suffix}</span>}
-              </p>
+              <p className="mt-3 text-2xl font-semibold leading-none tabular-nums tracking-tight text-fg sm:text-3xl">{value}</p>
             </div>
           ))}
         </section>
