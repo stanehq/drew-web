@@ -8,7 +8,7 @@ import {
   Layers,
   Search,
   Server,
-  Terminal,
+  Gauge,
   Clock3,
   TriangleAlert,
   Users,
@@ -148,9 +148,8 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
 
 
   const kpis = [
-    { icon: Server, label: "Servers", value: data ? formatExact(data.guilds) : "..." },
-    { icon: Users, label: "Members", value: data ? formatCompact(data.users) : "..." },
-    { icon: Terminal, label: "Commands used", value: data ? formatCompact(data.commandsUsed) : "..." },
+    { icon: Layers, label: "Shards", value: data ? `${online.length}/${shards.length}` : "..." },
+    { icon: Gauge, label: "Latency", value: data && data.latencyMs > 0 ? `${Math.round(data.latencyMs)} ms` : "..." },
     { icon: Clock3, label: "Uptime", value: data ? formatUptime(data.uptimeSeconds) : "..." },
   ];
 
@@ -219,13 +218,13 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
         </section>
 
         {/* Numbers: read left to right, counts on the first row and latencies on the second */}
-        <section className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-4" aria-label="Summary">
+        <section className="mt-6 grid grid-cols-3 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 " aria-label="Summary">
           {kpis.map(({ icon: Icon, label, value }) => (
             <div key={label} className="min-w-0 bg-ink p-4 sm:p-5">
               <p className="flex items-center gap-1.5 text-sm text-mute">
                 <Icon className="drew-icon-gradient size-4 shrink-0" strokeWidth={1.75} /> <span className="truncate">{t(label)}</span>
               </p>
-              <p className="mt-3 text-2xl font-semibold leading-none tabular-nums tracking-tight text-fg sm:text-3xl">{value}</p>
+              <p className="mt-3 truncate text-xl font-semibold leading-none tabular-nums tracking-tight text-fg sm:text-3xl">{value}</p>
             </div>
           ))}
         </section>
