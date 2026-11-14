@@ -59,8 +59,8 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
       >
         <defs>
           <linearGradient id={`g${id}`} x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.22" />
-            <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+            <stop offset="0%" stopColor="#41cf8b" stopOpacity="0.30" />
+            <stop offset="100%" stopColor="#41cf8b" stopOpacity="0" />
           </linearGradient>
         </defs>
         {ticks.map((t) => (
@@ -80,13 +80,13 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
               width={barW}
               height={Math.max(0, H - PAD.b - y(v))}
               rx={1.5}
-              className={hover === i ? "fill-white" : "fill-white/70"}
+              className={hover === i ? "fill-white" : "fill-[#41cf8b]/80"}
             />
           ))
         ) : (
           <>
             <path d={area} fill={`url(#g${id})`} />
-            <path d={line} fill="none" stroke="#ffffff" strokeWidth={1.75} strokeLinejoin="round" strokeLinecap="round" />
+            <path d={line} fill="none" stroke="#41cf8b" strokeWidth={1.9} strokeLinejoin="round" strokeLinecap="round" />
           </>
         )}
         {[0, Math.floor((points.length - 1) / 2), points.length - 1]
@@ -99,7 +99,7 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
         {h && hover != null && (
           <g>
             <line x1={x(hover)} x2={x(hover)} y1={PAD.t} y2={H - PAD.b} stroke="rgb(255 255 255 / 0.18)" strokeDasharray="3 3" />
-            {!series.bars && <circle cx={x(hover)} cy={y(values[hover])} r={3.5} fill="#ffffff" stroke="#000000" strokeWidth={2} />}
+            {!series.bars && <circle cx={x(hover)} cy={y(values[hover])} r={3.5} fill="#ffffff" stroke="#41cf8b" strokeWidth={2} />}
           </g>
         )}
       </svg>
@@ -120,6 +120,7 @@ const CHARTS: Series[] = [
   { key: "channels", label: "Channels", icon: Hash },
   { key: "latencyMs", label: "Gateway latency", icon: Gauge, unit: "ms" },
   { key: "shardsOnline", label: "Shards online", icon: Layers },
+  { key: "commands", label: "Commands", icon: Terminal },
 ];
 
 
