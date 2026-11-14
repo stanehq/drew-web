@@ -22,7 +22,6 @@ const MORE: Item[] = [
   { label: "Pricing", href: "/pricing" },
   { label: "Status", href: "/status" },
   { label: "Metrics", href: "/metrics" },
-  { label: "API", href: "/developers" },
   { label: "Docs", href: SITE.docs },
   { label: "Support", href: SITE.support },
 ];
