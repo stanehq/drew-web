@@ -88,15 +88,6 @@ function latencyTone(ms: number): { tone: Tone; label: string } {
   return { tone: "bad", label: "High" };
 }
 
-// Shards: all online is healthy, up to a quarter down is degraded, more is an outage.
-function shardTone(online: number, total: number): { tone: Tone; label: string } {
-  if (total === 0) return { tone: "idle", label: "No data" };
-  const down = total - online;
-  if (down === 0) return { tone: "good", label: "All online" };
-  if (online === 0) return { tone: "bad", label: "All down" };
-  return { tone: down / total > 0.25 ? "bad" : "warn", label: `${down} down` };
-}
-
 function shardForGuild(id: string, count: number) {
   if (!/^\d{17,20}$/.test(id) || count < 1) return null;
   return Number((BigInt(id) >> 22n) % BigInt(count));
@@ -155,9 +146,6 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
   const target = trimmed ? shardForGuild(trimmed, data?.shardCount ?? 0) : null;
   const lookupInvalid = trimmed !== "" && target === null;
 
-
-  const shardHealth = data ? shardTone(online.length, shards.length) : null;
-  const latencyHealth = data ? latencyTone(data.latencyMs) : null;
 
   const kpis = [
     { icon: Server, label: "Servers", value: data ? formatExact(data.guilds) : "..." },

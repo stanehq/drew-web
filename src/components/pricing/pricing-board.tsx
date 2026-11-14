@@ -88,7 +88,7 @@ export function PricingBoard() {
       const cookieValue = document.cookie.split("; ").find((part) => part.startsWith(`${CURRENCY_KEY}=`))?.split("=")[1];
       const saved = (localStorage.getItem(CURRENCY_KEY) ?? cookieValue) as Currency | null;
       if (saved && (CURRENCY_CODES as readonly string[]).includes(saved)) {
-        setCurrency(saved);
+        requestAnimationFrame(() => setCurrency(saved));
         localStorage.setItem(CURRENCY_KEY, saved);
       }
     } catch {}
