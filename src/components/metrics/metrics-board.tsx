@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useMemo, useState } from "react";
+import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Activity, Clock3, Gauge, Hash, Layers, Server, ShieldCheck, Terminal, TrendingUp, Users } from "lucide-react";
 import type { PublicMetricPoint, PublicMetrics } from "@/lib/public-metrics";
 import { useI18n } from "@/lib/i18n";
@@ -129,6 +129,46 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
   const [range, setRange] = useState<Range>(initialRange);
   const [data, setData] = useState<PublicMetrics | null>(initial);
   const [failed, setFailed] = useState(false);
+  const rangeListRef = useRef<HTMLDivElement>(null);
+  const rangeButtonRefs = useRef<Partial<Record<Range, HTMLButtonElement | null>>>({});
+  const [rangeBox, setRangeBox] = useState<{ left: number; width: number } | null>(null);
+  const [rangeAnimate, setRangeAnimate] = useState(false);
+
+  const measureRange = useCallback((value: Range) => {
+    const button = rangeButtonRefs.current[value];
+    const list = rangeListRef.current;
+    if (!button || !list) return null;
+    const listRect = list.getBoundingClientRect();
+    const buttonRect = button.getBoundingClientRect();
+    return { left: buttonRect.left - listRect.left, width: buttonRect.width };
+  }, []);
+
+  useLayoutEffect(() => {
+    let secondFrame = 0;
+    const firstFrame = requestAnimationFrame(() => {
+      setRangeAnimate(false);
+      setRangeBox(measureRange(range));
+      secondFrame = requestAnimationFrame(() => {
+        setRangeBox(measureRange(range));
+        setRangeAnimate(true);
+      });
+    });
+    return () => {
+      cancelAnimationFrame(firstFrame);
+      cancelAnimationFrame(secondFrame);
+    };
+  }, [measureRange, range]);
+
+  useEffect(() => {
+    const update = () => setRangeBox(measureRange(range));
+    const observer = rangeListRef.current ? new ResizeObserver(update) : null;
+    if (rangeListRef.current) observer?.observe(rangeListRef.current);
+    window.addEventListener("resize", update);
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, [measureRange, range]);
 
   useEffect(() => {
     let alive = true;
@@ -211,14 +251,32 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
             <h1 className="text-balance text-4xl font-semibold tracking-[-0.025em] sm:text-6xl"><TwoTone text={t("Drew in numbers")} /></h1>
             <p className="mx-auto mt-4 max-w-lg text-balance text-soft">{t("Public, aggregate figures sampled every five minutes, no server or user data")}</p>
           </div>
-          <div role="tablist" aria-label="Time range" className="flex w-fit gap-1 rounded-xl border border-white/10 p-1">
+          <div
+            ref={rangeListRef}
+            role="tablist"
+            aria-label="Time range"
+            className="relative flex w-fit gap-1 rounded-xl border border-white/10 p-1"
+            onMouseLeave={() => setRangeBox(measureRange(range))}
+          >
+            {rangeBox && (
+              <span
+                aria-hidden
+                className={`pointer-events-none absolute bottom-1 top-1 rounded-lg bg-white/10 will-change-[left,width] ${rangeAnimate ? "transition-[left,width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]" : ""}`}
+                style={{ left: rangeBox.left, width: rangeBox.width }}
+              />
+            )}
             {RANGES.map((r) => (
               <button
                 key={r}
+                ref={(el) => {
+                  rangeButtonRefs.current[r] = el;
+                }}
                 role="tab"
                 aria-selected={range === r}
                 onClick={() => pick(r)}
-                className={`rounded-lg px-4 py-1.5 text-sm font-medium transition-colors ${range === r ? "bg-white/10 text-fg" : "text-soft hover:text-fg"}`}
+                onMouseEnter={() => setRangeBox(measureRange(r))}
+                onFocus={() => setRangeBox(measureRange(r))}
+                className={`relative z-10 rounded-lg px-4 py-1.5 text-sm font-medium transition-colors ${range === r ? "text-fg" : "text-soft hover:text-fg"}`}
               >
                 {r}
               </button>
