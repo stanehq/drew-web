@@ -6,7 +6,9 @@ import { Loader } from "@/components/loader";
 export default function Loading() {
   useEffect(() => {
     window.dispatchEvent(new Event("drew:route-loading-start"));
-    return () => window.dispatchEvent(new Event("drew:route-loading-end"));
+    return () => {
+      window.dispatchEvent(new Event("drew:route-loading-end"));
+    };
   }, []);
 
   return (
