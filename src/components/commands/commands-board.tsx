@@ -59,7 +59,7 @@ function CommandDetails({ cmd }: { cmd: Command }) {
               {cmd.options.map((option) => (
                 <tr key={option.name} className="border-t border-white/[0.06]">
                   <td className="whitespace-nowrap px-4 py-2.5 font-mono text-[0.82rem] text-fg">{option.name}</td>
-                  <td className="whitespace-nowrap px-4 py-2.5 text-mute">{option.type}</td>
+                  <td className="whitespace-nowrap px-4 py-2.5 text-mute">{t(option.type)}</td>
                   <td className="px-4 py-2.5">{option.required ? <span className="text-brand-bright">{t("Yes")}</span> : <span className="text-mute">{t("No")}</span>}</td>
                   <td className="px-4 py-2.5 text-soft">{option.description}</td>
                 </tr>
@@ -152,7 +152,7 @@ export function CommandsBoard() {
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[360px_minmax(0,1fr)] xl:gap-14">
           <aside className="min-w-0 lg:sticky lg:top-24 lg:self-start">
             <p className="mb-4 px-3 text-sm font-medium text-mute">{t("Categories")}</p>
-            <nav aria-label={t("Categories")} className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-1">
+            <nav aria-label={t("Categories")} className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-2 [scrollbar-width:none] lg:mx-0 lg:grid lg:grid-cols-1 lg:overflow-visible lg:px-0 lg:pb-0">
               {CATEGORIES.map((category) => {
                 const Icon = CATEGORY_ICONS[category.id.toLowerCase()] ?? CATEGORY_ICONS.default;
                 const selectedCategory = category.id === active;
@@ -162,12 +162,12 @@ export function CommandsBoard() {
                     type="button"
                     onClick={() => chooseCategory(category.id)}
                     aria-current={selectedCategory ? "page" : undefined}
-                    className={`flex min-h-[58px] min-w-0 items-center gap-3 rounded-2xl border px-3 text-left transition-colors ${selectedCategory ? "border-brand/20 bg-brand/[0.12] text-fg" : "border-transparent text-soft hover:border-white/[0.06] hover:bg-white/[0.035]"}`}
+                    className={`flex min-h-[48px] shrink-0 items-center gap-2.5 rounded-2xl border px-2.5 text-left lg:min-h-[58px] lg:min-w-0 lg:shrink lg:gap-3 lg:px-3 transition-colors ${selectedCategory ? "border-brand/20 bg-brand/[0.12] text-fg" : "border-transparent text-soft hover:border-white/[0.06] hover:bg-white/[0.035]"}`}
                   >
-                    <span className={`flex size-10 shrink-0 items-center justify-center rounded-xl border ${selectedCategory ? "border-brand/15 bg-brand/[0.10] text-brand-bright" : "border-white/[0.06] bg-white/[0.035] text-mute"}`}>
-                      <Icon className="size-[19px]" strokeWidth={1.9} />
+                    <span className={`flex size-8 shrink-0 items-center justify-center rounded-xl border sm:size-10 ${selectedCategory ? "border-brand/15 bg-brand/[0.10] text-brand-bright" : "border-white/[0.06] bg-white/[0.035] text-mute"}`}>
+                      <Icon className="size-4 sm:size-[19px]" strokeWidth={1.9} />
                     </span>
-                    <span className="min-w-0 flex-1 truncate text-sm font-semibold">{t(category.label)}</span>
+                    <span className="whitespace-nowrap text-sm font-semibold lg:min-w-0 lg:flex-1 lg:truncate">{t(category.label)}</span>
                     <span className={`shrink-0 text-sm tabular-nums ${selectedCategory ? "text-soft" : "text-mute"}`}>{counts.get(category.id)}</span>
                   </button>
                 );

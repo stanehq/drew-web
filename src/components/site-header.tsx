@@ -63,7 +63,7 @@ export function SiteHeader() {
   }, []);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-[#101113] text-fg">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/[0.08] bg-black text-fg">
       <div className="flex h-[76px] w-full items-center gap-5 px-4 sm:px-6 xl:gap-6 lg:px-8">
         <div className="inline-flex shrink-0 items-center gap-3">
           <a href={SITE.stane.web} target="_blank" rel="noopener" aria-label="Stane Labs" className="transition-opacity hover:opacity-85">
@@ -116,7 +116,7 @@ export function SiteHeader() {
       </div>
 
       {open && (
-        <div className="border-t border-line bg-[#101113] px-4 pb-6 pt-4 xl:hidden">
+        <div className="max-h-[calc(100dvh-76px)] overflow-y-auto border-t border-white/[0.08] bg-black px-4 pb-6 pt-4 xl:hidden">
           <nav className="grid" aria-label={t("Mobile")}>
             {MORE.map((item) => (
               <MenuLink key={item.href} item={item} label={label(item.label)} locale={locale} onPick={() => setOpen(false)} />

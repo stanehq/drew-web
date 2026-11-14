@@ -184,12 +184,12 @@ export default function HomePage() {
           />
           <h2 className="relative text-balance text-4xl font-semibold tracking-[-0.025em] text-white sm:text-6xl">{t("Protect your server in under a minute")}</h2>
           <p className="relative mx-auto mt-5 max-w-xl text-pretty text-lg leading-relaxed text-white/90">{t("Invite Drew, run /opsec setup and sleep well tonight")}</p>
-          <div className="relative mx-auto mt-10 inline-flex overflow-hidden rounded-xl border border-white/70 text-white">
-            <a href={SITE.invite} className="inline-flex h-14 items-center gap-2.5 px-6 text-sm font-bold uppercase tracking-wider transition-colors hover:bg-white/15 sm:px-8">
+          <div className="relative mx-auto mt-10 flex w-full max-w-xs flex-col overflow-hidden rounded-xl border border-white/70 text-white sm:inline-flex sm:w-auto sm:max-w-none sm:flex-row">
+            <a href={SITE.invite} className="inline-flex h-14 items-center justify-center gap-2.5 px-6 text-sm font-bold uppercase tracking-wider transition-colors hover:bg-white/15 sm:px-8">
               <PlusCircle className="size-5" strokeWidth={1.75} /> {t("Invite")}
             </a>
-            <span className="w-px bg-white/70" aria-hidden />
-            <a href="/api/auth/discord" className="inline-flex h-14 items-center gap-2.5 px-6 text-sm font-bold uppercase tracking-wider transition-colors hover:bg-white/15 sm:px-8">
+            <span className="h-px w-full bg-white/70 sm:h-auto sm:w-px" aria-hidden />
+            <a href="/api/auth/discord" className="inline-flex h-14 items-center justify-center gap-2.5 px-6 text-sm font-bold uppercase tracking-wider transition-colors hover:bg-white/15 sm:px-8">
               <LayoutDashboard className="size-5" strokeWidth={1.75} /> {t("Dashboard")}
             </a>
           </div>

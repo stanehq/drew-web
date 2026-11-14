@@ -1,5 +1,7 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
+
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Link from "@/components/locale-link";
 
@@ -11,6 +13,7 @@ const KEY = "drew-legal-tab";
 /** Sliding active-tab indicator that remains visible during document navigation. */
 export function LegalTabs({ tabs, active }: { tabs: Tab[]; active: string }) {
   const listRef = useRef<HTMLUListElement>(null);
+  const { t } = useI18n();
   const refs = useRef<Record<string, HTMLAnchorElement | null>>({});
   const [box, setBox] = useState<Box | null>(null);
   const [animate, setAnimate] = useState(false);
@@ -93,7 +96,7 @@ export function LegalTabs({ tabs, active }: { tabs: Tab[]; active: string }) {
                   tab.slug === active ? "text-fg" : "text-soft hover:text-fg"
                 }`}
               >
-                {tab.title}
+                {t(tab.title)}
               </Link>
             </li>
           ))}

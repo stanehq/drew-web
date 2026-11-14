@@ -60,12 +60,11 @@ export default function DevelopersPage() {
   return (
     <>
       <PageHero eyebrow={t("Developers & AI agents")} title={<><span className="text-brand">{t("Configure Drew ")}</span><span className="text-fg">{t("with code")}</span></>}>
-        Per-server tokens, a self-describing schema and dry runs, so scripts and AI assistants can set up your server
-        safely, without the dashboard.
+        {t("Per-server tokens, a self-describing schema and dry runs, so scripts and AI assistants can set up your server safely, without the dashboard.")}
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <ButtonLink href="#quickstart">{t("Quick start")}</ButtonLink>
           <ButtonLink href={`${SITE.api}/schema`} external variant="secondary">
-            View the schema
+            {t("View the schema")}
           </ButtonLink>
         </div>
       </PageHero>
@@ -85,21 +84,33 @@ export default function DevelopersPage() {
         <section className="surface grid gap-6 p-6 sm:p-8 lg:grid-cols-2">
           <div className="lg:col-span-2">
             <h2 className="mt-2 text-2xl font-semibold tracking-tight">{t("Preview, then apply a change")}</h2>
-            <p className="mt-2 text-sm text-mute">Send the same request with <code className="font-mono text-soft">&quot;dry_run&quot;: false</code> to apply it. Discord IDs are always strings.</p>
+            <p className="mt-2 text-sm text-mute">{t("Send the same request with")} <code className="font-mono text-soft">&quot;dry_run&quot;: false</code> {t("to apply it. Discord IDs are always strings.")}</p>
           </div>
-          <CodeBlock label="Request" code={curl} />
-          <CodeBlock label="Response" code={response} />
+          <CodeBlock label={t("Request")} code={curl} />
+          <CodeBlock label={t("Response")} code={response} />
         </section>
 
         <section className="surface overflow-hidden">
           <div className="border-b border-white/10 p-6 sm:p-8">
             <h2 className="mt-2 text-2xl font-semibold tracking-tight">{t("Endpoints")}</h2>
             <p className="mt-2 text-sm text-mute">
-              Base URL <code className="font-mono text-soft">{SITE.api}</code>, header{" "}
+              {t("Base URL")} <code className="font-mono text-soft">{SITE.api}</code>, {t("header")}{" "}
               <code className="font-mono text-soft">Authorization: Bearer drew_...</code>
             </p>
           </div>
-          <div className="overflow-x-auto">
+          <ul className="divide-y divide-line sm:hidden">
+            {endpoints.map(([m, p, s, d]) => (
+              <li key={m + p} className="px-6 py-4">
+                <p className="flex flex-wrap items-center gap-2">
+                  <span className={`px-2 py-0.5 font-mono text-xs ${m === "PATCH" ? "bg-brand/15 text-brand" : "bg-white/[0.06] text-soft"}`}>{m}</span>
+                  <code className="break-all font-mono text-xs text-fg">{p}</code>
+                  <span className="ml-auto rounded-md border border-white/10 px-1.5 py-0.5 text-[0.7rem] text-mute">{t(s)}</span>
+                </p>
+                <p className="mt-2 text-xs leading-relaxed text-soft">{t(d)}</p>
+              </li>
+            ))}
+          </ul>
+          <div className="hidden overflow-x-auto sm:block">
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-xs font-medium text-mute">
@@ -116,7 +127,7 @@ export default function DevelopersPage() {
                       <span className={`px-2 py-0.5 font-mono text-xs ${m ==="PATCH"?"bg-brand/15 text-brand":"bg-white/[0.06] text-soft"}`}>{m}</span>
                     </td>
                     <td className="whitespace-nowrap px-6 py-3.5 font-mono text-xs text-fg">{p}</td>
-                    <td className="px-6 py-3.5 text-xs text-mute">{s}</td>
+                    <td className="px-6 py-3.5 text-xs text-mute">{t(s)}</td>
                     <td className="px-6 py-3.5 text-xs text-soft">{t(d)}</td>
                   </tr>
                 ))}
@@ -148,8 +159,8 @@ export default function DevelopersPage() {
               <div key={title as string} className="surface flex gap-4 p-5">
                 <I className="mt-0.5 size-5 shrink-0 text-brand" />
                 <div>
-                  <h3 className="font-medium">{title as string}</h3>
-                  <p className="mt-1 text-sm leading-relaxed text-mute">{body as string}</p>
+                  <h3 className="font-medium">{t(title as string)}</h3>
+                  <p className="mt-1 text-sm leading-relaxed text-mute">{t(body as string)}</p>
                 </div>
               </div>
             );
