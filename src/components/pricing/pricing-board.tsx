@@ -131,7 +131,7 @@ export function PricingBoard() {
         <div className="mx-auto max-w-6xl px-5 pb-12 pt-20 text-center">
           <h1 className="mx-auto max-w-3xl text-balance text-4xl font-semibold tracking-[-0.025em] sm:text-6xl"><TwoTone text={t("Protection for less than a coffee")} greenWords={2} /></h1>
           <p className="mx-auto mt-4 max-w-lg text-balance text-soft">
-            <Highlight text={t("Try every Premium feature free for 5 days. Cancel before it ends and you won't pay a cent.")} />
+            {t("Try every Premium feature free for 5 days. Cancel before it ends and you won't pay a cent.")}
           </p>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -175,7 +175,7 @@ export function PricingBoard() {
                 key={p.id}
                 className={
                   popular
-                    ? "relative flex flex-col rounded-[0.875rem] border border-brand/60 bg-[linear-gradient(180deg,rgb(65_207_139/0.10),rgb(65_207_139/0.02)_45%,transparent)] p-8 shadow-[0_30px_90px_-30px_rgb(65_207_139/0.45)] sm:p-10 md:-my-4 md:py-14"
+                    ? "relative flex flex-col rounded-[0.875rem] drew-gradient-border p-8 shadow-[0_30px_90px_-40px_rgb(65_207_139/0.25)] sm:p-10 md:-my-4 md:py-14"
                     : "surface relative flex flex-col p-8 opacity-90 sm:p-10"
                 }
               >
@@ -191,16 +191,16 @@ export function PricingBoard() {
                 <p className="mt-2 min-h-5 text-sm text-mute">
                   {billing === "yearly" ? (
                     <>
-                      {t("Billed ")}{money(yearly)}{t(" yearly. ")} {popular && <span className="text-brand-bright">{t("You save ")}{money(p.monthly * 12 - yearly)}.</span>}
+                      {t("Billed ")}{money(yearly)}{t(" yearly. ")} {popular && <span className="text-fg">{t("You save ")}{money(p.monthly * 12 - yearly)}.</span>}
                     </>
                   ) : (
                     <>{t("That's just ")}{money(perDay)}{t(" a day.")}</>
                   )}
                 </p>
                 {popular && (
-                  <p className="mt-3 w-fit rounded-lg bg-brand/10 px-3 py-1.5 text-sm text-soft">
+                  <p className="mt-3 w-fit rounded-lg bg-white/[0.06] px-3 py-1.5 text-sm text-soft">
                     <span>
-                      {t("Only ")}<span className="font-semibold text-brand-bright">{money(diff)}</span>{t(" more a month than Standard")}
+                      {t("Only ")}<span className="font-semibold drew-gradient-x">{money(diff)}</span>{t(" more a month than Standard")}
                     </span>
                   </p>
                 )}
@@ -222,10 +222,8 @@ export function PricingBoard() {
                 <ul className="mt-8 space-y-3 border-t border-white/10 pt-8 text-[0.95rem]">
                   {p.features.map((f) => (
                     <li key={f} className={`flex gap-3 ${popular ? "text-fg" : "text-mute"}`}>
-                      <Check className={`mt-0.5 size-4 shrink-0 ${popular ? "text-brand-bright" : "text-white/35"}`} strokeWidth={popular ? 2.75 : 2} />
-                      <span>
-                        <Highlight text={t(f)} className={popular ? "font-medium text-brand-bright" : ""} />
-                      </span>
+                      <Check className={`mt-0.5 size-4 shrink-0 ${popular ? "text-white" : "text-white/35"}`} strokeWidth={popular ? 2.75 : 2} />
+                      <span>{t(f)}</span>
                     </li>
                   ))}
                 </ul>

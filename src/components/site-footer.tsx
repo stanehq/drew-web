@@ -13,7 +13,6 @@ const columns = [
   {
     title: "Product",
     links: [
-      { href: "/#features", label: "Features" },
       { href: "/commands", label: "Commands" },
       { href: "/pricing", label: "Pricing" },
       { href: "/dashboard", label: "Dashboard" },
@@ -61,11 +60,11 @@ export function SiteFooter() {
               {col.links.map((l) => (
                 <li key={l.label}>
                   {l.href.startsWith("/") ? (
-                    <Link href={l.href} className="text-sm text-mute transition-colors hover:text-brand">
+                    <Link href={l.href} className="text-sm text-mute transition-colors hover:text-fg">
                       {t(l.label)}
                     </Link>
                   ) : (
-                    <a href={l.href} className="text-sm text-mute transition-colors hover:text-brand">
+                    <a href={l.href} className="text-sm text-mute transition-colors hover:text-fg">
                       {t(l.label)}
                     </a>
                   )}
