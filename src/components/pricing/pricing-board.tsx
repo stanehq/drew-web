@@ -244,26 +244,26 @@ export function PricingBoard() {
         <div className="mx-auto max-w-5xl px-5">
           <h2 className="pb-10 pt-24 text-center text-4xl font-semibold tracking-[-0.025em] sm:text-6xl">{t("Compare plans")}</h2>
           <div className="surface overflow-x-auto">
-            <table className="w-full min-w-[560px] text-left text-[0.95rem]">
+            <table className="w-full table-fixed text-left text-[0.85rem] sm:table-auto sm:text-[0.95rem]">
               <thead>
                 <tr>
-                  <th className="px-6 pb-5 pt-6 align-bottom text-sm font-medium text-mute">{t("Feature")}</th>
-                  <th className="w-44 px-4 pb-5 pt-6 align-bottom">
-                    <p className="text-lg font-semibold text-soft">{t("Standard")}</p>
-                    <p className="mt-0.5 text-sm font-normal text-mute">{money(monthlyPrice(PLANS[0].monthly, billing))} {t("/ month")}</p>
+                  <th className="px-4 pb-5 pt-6 align-bottom text-sm font-medium text-mute sm:px-6"><span className="sr-only sm:not-sr-only">{t("Feature")}</span></th>
+                  <th className="w-[6.25rem] px-2 pb-5 pt-6 align-bottom sm:w-44 sm:px-4">
+                    <p className="hyphens-auto break-words text-[0.95rem] font-semibold text-soft sm:text-lg">{t("Standard")}</p>
+                    <p className="mt-0.5 text-xs font-normal text-mute sm:text-sm">{money(monthlyPrice(PLANS[0].monthly, billing))} {t("/ month")}</p>
                   </th>
-                  <th className="w-44 rounded-t-xl bg-brand/[0.07] px-4 pb-5 pt-6 align-bottom">
-                    <p className="text-xl font-bold drew-title-green">{t("Advanced")}</p>
-                    <p className="mt-0.5 text-sm font-normal text-mute">{money(monthlyPrice(PLANS[1].monthly, billing))} {t("/ month")}</p>
+                  <th className="w-[5.5rem] rounded-t-xl bg-brand/[0.07] px-2 pb-5 pt-6 align-bottom sm:w-44 sm:px-4">
+                    <p className="hyphens-auto break-words text-[0.95rem] font-bold drew-title-green sm:text-xl">{t("Advanced")}</p>
+                    <p className="mt-0.5 text-xs font-normal text-mute sm:text-sm">{money(monthlyPrice(PLANS[1].monthly, billing))} {t("/ month")}</p>
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {COMPARE.map(([label, a, b]) => (
                   <tr key={label} className="border-t border-white/[0.06] transition-colors hover:bg-white/[0.02]">
-                    <td className="px-6 py-4 text-soft">{t(label)}</td>
+                    <td className="px-4 py-4 text-soft sm:px-6">{t(label)}</td>
                     {[a, b].map((v, i) => (
-                      <td key={i} className={`px-4 py-4 ${i === 1 ? "bg-brand/[0.07]" : ""}`}>
+                      <td key={i} className={`px-2 py-4 sm:px-4 ${i === 1 ? "bg-brand/[0.07]" : ""}`}>
                         {v === true ? (
                           <span className={`inline-flex size-6 items-center justify-center rounded-full ${i === 1 ? "bg-brand/25 ring-1 ring-brand/35" : "bg-white/[0.05]"}`} aria-label={t("Included")}>
                             <Check className={`size-3.5 ${i === 1 ? "text-[#eafff4]" : "text-white/45"}`} strokeWidth={3} />
@@ -279,7 +279,7 @@ export function PricingBoard() {
                     ))}
                   </tr>
                 ))}
-                <tr className="border-t border-white/[0.06]">
+                <tr className="hidden border-t border-white/[0.06] sm:table-row">
                   <td className="px-6 py-5" />
                   <td className="px-4 py-5">
                     <a href={SITE.support} target="_blank" rel="noreferrer" className="inline-flex h-11 w-full items-center justify-center whitespace-nowrap rounded-lg border border-white/10 text-sm font-medium text-soft transition-colors hover:border-white/20 hover:text-fg">

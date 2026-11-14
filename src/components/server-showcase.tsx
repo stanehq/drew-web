@@ -11,8 +11,10 @@ import type { Badge } from "@/lib/public-showcase";
 type Server = { name: string; icon: string | null; members: number; badge: Badge | null };
 
 const SECONDS_PER_CARD = 3.2;
-// Enough cards per row to cover a wide screen without the same server showing twice.
-const MIN_CARDS = 7;
+// Each row is repeated only when it is too short to fill a wide screen on its own.
+const MIN_CARDS = 5;
+// The carousel shows the top 15 servers by people, never more.
+const TOP = 15;
 // Two rows only when each row gets its own servers, otherwise one row.
 const TWO_ROWS_FROM = 14;
 
@@ -68,7 +70,7 @@ export function ServerShowcase() {
       .then((r) => (r.ok ? r.json() : null))
       .then((d: { servers?: Server[]; total?: number; totalMembers?: number } | null) => {
         if (!alive || !Array.isArray(d?.servers)) return;
-        setServers(d.servers);
+        setServers(d.servers.slice(0, TOP));
         const totals = { servers: Number(d.total) || 0, people: Number(d.totalMembers) || 0 };
         setTotals(totals);
         // Older bot builds don't send totalMembers: fall back to the live stats.

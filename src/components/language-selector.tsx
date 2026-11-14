@@ -12,8 +12,9 @@ function Flag({ code, className = "" }: { code: Locale; className?: string }) {
   const F = FLAGS[code];
   // Clipped by a wrapper: rounding an <svg> directly leaves light edge pixels.
   return (
-    <span aria-hidden className={`inline-block shrink-0 overflow-hidden rounded-[5px] shadow-[0_0_0_1px_rgba(255,255,255,0.08)] ${className}`}>
-      <F className="block size-full" width="100%" height="100%" preserveAspectRatio="none" />
+    <span aria-hidden className={`inline-block shrink-0 overflow-hidden rounded-[5px] ${className}`}>
+      {/* Scaled a touch past the clip so no light anti-aliased edge shows at the corners */}
+      <F className="block size-full scale-[1.08]" preserveAspectRatio="xMidYMid slice" />
     </span>
   );
 }
@@ -51,7 +52,7 @@ export function LanguageSelector({ compact = false, up = false }: { compact?: bo
         <ChevronDown className={`size-3.5 transition-transform ${open ? "rotate-180" : ""}`} strokeWidth={1.75} />
       </button>
       {open && (
-        <div className={`lang-panel-in absolute z-50 w-[min(21rem,calc(100vw-2rem))] ${up ? "bottom-full left-0 mb-2 origin-bottom-left" : "right-0 mt-2 origin-top-right"} rounded-2xl border border-white/10 bg-[#0d1117] p-2 shadow-[0_20px_50px_rgba(0,0,0,0.55)]`}>
+        <div className={`lang-panel-in absolute z-50 w-[min(21rem,calc(100vw-2rem))] ${up ? "bottom-full left-0 mb-2 origin-bottom-left" : "right-0 mt-2 origin-top-right"} rounded-2xl border border-white/10 bg-[#0a0a0a] p-2 shadow-[0_20px_50px_rgba(0,0,0,0.55)]`}>
           <p className="px-2 pb-2 pt-1 text-xs capitalize text-mute">{t("language")}</p>
           <ul role="listbox" aria-label={t("language")} className="grid grid-cols-2 gap-1">
             {LOCALES.map((item, i) => {

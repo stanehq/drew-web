@@ -345,7 +345,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
                 aria-label={`Shard ${s.id}, ${t(STATE[s.status].text)}`}
               >
                 <div className="flex items-center justify-between">
-                  <h3 className="font-sans text-sm font-semibold">Shard {s.id}</h3>
+                  <h3 className="font-sans text-sm font-semibold">{t("Shard")} {s.id}</h3>
                   <Dot state={s.status} pulse={s.status === "online"} />
                 </div>
                 <p className={`mt-3 inline-flex items-center gap-2 text-sm ${s.status === "online" ? TONE[latencyTone(s.latencyMs).tone].text : "text-mute"}`}>

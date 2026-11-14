@@ -45,8 +45,8 @@ export function SiteFooter() {
   const { t } = useI18n();
   return (
     <footer className="relative border-t border-line">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-[1.4fr_repeat(3,1fr)]">
-        <div className="space-y-4">
+      <div className="mx-auto grid max-w-6xl grid-cols-2 gap-x-6 gap-y-10 px-5 py-14 sm:grid-cols-3 sm:px-6 md:grid-cols-[1.4fr_repeat(3,1fr)]">
+        <div className="col-span-2 space-y-4 sm:col-span-3 md:col-span-1">
           <Logo />
           <p className="max-w-xs text-sm leading-relaxed text-mute">
             {t("Advanced security and automation for Discord communities. Made by Stane.")}
@@ -65,7 +65,7 @@ export function SiteFooter() {
                     </Link>
                   ) : (
                     <a href={l.href} className="text-sm text-mute transition-colors hover:text-brand">
-                      {l.label}
+                      {t(l.label)}
                     </a>
                   )}
                 </li>
@@ -76,7 +76,7 @@ export function SiteFooter() {
 
       </div>
       <div className="border-t border-line">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-6 sm:px-6">
+        <div className="mx-auto flex max-w-6xl flex-col-reverse items-center gap-4 px-5 py-6 text-center sm:flex-row sm:justify-between sm:px-6 sm:text-left">
           <p className="text-xs text-mute">
             <Copyright className="mr-1 inline size-3 align-[-1px]" aria-label="Copyright" />
             {new Date().getFullYear()} Drew {t("by")}{" "}

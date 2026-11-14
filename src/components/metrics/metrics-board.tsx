@@ -281,10 +281,10 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
         </div>
 
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          {kpis.map(({ label, icon: Icon, value }) => (
+          {kpis.map(({ label, icon: Icon, value, suffix }: { label: string; icon: typeof Server; value: string; suffix?: string }) => (
             <div key={label} className="surface min-w-0 p-5 sm:p-6">
               <p className="flex items-center gap-2 text-xs text-mute">
-                <Icon className="size-3.5 text-brand" /> {label}
+                <Icon className="size-3.5 text-brand" /> {t(label)}{suffix}
               </p>
               <p className="mt-4 truncate font-sans text-2xl font-semibold leading-none tabular-nums tracking-[-0.02em] sm:text-3xl">{data ? value : "..."}</p>
             </div>
@@ -305,7 +305,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
               <article key={s.key} className="surface min-w-0 p-5 sm:p-6">
                 <header className="mb-3 flex items-center justify-between">
                   <h2 className="font-sans flex items-center gap-2 text-sm font-medium">
-                    <s.icon className="size-4 text-brand" /> {s.label}
+                    <s.icon className="size-4 text-brand" /> {t(s.label)}
                   </h2>
                   <span className="text-xs text-mute">{t(RANGE_LABEL[range])}</span>
                 </header>
