@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Activity, Clock3, Gauge, Hash, Layers, Server, ShieldCheck, TrendingUp, Users } from "lucide-react";
+import { Activity, Clock3, Gauge, Hash, Layers, Server, ShieldCheck, Terminal, TrendingUp, Users } from "lucide-react";
 import type { PublicMetricPoint, PublicMetrics } from "@/lib/public-metrics";
 import { useI18n } from "@/lib/i18n";
 import { formatCompact, formatExact, formatUptime } from "@/lib/format";
@@ -237,6 +237,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
       value: points.length ? `${stats.availability.toFixed(stats.availability === 100 ? 0 : 2)}%` : "...",
     },
     { label: "Uptime", icon: Clock3, value: cur?.uptimeSeconds ? formatUptime(cur.uptimeSeconds) : "..." },
+    { label: "Commands run", icon: Terminal, value: formatCompact(cur?.commandsUsed ?? 0) },
   ];
 
   return (
