@@ -21,13 +21,13 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
-  title: { default: "Drew Bot: Discord security, done right", template: "Drew Bot: %s" },
+  title: { default: "Drew Bot: Protect Your Discord Server in a Minute", template: "Drew Bot: %s" },
   description: SITE.description,
   openGraph: {
     type: "website",
     siteName: "Drew",
     url: SITE.url,
-    title: "Drew Bot: Discord security, done right",
+    title: "Drew Bot: Protect Your Discord Server in a Minute",
     description: SITE.description,
   },
   twitter: { card: "summary" },
