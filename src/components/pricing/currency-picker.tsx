@@ -22,6 +22,8 @@ function Flag({ code, className = "" }: { code: CurrencyCode; className?: string
 export function CurrencyPicker({ value, onChange }: { value: CurrencyCode; onChange: (c: CurrencyCode) => void }) {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
+  // Panel position relative to the button, kept inside the screen wherever the button sits.
+  const [panelLeft, setPanelLeft] = useState<number | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const slide = useSlidingHighlight<CurrencyCode>(value, open);
 
@@ -44,7 +46,16 @@ export function CurrencyPicker({ value, onChange }: { value: CurrencyCode; onCha
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={`${t("Currency")}: ${value}`}
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => {
+          const r = ref.current?.getBoundingClientRect();
+          if (r) {
+            const w = Math.min(272, window.innerWidth - 32);
+            const ideal = r.right - w; // right-aligned with the button, like on desktop
+            const left = Math.min(Math.max(ideal, 16), window.innerWidth - 16 - w);
+            setPanelLeft(left - r.left);
+          }
+          setOpen((v) => !v);
+        }}
         className="flex h-[46px] items-center gap-2.5 rounded-xl border border-white/10 px-3.5 text-sm font-medium text-fg transition-colors hover:border-white/20 hover:bg-white/[0.04]"
       >
         <Flag key={value} code={value} className="lang-flag-in h-[15px] w-[22px]" />
@@ -52,7 +63,7 @@ export function CurrencyPicker({ value, onChange }: { value: CurrencyCode; onCha
         <ChevronDown className={`size-4 text-mute transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
       {open && (
-        <div className="lang-panel-in absolute right-0 z-50 mt-2 w-[min(17rem,calc(100vw-2rem))] origin-top-right rounded-2xl border border-white/10 bg-[#0a0a0a] p-1.5 text-left shadow-[0_20px_50px_rgba(0,0,0,0.6)]">
+        <div className={`lang-panel-in absolute z-50 mt-2 w-[min(17rem,calc(100vw-2rem))] origin-top rounded-2xl border border-white/10 bg-[#0a0a0a] p-1.5 text-left shadow-[0_20px_50px_rgba(0,0,0,0.6)]`} style={{ left: panelLeft ?? undefined, right: panelLeft === null ? 0 : undefined }}>
           <ul role="listbox" aria-label={t("Currency")} className="relative grid gap-0.5" {...slide.containerProps}>
             {slide.highlight("bg-white/[0.08]")}
             {CURRENCY_CODES.map((c, i) => {

@@ -284,7 +284,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
           {kpis.map(({ label, icon: Icon, value, suffix }: { label: string; icon: typeof Server; value: string; suffix?: string }) => (
             <div key={label} className="surface min-w-0 p-5 sm:p-6">
               <p className="flex items-center gap-2 text-xs text-mute">
-                <Icon className="size-3.5 text-brand" /> {t(label)}{suffix}
+                <Icon className="drew-icon-gradient size-3.5" /> {t(label)}{suffix}
               </p>
               <p className="mt-4 truncate font-sans text-2xl font-semibold leading-none tabular-nums tracking-[-0.02em] sm:text-3xl">{data ? value : "..."}</p>
             </div>
@@ -293,7 +293,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
 
         {points.length < 2 ? (
           <div className="surface mt-3 flex flex-col items-center gap-3 px-6 py-20 text-center">
-            <Activity className="size-6 text-brand" />
+            <Activity className="drew-icon-gradient size-6" />
             <p className="font-medium">{failed || !data ? t("Metrics are unavailable right now.") : "Collecting data..."}</p>
             {(failed || !data) && (
               <p className="max-w-sm text-sm text-mute">We couldn&apos;t reach the bot. This page retries automatically.</p>
@@ -305,7 +305,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
               <article key={s.key} className="surface min-w-0 p-5 sm:p-6">
                 <header className="mb-3 flex items-center justify-between">
                   <h2 className="font-sans flex items-center gap-2 text-sm font-medium">
-                    <s.icon className="size-4 text-brand" /> {t(s.label)}
+                    <s.icon className="drew-icon-gradient size-4" /> {t(s.label)}
                   </h2>
                   <span className="text-xs text-mute">{t(RANGE_LABEL[range])}</span>
                 </header>
