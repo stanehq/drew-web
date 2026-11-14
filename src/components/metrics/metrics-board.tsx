@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Activity, Clock3, Gauge, Hash, Layers, Server, ShieldCheck, Terminal, TrendingUp, Users } from "lucide-react";
+import { Activity, Clock3, Gauge, Hash, Layers, Server, ShieldCheck, TrendingUp, Users } from "lucide-react";
 import type { PublicMetricPoint, PublicMetrics } from "@/lib/public-metrics";
 import { useI18n } from "@/lib/i18n";
 import { formatCompact, formatExact, formatUptime } from "@/lib/format";
@@ -118,7 +118,6 @@ const CHARTS: Series[] = [
   { key: "guilds", label: "Servers", icon: Server },
   { key: "users", label: "Members", icon: Users },
   { key: "channels", label: "Channels", icon: Hash },
-  { key: "commands", label: "Commands", icon: Terminal, bars: true },
   { key: "latencyMs", label: "Gateway latency", icon: Gauge, unit: "ms" },
   { key: "shardsOnline", label: "Shards online", icon: Layers },
 ];
@@ -201,7 +200,6 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
   const stats = useMemo(() => {
     const first = points[0];
     const last = points[points.length - 1];
-    const commands = points.reduce((s, p) => s + p.commands, 0);
     const latencies = points.map((p) => p.latencyMs).filter((v) => v > 0);
     const avgLatency = latencies.length ? latencies.reduce((a, b) => a + b, 0) / latencies.length : 0;
     const healthy = points.filter((p) => p.shardsTotal > 0 && p.shardsOnline >= p.shardsTotal).length;
@@ -210,8 +208,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
     return {
       first,
       last,
-      commands,
-      perHour: commands / spanHours,
+      perHour: points.reduce((sum, point) => sum + point.commands, 0) / spanHours,
       avgLatency,
       best: latencies.length ? Math.min(...latencies) : 0,
       worst: latencies.length ? Math.max(...latencies) : 0,
@@ -229,7 +226,6 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
       icon: TrendingUp,
       value: cur?.guilds ? formatExact(Math.round(cur.users / cur.guilds)) : "0",
     },
-    { label: `Commands (${range})`, icon: Terminal, value: formatCompact(stats.commands) },
     {
       label: "Avg latency",
       icon: Gauge,
@@ -299,11 +295,9 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
           <div className="surface mt-3 flex flex-col items-center gap-3 px-6 py-20 text-center">
             <Activity className="size-6 text-brand" />
             <p className="font-medium">{failed || !data ? t("Metrics are unavailable right now.") : "Collecting data..."}</p>
-            <p className="max-w-sm text-sm text-mute">
-              {failed || !data
-                ? "We couldn't reach the bot. This page retries automatically."
-                : "Drew records a sample every five minutes. Charts appear once there are enough points for this range."}
-            </p>
+            {(failed || !data) && (
+              <p className="max-w-sm text-sm text-mute">We couldn't reach the bot. This page retries automatically.</p>
+            )}
           </div>
         ) : (
           <div className="mt-3 grid gap-3 lg:grid-cols-2">
