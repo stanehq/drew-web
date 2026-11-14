@@ -296,7 +296,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
             <Activity className="size-6 text-brand" />
             <p className="font-medium">{failed || !data ? t("Metrics are unavailable right now.") : "Collecting data..."}</p>
             {(failed || !data) && (
-              <p className="max-w-sm text-sm text-mute">We couldn't reach the bot. This page retries automatically.</p>
+              <p className="max-w-sm text-sm text-mute">We couldn&apos;t reach the bot. This page retries automatically.</p>
             )}
           </div>
         ) : (
