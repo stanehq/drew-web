@@ -6,7 +6,6 @@ import { Loader } from "@/components/loader";
 import { splitLocale } from "@/lib/locales";
 
 const FIRST_MS = 3500;
-const LOCALE_MS = 700;
 const MAX_MS = 8000;
 
 /** Shows only on an initial homepage load and explicit language changes. */
@@ -14,7 +13,6 @@ export function PageLoader() {
   const pathname = usePathname();
   const isHome = splitLocale(pathname)[1] === "/";
   const initialHome = useRef(isHome);
-  const localeChange = useRef(false);
   const shownAt = useRef(0);
   const timers = useRef<number[]>([]);
   const [visible, setVisible] = useState(() => isHome);
@@ -61,32 +59,6 @@ export function PageLoader() {
       clearTimers();
     };
   }, [clearTimers, hide]);
-
-  useEffect(() => {
-    const onLocaleChange = () => {
-      localeChange.current = true;
-      shownAt.current = performance.now();
-      setFading(false);
-      setVisible(true);
-      // Failsafe in case navigation is interrupted.
-      timers.current.push(window.setTimeout(() => {
-        localeChange.current = false;
-        setFading(true);
-        timers.current.push(window.setTimeout(() => {
-          setVisible(false);
-          setFading(false);
-        }, 450));
-      }, MAX_MS));
-    };
-    window.addEventListener("drew:locale-change", onLocaleChange);
-    return () => window.removeEventListener("drew:locale-change", onLocaleChange);
-  }, []);
-
-  useEffect(() => {
-    if (!localeChange.current) return;
-    localeChange.current = false;
-    hide(LOCALE_MS);
-  }, [hide, pathname]);
 
   useEffect(() => () => clearTimers(), [clearTimers]);
 
