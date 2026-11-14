@@ -20,7 +20,8 @@ function Flag({ code, className = "" }: { code: Locale; className?: string }) {
   );
 }
 
-export function LanguageSelector({ compact = false, up = false }: { compact?: boolean; up?: boolean }) {
+/** `block`: fills its row and opens a full-width panel (used in the mobile menu, where a corner-anchored panel runs off screen). */
+export function LanguageSelector({ compact = false, up = false, block = false }: { compact?: boolean; up?: boolean; block?: boolean }) {
   const { locale, setLocale, t } = useI18n();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -40,7 +41,7 @@ export function LanguageSelector({ compact = false, up = false }: { compact?: bo
   }, [open]);
 
   return (
-    <div ref={ref} className="relative">
+    <div ref={ref} className={block ? "relative flex w-full justify-center" : "relative"}>
       <button
         type="button"
         aria-haspopup="listbox"
@@ -54,7 +55,7 @@ export function LanguageSelector({ compact = false, up = false }: { compact?: bo
         <ChevronDown className={`size-3.5 transition-transform ${open ? "rotate-180" : ""}`} strokeWidth={1.75} />
       </button>
       {open && (
-        <div className={`lang-panel-in absolute z-50 w-[min(21rem,calc(100vw-2rem))] ${up ? "bottom-full left-0 mb-2 origin-bottom-left" : "right-0 mt-2 origin-top-right"} rounded-2xl border border-white/10 bg-[#0a0a0a] p-2 shadow-[0_20px_50px_rgba(0,0,0,0.55)]`}>
+        <div className={`lang-panel-in absolute z-50 w-[min(21rem,calc(100vw-2rem))] ${block ? "inset-x-0 top-full mx-auto mt-2 origin-top" : up ? "bottom-full left-0 mb-2 origin-bottom-left" : "right-0 mt-2 origin-top-right"} rounded-2xl border border-white/10 bg-[#0a0a0a] p-2 shadow-[0_20px_50px_rgba(0,0,0,0.55)]`}>
           <p className="px-2 pb-2 pt-1 text-xs capitalize text-mute">{t("language")}</p>
           <ul role="listbox" aria-label={t("language")} className="relative grid grid-cols-2 gap-1" {...slide.containerProps}>
             {slide.highlight("bg-white/[0.08]")}

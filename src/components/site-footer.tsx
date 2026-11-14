@@ -57,7 +57,7 @@ export function SiteFooter() {
           // On phones the legal links sit in one wrapped row so the footer stays short.
           <div key={col.title} className={col.title === "Legal" ? "col-span-2 sm:col-span-1" : undefined}>
             <h3 className="text-sm font-medium text-fg">{t(col.title)}</h3>
-            <ul className={`mt-3 sm:mt-4 sm:block sm:space-y-2.5 ${col.title === "Legal" ? "flex flex-wrap gap-x-5 gap-y-2" : "space-y-2"}`}>
+            <ul className={`mt-3 sm:mt-4 sm:block sm:space-y-2.5 ${col.title === "Legal" ? "grid grid-cols-2 gap-x-6 gap-y-2" : "space-y-2"}`}>
               {col.links.map((l) => (
                 <li key={l.label}>
                   {l.href.startsWith("/") ? (

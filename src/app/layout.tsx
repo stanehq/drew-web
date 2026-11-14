@@ -48,7 +48,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {/* Shared green-to-white gradient for icons (class drew-icon-gradient) */}
         <svg aria-hidden="true" className="pointer-events-none absolute size-0 overflow-hidden">
           <defs>
-            <linearGradient id="drew-icon-gradient" x1="0" y1="0" x2="0" y2="1">
+            {/* In icon units (24x24), so straight horizontal strokes are painted too */}
+            <linearGradient id="drew-icon-gradient" gradientUnits="userSpaceOnUse" x1="0" y1="2" x2="0" y2="22">
               <stop offset="0%" stopColor="#35c98d" />
               <stop offset="52%" stopColor="#7ee8b5" />
               <stop offset="100%" stopColor="#ffffff" />

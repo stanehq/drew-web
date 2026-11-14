@@ -144,9 +144,7 @@ export function SiteHeader() {
             <a href={SITE.invite} className="inline-flex h-12 items-center justify-center gap-2 rounded-lg border border-[#7ee8b5] bg-[linear-gradient(110deg,#35c98d_0%,#41cf8b_58%,#7ee8b5_100%)] font-semibold text-white">
               {t("Add to Discord")} <DiscordIcon />
             </a>
-            <div className="flex justify-center">
-              <LanguageSelector />
-            </div>
+            <LanguageSelector block />
           </div>
         </div>
       )}
