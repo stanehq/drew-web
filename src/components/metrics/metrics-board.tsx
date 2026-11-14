@@ -196,7 +196,10 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
     window.history.replaceState(null, "", u);
   };
 
-  const points = useMemo(() => (data?.range === range ? data.points : []), [data, range]);
+  // Keep the last complete range on screen while the newly selected range loads.
+  const displayedRange = data?.range ?? range;
+  const updatingRange = Boolean(data && data.range !== range);
+  const points = useMemo(() => data?.points ?? [], [data]);
   const stats = useMemo(() => {
     const first = points[0];
     const last = points[points.length - 1];
@@ -307,9 +310,9 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
                   <h2 className="font-sans flex items-center gap-2 text-sm font-medium">
                     <s.icon className="size-4 text-brand" /> {s.label}
                   </h2>
-                  <span className="text-xs text-mute">{t(RANGE_LABEL[range])}</span>
+                  <span className="text-xs text-mute" aria-live="polite">{t(RANGE_LABEL[displayedRange])}{updatingRange ? " · Updating…" : ""}</span>
                 </header>
-                <Chart points={points} series={s} range={range} />
+                <Chart points={points} series={s} range={displayedRange} />
               </article>
             ))}
           </div>
