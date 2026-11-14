@@ -89,8 +89,8 @@ export function SiteFooter() {
               { href: SITE.stane.discord, label: "Stane on Discord", Icon: DiscordIcon },
               { href: SITE.stane.instagram, label: "Stane on Instagram", Icon: InstagramIcon },
             ].map(({ href, label, Icon }) => (
-              <a key={href} href={href} target="_blank" rel="noopener" aria-label={label} title={label} className="inline-flex size-9 items-center justify-center rounded-lg text-mute transition-colors hover:bg-white/[0.06] hover:text-fg">
-                {Icon === DiscordIcon ? <DiscordIcon className="size-[18px]" color="#5865F2" /> : <Icon className="size-[18px]" />}
+              <a key={href} href={href} target="_blank" rel="noopener" aria-label={label} title={label} className="group inline-flex size-9 items-center justify-center rounded-lg text-mute transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/[0.06] hover:text-fg">
+                {Icon === DiscordIcon ? <DiscordIcon className="size-[18px] transition-transform duration-200 group-hover:scale-110" color="#5865F2" /> : <Icon className="size-[18px] transition-transform duration-200 group-hover:scale-110" />}
               </a>
             ))}
           </div>

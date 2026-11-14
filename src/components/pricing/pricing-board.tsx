@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Highlight } from "@/components/highlight";
-import { Check, Minus, Plus } from "lucide-react";
+import { Check, Minus, Plus, ChevronDown } from "lucide-react";
 import { buttonClass } from "@/components/button";
 import { SITE } from "@/lib/site";
 import { useI18n } from "@/lib/i18n";
@@ -68,14 +68,36 @@ const FAQ = [
   ],
 ];
 
-const money = (n: number) => `$${n.toFixed(2)}`;
+// Display currencies. Prices are set in USD; the others are converted with
+// approximate rates (update CURRENCY_RATES when they drift) and shown as such.
+const CURRENCY_RATES = { USD: 1, EUR: 0.92, GBP: 0.79, BRL: 5.4, MXN: 18.5, CAD: 1.38, AUD: 1.53 } as const;
+type Currency = keyof typeof CURRENCY_RATES;
+const CURRENCIES = Object.keys(CURRENCY_RATES) as Currency[];
+const CURRENCY_KEY = "drew-currency";
+const DEFAULT_CURRENCY: Record<string, Currency> = { en: "USD", es: "EUR", fr: "EUR", de: "EUR", pt: "EUR", ru: "USD" };
 // Monthly price shown for a plan: yearly billing is 10 months spread over 12.
 const monthlyPrice = (monthly: number, billing: Billing) => (billing === "monthly" ? monthly : +(monthly * 10).toFixed(2) / 12);
 
 export function PricingBoard() {
   const [billing, setBilling] = useState<Billing>("yearly");
   const [open, setOpen] = useState<number | null>(0);
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const [currency, setCurrency] = useState<Currency>(DEFAULT_CURRENCY[locale] ?? "USD");
+  // Remember the visitor's pick (falls back to the language default).
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(CURRENCY_KEY) as Currency | null;
+      if (saved && saved in CURRENCY_RATES) requestAnimationFrame(() => setCurrency(saved));
+    } catch {}
+  }, []);
+  const pickCurrency = (c: Currency) => {
+    setCurrency(c);
+    try {
+      localStorage.setItem(CURRENCY_KEY, c);
+    } catch {}
+  };
+  const money = (usd: number) =>
+    new Intl.NumberFormat(locale, { style: "currency", currency, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(usd * CURRENCY_RATES[currency]);
 
 
   return (
@@ -91,7 +113,8 @@ export function PricingBoard() {
             <Highlight text={t("Try every Premium feature free for 5 days. Cancel before it ends and you won't pay a cent.")} />
           </p>
 
-          <div role="radiogroup" aria-label={t("Billing period")} className="mx-auto mt-8 flex w-fit gap-1 rounded-xl border border-white/10 p-1">
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <div role="radiogroup" aria-label={t("Billing period")} className="flex w-fit gap-1 rounded-xl border border-white/10 p-1">
             {(["monthly", "yearly"] as const).map((b) => (
               <button
                 key={b}
@@ -111,6 +134,23 @@ export function PricingBoard() {
               </button>
             ))}
           </div>
+          <label className="relative flex items-center rounded-xl border border-white/10 p-1 text-sm">
+            <span className="sr-only">{t("Currency")}</span>
+            <select
+              value={currency}
+              onChange={(e) => pickCurrency(e.target.value as Currency)}
+              className="cursor-pointer appearance-none rounded-lg bg-transparent py-2 pl-4 pr-9 font-medium text-fg outline-none transition-colors hover:bg-white/[0.06] focus-visible:ring-2 focus-visible:ring-brand/60"
+            >
+              {CURRENCIES.map((c) => (
+                <option key={c} value={c} className="bg-[#0a0a0a] text-fg">
+                  {c}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-3 size-4 text-mute" />
+          </label>
+          </div>
+          {currency !== "USD" && <p className="mt-3 text-xs text-mute">{t("Approximate prices. You are charged in USD.")}</p>}
         </div>
 
         <div className="mx-auto grid max-w-5xl items-center gap-4 px-5 md:grid-cols-2 md:gap-6">
