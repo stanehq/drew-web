@@ -46,50 +46,87 @@ export function PageLoader() {
     }, wait));
   }, [clearTimers]);
 
-  useEffect(() => {
-    const onRouteStart = () => {
-      routeEverStarted.current = true;
-      clearTimers();
-      clearRouteTimers();
+  // Is the app/loading.tsx boundary currently showing (server data pending)?
+  const routeLoading = useRef(false);
+
+  const finishRoute = useCallback(() => {
+    const timing = routeTiming.current;
+    if (!timing || routeLoading.current) return;
+    routeTiming.current = null;
+    clearRouteTimers();
+    const remaining = Math.max(0, timing.startedAt + timing.minimumMs - performance.now());
+    routeTimers.current.push(window.setTimeout(() => {
+      setFading(true);
+      routeTimers.current.push(window.setTimeout(() => {
+        setVisible(false);
+        setFading(false);
+      }, ROUTE_FADE_MS));
+    }, remaining));
+  }, [clearRouteTimers]);
+
+  const startRoute = useCallback(() => {
+    routeEverStarted.current = true;
+    clearTimers();
+    clearRouteTimers();
+    if (!routeTiming.current) {
       routeTiming.current = {
         startedAt: performance.now(),
         minimumMs: FIRST_MIN_MS + Math.random() * (FIRST_MAX_MS - FIRST_MIN_MS),
       };
-      setFading(false);
-      setVisible(false);
-    };
+    }
+    setFading(false);
+    setVisible(true);
+  }, [clearRouteTimers, clearTimers]);
 
+  // Cover the screen the moment an internal link is clicked, before Next.js
+  // has fetched anything, so neither page flashes in between.
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const a = (e.target as Element | null)?.closest?.("a");
+      if (!a || (a.target && a.target !== "_self") || a.hasAttribute("download")) return;
+      const url = new URL(a.href, window.location.href);
+      if (url.origin !== window.location.origin || url.pathname.startsWith("/api/")) return;
+      if (url.pathname === window.location.pathname) return; // same page or an #anchor
+      startRoute();
+    };
+    const onRouteStart = () => {
+      routeLoading.current = true;
+      startRoute();
+    };
     const onRouteEnd = () => {
-      const timing = routeTiming.current;
-      routeTiming.current = null;
-      if (!timing) return;
-
-      const remaining = timing.startedAt + timing.minimumMs - performance.now();
-      if (remaining <= 0) {
-        setVisible(false);
-        setFading(false);
-        return;
-      }
-
-      setFading(false);
-      setVisible(true);
-      routeTimers.current.push(window.setTimeout(() => {
-        setFading(true);
-        routeTimers.current.push(window.setTimeout(() => {
-          setVisible(false);
-          setFading(false);
-        }, ROUTE_FADE_MS));
-      }, remaining));
+      routeLoading.current = false;
+      finishRoute();
     };
-
+    document.addEventListener("click", onClick, true);
     window.addEventListener("drew:route-loading-start", onRouteStart);
     window.addEventListener("drew:route-loading-end", onRouteEnd);
     return () => {
+      document.removeEventListener("click", onClick, true);
       window.removeEventListener("drew:route-loading-start", onRouteStart);
       window.removeEventListener("drew:route-loading-end", onRouteEnd);
       clearRouteTimers();
     };
-  }, [clearRouteTimers, clearTimers]);
+  }, [clearRouteTimers, finishRoute, startRoute]);
+
+  // The new page is in place (and no server data is pending): let it go.
+  useEffect(() => {
+    finishRoute();
+  }, [pathname, finishRoute]);
+
+  // Back/forward with the browser buttons has no click: cover until the page changes.
+  // The browser URL (with the language prefix) of the page on screen.
+  const lastPath = useRef("");
+  useEffect(() => {
+    lastPath.current = window.location.pathname;
+  }, [pathname]);
+  useEffect(() => {
+    const onPop = () => {
+      if (window.location.pathname !== lastPath.current) startRoute();
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, [startRoute]);
 
   useEffect(() => {
     if (!initialHome.current) {
