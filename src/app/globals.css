@@ -56,7 +56,7 @@
     color: var(--color-fg);
   }
   ::selection {
-    background: rgb(65 207 139 / 0.35);
+    background: rgb(255 255 255 / 0.18);
     color: #fff;
   }
   :focus-visible {
