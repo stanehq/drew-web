@@ -10,6 +10,7 @@ import {
   Layers,
   Search,
   Server,
+  Terminal,
   TriangleAlert,
   Users,
   Wifi,
@@ -53,13 +54,13 @@ function Dot({ state, pulse }: { state: keyof typeof STATE; pulse?: boolean }) {
 }
 
 function SignalBars({ latency, status }: { latency: number; status: PublicShard["status"] }) {
-  const level = status !== "online" ? 0 : latency < 80 ? 4 : latency < LATENCY_WARN_MS ? 3 : latency < LATENCY_BAD_MS ? 2 : 1;
+  const level = status === "online" ? (latency < 80 ? 4 : latency < LATENCY_WARN_MS ? 3 : latency < LATENCY_BAD_MS ? 2 : 1) : status === "connecting" ? 2 : 0;
   return (
     <span className="inline-flex items-end gap-[2px]" aria-hidden>
       {[1, 2, 3, 4].map((b) => (
         <span
           key={b}
-          className={`w-[3px] ${b <= level ? (level >= 3 ? "bg-brand" : level === 2 ? "bg-warn" : "bg-bad") : "bg-white/12"}`}
+          className={`w-[3px] ${b <= level ? (status === "online" ? "bg-[linear-gradient(180deg,#35c98d_0%,#7ee8b5_55%,#ffffff_100%)]" : status === "connecting" ? "bg-warn" : "bg-bad") : "bg-white/12"}`}
           style={{ height: 3 + b * 2.5 }}
         />
       ))}
@@ -169,6 +170,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
   }[] = [
     { icon: Server, label: "Servers", value: data ? formatExact(data.guilds) : "...", note: "" },
     { icon: Users, label: "Members", value: data ? formatCompact(data.users) : "...", note: "" },
+    { icon: Terminal, label: "Commands used", value: data ? formatCompact(data.commandsUsed) : "...", note: "" },
     {
       icon: Activity,
       label: "Shards online",
@@ -261,7 +263,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
         </section>
 
         {/* Numbers: read left to right, counts on the first row and latencies on the second */}
-        <section className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-3" aria-label="Summary">
+        <section className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-4" aria-label="Summary">
           {kpis.map(({ icon: Icon, label, value, suffix, health }) => (
             <div key={label} className="min-w-0 bg-ink p-4 sm:p-5">
               <p className="flex items-center gap-1.5 text-sm text-mute">
@@ -290,7 +292,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
               return (
                 <li key={key} className="flex items-center justify-between gap-4 px-5 py-4">
                   <div className="flex items-center gap-3">
-                    <Icon className="size-4 text-mute" strokeWidth={1.75} />
+                    <Icon className={`size-4 ${state === "operational" ? "drew-icon-gradient" : state === "degraded" ? "text-warn" : state === "down" ? "text-bad" : "text-mute"}`} strokeWidth={1.75} />
                     <div>
                       <p className="text-sm font-medium">{t(meta.label)}</p>
                       <p className="text-xs text-mute">{t(meta.detail)}</p>
