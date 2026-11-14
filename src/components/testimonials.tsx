@@ -28,24 +28,24 @@ function Card({ item, featured }: { item: Testimonial; featured: boolean }) {
         <span className="pointer-events-none absolute inset-0" style={{ background: `radial-gradient(120% 90% at 0% 0%, ${accent}${featured ? "59" : "40"}, transparent 60%), linear-gradient(160deg, ${accent}1a, transparent 55%)` }} aria-hidden />
       )}
       <div className="relative flex items-center gap-4">
-        <Avatar src={server.icon} name={server.name} className={featured ? "size-16 text-xl" : "size-12"} />
+        <Avatar src={server.icon} name={t(server.name)} className={featured ? "size-16 text-xl" : "size-12"} />
         <div className="min-w-0">
           <p className="flex items-center gap-2 font-semibold text-fg">
-            <span className="truncate">{server.name}</span>
+            <span className="truncate">{t(server.name)}</span>
             {server.badge && <ServerBadge badge={server.badge} />}
           </p>
           {server.members != null && <p className="text-sm text-mute">{formatCompact(server.members)} {t("members")}</p>}
         </div>
       </div>
       <blockquote className={`relative my-8 flex-1 text-pretty leading-relaxed text-fg/90 ${featured ? "flex items-center text-xl sm:text-2xl" : "text-[1.02rem]"}`}>
-        <p>&ldquo;{quote}&rdquo;</p>
+        <p>&ldquo;{t(quote)}&rdquo;</p>
       </blockquote>
       <figcaption className="relative flex items-end justify-between gap-4">
         <div>
-          <p className="font-semibold text-white">{author.name}</p>
+          <p className="font-semibold text-white">{t(author.name)}</p>
           <p className="text-sm text-mute">{t(author.role)}</p>
         </div>
-        <Avatar src={author.avatar} name={author.name} className="size-11" />
+        <Avatar src={author.avatar} name={t(author.name)} className="size-11" />
       </figcaption>
     </figure>
   );
