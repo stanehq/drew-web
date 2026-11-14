@@ -191,7 +191,7 @@ export function PricingBoard() {
                 <p className="mt-2 min-h-5 text-sm text-mute">
                   {billing === "yearly" ? (
                     <>
-                      {t("Billed ")}{money(yearly)}{t(" yearly. ")} {popular && <span className="text-brand-bright">{t("You save ")}{money(p.monthly * 12 - yearly)}.</span>}
+                      {t("Billed ")}{money(yearly)}{t(" yearly. ")} {popular && <span className="drew-gradient-x">{t("You save ")}{money(p.monthly * 12 - yearly)}.</span>}
                     </>
                   ) : (
                     <>{t("That's just ")}{money(perDay)}{t(" a day.")}</>
@@ -200,7 +200,7 @@ export function PricingBoard() {
                 {popular && (
                   <p className="mt-3 w-fit rounded-lg bg-brand/10 px-3 py-1.5 text-sm text-soft">
                     <span>
-                      {t("Only ")}<span className="font-semibold text-brand-bright">{money(diff)}</span>{t(" more a month than Standard")}
+                      {t("Only ")}<span className="font-semibold drew-gradient-x">{money(diff)}</span>{t(" more a month than Standard")}
                     </span>
                   </p>
                 )}
@@ -222,9 +222,9 @@ export function PricingBoard() {
                 <ul className="mt-8 space-y-3 border-t border-white/10 pt-8 text-[0.95rem]">
                   {p.features.map((f) => (
                     <li key={f} className={`flex gap-3 ${popular ? "text-fg" : "text-mute"}`}>
-                      <Check className={`mt-0.5 size-4 shrink-0 ${popular ? "text-brand-bright" : "text-white/35"}`} strokeWidth={popular ? 2.75 : 2} />
+                      <Check className={`mt-0.5 size-4 shrink-0 ${popular ? "drew-icon-gradient" : "text-white/35"}`} strokeWidth={popular ? 2.75 : 2} />
                       <span>
-                        <Highlight text={t(f)} className={popular ? "font-medium text-brand-bright" : ""} />
+                        <Highlight text={t(f)} className={popular ? "font-medium drew-gradient-x" : ""} />
                       </span>
                     </li>
                   ))}

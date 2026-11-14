@@ -6,6 +6,7 @@ import { formatCompact } from "@/lib/format";
 import { TESTIMONIALS, type Testimonial } from "@/lib/testimonials";
 import { SITE } from "@/lib/site";
 import { BADGE, ServerBadge } from "@/components/server-badge";
+import { TwoTone } from "@/components/two-tone";
 
 function Avatar({ src, name, className }: { src?: string | null; name: string; className: string }) {
   return src ? (
@@ -71,7 +72,7 @@ export function Testimonials() {
   return (
     <section className="px-5 pb-28">
       <h2 className="mx-auto max-w-3xl text-balance text-center text-4xl font-semibold tracking-[-0.025em] sm:text-6xl">
-        {t("Loved by the communities that use it")}
+        <TwoTone text={t("Loved by the communities that use it")} />
       </h2>
       <p className="mx-auto mt-4 max-w-2xl text-center text-sm text-mute">{t("A look at the everyday challenges Drew is built to help communities handle.")}</p>
       <div className="mx-auto mt-14 max-w-5xl columns-1 gap-5 md:columns-2">
