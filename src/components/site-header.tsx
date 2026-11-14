@@ -109,7 +109,7 @@ export function SiteHeader() {
           <a href={LOGIN} className={DASHBOARD_BTN}>
             <LayoutDashboard className="size-4" /> {label("Dashboard")}
           </a>
-          <a href={SITE.invite} className="inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-lg border border-[#7ee8b5] bg-[linear-gradient(110deg,#35c98d_0%,#41cf8b_58%,#7ee8b5_100%)] px-4 text-[0.95rem] font-semibold text-white transition-all hover:bg-[linear-gradient(110deg,#41cf8b_0%,#65dda9_58%,#a5f3cf_100%)]">
+          <a href={SITE.invite} className="inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-lg border border-[#41cf8b] bg-[#41cf8b] px-4 text-[0.95rem] font-semibold text-white transition-all hover:bg-[#5bd9a0]">
             {t("Add to Discord")} <DiscordIcon />
           </a>
         </div>
@@ -141,7 +141,7 @@ export function SiteHeader() {
             <a href={LOGIN} className={`${DASHBOARD_BTN} h-12 justify-center`}>
               <LayoutDashboard className="size-4" /> {label("Dashboard")}
             </a>
-            <a href={SITE.invite} className="inline-flex h-12 items-center justify-center gap-2 rounded-lg border border-[#7ee8b5] bg-[linear-gradient(110deg,#35c98d_0%,#41cf8b_58%,#7ee8b5_100%)] font-semibold text-white">
+            <a href={SITE.invite} className="inline-flex h-12 items-center justify-center gap-2 rounded-lg border border-[#41cf8b] bg-[#41cf8b] font-semibold text-white">
               {t("Add to Discord")} <DiscordIcon />
             </a>
             <LanguageSelector block />
