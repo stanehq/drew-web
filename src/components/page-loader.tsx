@@ -89,7 +89,7 @@ export function PageLoader() {
       window.removeEventListener("drew:route-loading-end", onRouteEnd);
       clearRouteTimers();
     };
-  }, [clearRouteTimers]);
+  }, [clearRouteTimers, clearTimers]);
 
   useEffect(() => {
     if (!initialHome.current) {
