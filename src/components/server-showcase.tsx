@@ -102,14 +102,6 @@ export function ServerShowcase() {
   const members = (n: number) => (n === 1 ? t("member") : t("members"));
   return (
     <div className="w-full overflow-hidden pb-4 pt-12" aria-label="Servers using Drew">
-      {totals.servers > 0 && totals.people > 0 && (
-        <div className="mb-12 px-5 text-center">
-          <h2 className="mx-auto max-w-4xl text-balance text-3xl font-semibold leading-[1.15] tracking-[-0.025em] text-fg sm:text-5xl">
-            {t("Protecting")} <span className="drew-wordmark"><CountUp value={totals.people} /></span> {t("people across")}{" "}
-            <span className="drew-wordmark"><CountUp value={totals.servers} ms={900} /></span> {t("communities")}
-          </h2>
-        </div>
-      )}
       <div className="mx-auto flex max-w-[1600px] flex-col gap-8 py-2 [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
         {rows.map((list, i) => (
           <Row key={i} track={fill(list)} members={members} reverse={i === 1} />
