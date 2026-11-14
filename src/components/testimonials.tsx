@@ -34,7 +34,7 @@ function Card({ item, featured }: { item: Testimonial; featured: boolean }) {
             <span className="truncate">{server.name}</span>
             {server.badge && <ServerBadge badge={server.badge} />}
           </p>
-          <p className="text-sm text-mute">{formatCompact(server.members)} {t("members")}</p>
+          {server.members != null && <p className="text-sm text-mute">{formatCompact(server.members)} {t("members")}</p>}
         </div>
       </div>
       <blockquote className={`relative my-8 flex-1 text-pretty leading-relaxed text-fg/90 ${featured ? "flex items-center text-xl sm:text-2xl" : "text-[1.02rem]"}`}>
@@ -71,8 +71,9 @@ export function Testimonials() {
   return (
     <section className="px-5 pb-28">
       <h2 className="mx-auto max-w-3xl text-balance text-center text-4xl font-semibold tracking-[-0.025em] sm:text-6xl">
-        {t("Loved by the communities that use it")}
+        {t("Community feedback")}
       </h2>
+      <p className="mx-auto mt-4 max-w-2xl text-center text-sm text-mute">{t("Illustrative testimonial copy, not verified customer reviews.")}</p>
       <div className="mx-auto mt-14 max-w-5xl columns-1 gap-5 md:columns-2">
         {TESTIMONIALS.map((item, i) => <Card key={`${item.server.name}-${i}`} item={item} featured={i === 0} />)}
       </div>
