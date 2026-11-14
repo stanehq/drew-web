@@ -149,6 +149,7 @@ export function I18nProvider({ children, initialLocale = "en" }: { children: Rea
   useEffect(() => {
     const [fromUrl] = splitLocale(window.location.pathname);
     if (fromUrl !== locale) Promise.resolve().then(() => setLocaleState(fromUrl));
+    document.cookie = `${LOCALE_COOKIE}=${fromUrl}; path=/; max-age=31536000; samesite=lax`;
     document.documentElement.lang = fromUrl;
   }, [pathname, locale]);
   const setLocale = (next: Locale) => {
