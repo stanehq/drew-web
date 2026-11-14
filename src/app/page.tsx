@@ -83,13 +83,13 @@ export default function HomePage() {
           aria-hidden
         />
         <div className="mx-auto max-w-4xl px-5 pb-24 pt-8 text-center sm:pt-12">
-          <h1 className="animate-fade-up mx-auto max-w-[14ch] text-balance text-[clamp(2.4rem,7.2vw,7rem)] font-semibold leading-[1.04] tracking-[-0.035em]">
+          <h1 className="mx-auto max-w-[14ch] text-balance text-[clamp(2.4rem,7.2vw,7rem)] font-semibold leading-[1.04] tracking-[-0.035em]">
             <TwoTone text={`${t("Discord security")} ${t("that never sleeps")}`} greenWords={2} />
           </h1>
-          <p className="animate-fade-up mx-auto mt-6 max-w-2xl px-2 text-pretty text-[clamp(1rem,1.5vw,1.3rem)] leading-relaxed text-white [animation-delay:80ms]">
+          <p className="mx-auto mt-6 max-w-2xl px-2 text-pretty text-[clamp(1rem,1.5vw,1.3rem)] leading-relaxed text-white">
             {t("Anti-nuke, anti-raid, verification and logging in one bot. Set it up in a minute and let Drew do the watching")}
           </p>
-          <div className="animate-fade-up mt-10 flex flex-wrap items-center justify-center gap-3 [animation-delay:140ms]">
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
             <a href={SITE.invite} className={primary}>
               <DiscordIcon /> {t("Add to Discord")}
             </a>
