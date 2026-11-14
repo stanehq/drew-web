@@ -273,7 +273,7 @@ export function PricingBoard() {
                             <Minus className="size-3.5 text-white/30" strokeWidth={3} />
                           </span>
                         ) : (
-                          <span className={i === 1 ? "font-semibold drew-title-green" : "text-mute"}>{t(v)}</span>
+                          <span className={i === 1 ? "font-semibold text-white" : "text-mute"}>{t(v)}</span>
                         )}
                       </td>
                     ))}
