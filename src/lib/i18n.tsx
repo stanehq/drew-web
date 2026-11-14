@@ -134,7 +134,6 @@ export function I18nProvider({ children, initialLocale = "en" }: { children: Rea
   }, [pathname, locale]);
   const setLocale = (next: Locale) => {
     if (next === locale) return;
-    window.dispatchEvent(new Event("drew:locale-change"));
     document.cookie = `${LOCALE_COOKIE}=${next}; path=/; max-age=31536000; samesite=lax`;
     const [, rest] = splitLocale(window.location.pathname);
     setLocaleState(next);
