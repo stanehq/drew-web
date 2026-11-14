@@ -1,10 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Activity, Clock3, Gauge, Hash, Layers, Server, ShieldCheck, Terminal, TrendingUp, Users } from "lucide-react";
+import { Activity, Gauge, Hash, Layers, Server, ShieldCheck, Terminal, TrendingUp, Users } from "lucide-react";
 import type { PublicMetricPoint, PublicMetrics } from "@/lib/public-metrics";
 import { useI18n } from "@/lib/i18n";
-import { formatCompact, formatExact, formatUptime } from "@/lib/format";
+import { formatCompact, formatExact } from "@/lib/format";
 import { TwoTone } from "@/components/two-tone";
 
 const RANGES = ["24h", "7d", "30d", "90d"] as const;
@@ -221,12 +221,12 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
   const kpis = [
     { label: "Servers", icon: Server, value: formatExact(cur?.guilds ?? 0) },
     { label: "Members", icon: Users, value: formatCompact(cur?.users ?? 0) },
-    { label: "Channels", icon: Hash, value: formatCompact(cur?.channels ?? 0) },
     {
       label: "Members per server",
       icon: TrendingUp,
       value: cur?.guilds ? formatExact(Math.round(cur.users / cur.guilds)) : "0",
     },
+    { label: "Commands run", icon: Terminal, value: formatCompact(cur?.commandsUsed ?? 0) },
     {
       label: "Avg latency",
       icon: Gauge,
@@ -237,8 +237,6 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
       icon: ShieldCheck,
       value: points.length ? `${stats.availability.toFixed(stats.availability === 100 ? 0 : 2)}%` : "...",
     },
-    { label: "Uptime", icon: Clock3, value: cur?.uptimeSeconds ? formatUptime(cur.uptimeSeconds) : "..." },
-    { label: "Commands run", icon: Terminal, value: formatCompact(cur?.commandsUsed ?? 0) },
   ];
 
   return (
@@ -284,7 +282,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
 
         <section aria-labelledby="metrics-snapshot">
           <h2 id="metrics-snapshot" className="mb-3 font-sans text-sm font-semibold text-soft">{t("Current snapshot")}</h2>
-          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
           {kpis.map(({ label, icon: Icon, value, suffix }: { label: string; icon: typeof Server; value: string; suffix?: string }) => (
             <div key={label} className="surface min-w-0 p-5 sm:p-6">
               <p className="flex items-center gap-2 text-xs text-mute">
@@ -299,9 +297,9 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
         {points.length < 2 ? (
           <div className="surface mt-3 flex flex-col items-center gap-3 px-6 py-20 text-center">
             <Activity className="drew-icon-gradient size-6" />
-            <p className="font-medium">{failed || !data ? t("Metrics are unavailable right now.") : "Collecting data..."}</p>
+            <p className="font-medium">{failed || !data ? t("Metrics are unavailable right now.") : t("Collecting data...")}</p>
             {(failed || !data) && (
-              <p className="max-w-sm text-sm text-mute">We couldn&apos;t reach the bot. This page retries automatically.</p>
+              <p className="max-w-sm text-sm text-mute">{t("We couldn't reach the bot. This page retries automatically.")}</p>
             )}
           </div>
         ) : (
@@ -322,7 +320,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
             </div>
           </section>
         )}
-        {failed && data && <p className="py-3 text-center text-xs text-warn">Showing the last data we received. Retrying...</p>}
+        {failed && data && <p className="py-3 text-center text-xs text-warn">{t("Showing the last data we received. Retrying...")}</p>}
       </div>
     </section>
   );
