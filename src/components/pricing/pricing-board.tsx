@@ -1,6 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSlidingHighlight } from "@/components/sliding-highlight";
+import { CurrencyPicker } from "@/components/pricing/currency-picker";
+import { CURRENCY_CODES, FALLBACK_RATES, type CurrencyCode } from "@/lib/currency";
 import { Highlight } from "@/components/highlight";
 import { Check, Minus, Plus } from "lucide-react";
 import { buttonClass } from "@/components/button";
@@ -68,14 +71,47 @@ const FAQ = [
   ],
 ];
 
-const money = (n: number) => `$${n.toFixed(2)}`;
+type Currency = CurrencyCode;
+const CURRENCY_KEY = "drew-currency";
+const DEFAULT_CURRENCY: Record<string, Currency> = { en: "USD", es: "EUR", fr: "EUR", de: "EUR", pt: "EUR", ru: "USD" };
 // Monthly price shown for a plan: yearly billing is 10 months spread over 12.
 const monthlyPrice = (monthly: number, billing: Billing) => (billing === "monthly" ? monthly : +(monthly * 10).toFixed(2) / 12);
 
 export function PricingBoard() {
   const [billing, setBilling] = useState<Billing>("yearly");
   const [open, setOpen] = useState<number | null>(0);
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const [currency, setCurrency] = useState<Currency>(DEFAULT_CURRENCY[locale] ?? "USD");
+  // Remember the visitor's pick (falls back to the language default).
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(CURRENCY_KEY) as Currency | null;
+      if (saved && (CURRENCY_CODES as readonly string[]).includes(saved)) requestAnimationFrame(() => setCurrency(saved));
+    } catch {}
+  }, []);
+  const pickCurrency = (c: Currency) => {
+    setCurrency(c);
+    try {
+      localStorage.setItem(CURRENCY_KEY, c);
+    } catch {}
+  };
+  // Live rates (cached server side for 6 hours); fallback rates until they load.
+  const [rates, setRates] = useState<Record<Currency, number>>(FALLBACK_RATES);
+  useEffect(() => {
+    let alive = true;
+    fetch("/api/rates")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: { rates?: Record<Currency, number> } | null) => alive && d?.rates && setRates({ ...FALLBACK_RATES, ...d.rates }))
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, []);
+  const money = (usd: number) =>
+    new Intl.NumberFormat(locale, { style: "currency", currency, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(usd * rates[currency]);
+
+  // Sliding highlight behind the billing period, like the legal tabs.
+  const billingSlide = useSlidingHighlight<Billing>(billing, locale);
 
 
   return (
@@ -91,15 +127,18 @@ export function PricingBoard() {
             <Highlight text={t("Try every Premium feature free for 5 days. Cancel before it ends and you won't pay a cent.")} />
           </p>
 
-          <div role="radiogroup" aria-label={t("Billing period")} className="mx-auto mt-8 flex w-fit gap-1 rounded-xl border border-white/10 p-1">
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <div role="radiogroup" aria-label={t("Billing period")} className="relative flex w-fit gap-1 rounded-xl border border-white/10 p-1" {...billingSlide.containerProps}>
+            {billingSlide.highlight("bg-white/10")}
             {(["monthly", "yearly"] as const).map((b) => (
               <button
                 key={b}
+                {...billingSlide.itemProps(b)}
                 role="radio"
                 aria-checked={billing === b}
                 onClick={() => setBilling(b)}
-                className={`flex items-center gap-2 rounded-lg px-5 py-2 text-sm font-medium transition-colors ${
-                  billing === b ? "bg-white/10 text-fg" : "text-soft hover:text-fg"
+                className={`relative flex items-center gap-2 rounded-lg px-5 py-2 text-sm font-medium transition-colors ${
+                  billing === b ? "text-fg" : "text-soft hover:text-fg"
                 }`}
               >
                 {b === "monthly" ? t("Monthly") : t("Yearly")}
@@ -111,6 +150,9 @@ export function PricingBoard() {
               </button>
             ))}
           </div>
+          <CurrencyPicker value={currency} onChange={pickCurrency} />
+          </div>
+          {currency !== "USD" && <p className="mt-3 text-xs text-mute">{t("Approximate prices. You are charged in USD.")}</p>}
         </div>
 
         <div className="mx-auto grid max-w-5xl items-center gap-4 px-5 md:grid-cols-2 md:gap-6">

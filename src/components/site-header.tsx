@@ -56,6 +56,16 @@ export function SiteHeader() {
   const label = (k: string) => t(k);
   const [open, setOpen] = useState(false);
 
+  // The mobile menu covers the whole screen: keep the page behind it still.
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
+
   useEffect(() => {
     const closeOnResize = () => window.innerWidth >= 1280 && setOpen(false);
     window.addEventListener("resize", closeOnResize);
@@ -111,18 +121,23 @@ export function SiteHeader() {
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
         >
-          {open ? <X className="size-5" /> : <Menu className="size-5" />}
+          <span className="relative inline-flex size-5">
+            <Menu className={`absolute inset-0 size-5 transition-all duration-300 ${open ? "rotate-90 scale-50 opacity-0" : "rotate-0 scale-100 opacity-100"}`} />
+            <X className={`absolute inset-0 size-5 transition-all duration-300 ${open ? "rotate-0 scale-100 opacity-100" : "-rotate-90 scale-50 opacity-0"}`} />
+          </span>
         </button>
       </div>
 
       {open && (
-        <div className="max-h-[calc(100dvh-76px)] overflow-y-auto border-t border-white/[0.08] bg-black px-4 pb-6 pt-4 xl:hidden">
+        <div className="menu-panel-in fixed inset-x-0 bottom-0 top-[76px] overflow-y-auto overscroll-contain border-t border-white/[0.08] bg-black px-4 pb-10 pt-4 xl:hidden">
           <nav className="grid" aria-label={t("Mobile")}>
-            {MORE.map((item) => (
-              <MenuLink key={item.href} item={item} label={label(item.label)} locale={locale} onPick={() => setOpen(false)} />
+            {MORE.map((item, i) => (
+              <div key={item.href} className="menu-item-in" style={{ animationDelay: `${60 + i * 35}ms` }}>
+                <MenuLink item={item} label={label(item.label)} locale={locale} onPick={() => setOpen(false)} />
+              </div>
             ))}
           </nav>
-          <div className="mt-4 grid gap-2.5">
+          <div className="menu-item-in mt-4 grid gap-2.5" style={{ animationDelay: "320ms" }}>
             <a href={LOGIN} className={`${DASHBOARD_BTN} h-12 justify-center`}>
               <LayoutDashboard className="size-4" /> {label("Dashboard")}
             </a>

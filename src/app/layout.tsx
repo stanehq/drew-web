@@ -45,6 +45,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang={locale} className={`${sans.variable} ${display.variable} ${mono.variable}`}>
       <body className="min-h-dvh overflow-x-hidden">
+        {/* Shared green-to-white gradient for icons (class drew-icon-gradient) */}
+        <svg aria-hidden="true" className="pointer-events-none absolute size-0 overflow-hidden">
+          <defs>
+            <linearGradient id="drew-icon-gradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#35c98d" />
+              <stop offset="52%" stopColor="#7ee8b5" />
+              <stop offset="100%" stopColor="#ffffff" />
+            </linearGradient>
+          </defs>
+        </svg>
         <PageLoader />
         <I18nProvider initialLocale={locale}>
         <SiteHeader />

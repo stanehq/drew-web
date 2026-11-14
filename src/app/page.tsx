@@ -65,15 +65,6 @@ export default function HomePage() {
   }
   return (
     <>
-      <svg aria-hidden="true" className="pointer-events-none absolute size-0 overflow-hidden">
-        <defs>
-          <linearGradient id="drew-icon-gradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#35c98d" />
-            <stop offset="52%" stopColor="#7ee8b5" />
-            <stop offset="100%" stopColor="#ffffff" />
-          </linearGradient>
-        </defs>
-      </svg>
       {/* Hero: centered, one soft glow, nothing else in the background */}
       <section className="relative isolate overflow-hidden pt-[76px]">
         <HeroAtmosphere />

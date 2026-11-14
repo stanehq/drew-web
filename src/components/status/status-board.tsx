@@ -184,6 +184,16 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
       note: "",
       health: latencyHealth,
     },
+    ...(["database", "cache"] as const).map((key) => {
+      const svc = data?.services[key];
+      return {
+        icon: key === "database" ? Database : Layers,
+        label: key === "database" ? "Database latency" : "Cache latency",
+        value: svc && svc.latencyMs > 0 ? `${svc.latencyMs}ms` : data ? "N/A" : "...",
+        note: "",
+        health: svc && svc.latencyMs > 0 ? latencyTone(svc.latencyMs) : null,
+      };
+    }),
   ];
 
   const tone = overall === "operational" ? "good" : overall === "degraded" ? "warn" : "bad";
@@ -250,19 +260,18 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
           </div>
         </section>
 
-        {/* Numbers: one quiet panel */}
-        <section className="mt-6 grid grid-cols-2 overflow-hidden rounded-2xl border border-white/10 sm:grid-cols-4" aria-label="Summary">
-          {kpis.map(({ icon: Icon, label, value, suffix, note, health }, i) => (
-            <div key={label} className={`min-w-0 p-4 sm:p-5 ${i % 2 ? "border-l border-white/10" : ""} ${i >= 2 ? "border-t border-white/10 sm:border-t-0" : ""} ${i % 3 !== 0 ? "sm:border-l" : ""} ${i >= 3 ? "sm:border-t sm:border-white/10" : ""} ${i % 6 !== 0 ? "lg:border-l" : ""} ${i >= 3 ? "lg:border-t-0" : ""}`}>
+        {/* Numbers: read left to right, counts on the first row and latencies on the second */}
+        <section className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-3" aria-label="Summary">
+          {kpis.map(({ icon: Icon, label, value, suffix, health }) => (
+            <div key={label} className="min-w-0 bg-ink p-4 sm:p-5">
               <p className="flex items-center gap-1.5 text-sm text-mute">
-                <Icon className="size-4" strokeWidth={1.75} /> {t(label)}
+                <Icon className="drew-icon-gradient size-4 shrink-0" strokeWidth={1.75} /> <span className="truncate">{t(label)}</span>
               </p>
               {/* White while healthy, coloured only when shards or latency need attention */}
-              <p className={`mt-4 text-2xl font-semibold leading-none tabular-nums tracking-tight sm:text-3xl ${health && health.tone !== "good" ? TONE[health.tone].text : "text-fg"}`}>
+              <p className={`mt-3 text-2xl font-semibold leading-none tabular-nums tracking-tight sm:text-3xl ${health && health.tone !== "good" ? TONE[health.tone].text : "text-fg"}`}>
                 {value}
                 {suffix && <span className="ml-1 text-base font-normal text-mute">{suffix}</span>}
               </p>
-              {note && <p className="mt-1 text-xs text-mute">{note}</p>}
             </div>
           ))}
         </section>
@@ -272,8 +281,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
           <h2 id="services" className="font-sans text-lg font-semibold tracking-tight">
             {t("Services")}
           </h2>
-          <div className="mt-4 grid items-center gap-4 lg:grid-cols-[1.5fr_1fr]">
-          <ul className="divide-y divide-white/[0.06] overflow-hidden rounded-2xl border border-white/10">
+          <ul className="mt-4 divide-y divide-white/[0.06] overflow-hidden rounded-2xl border border-white/10">
             {(data ? [...SERVICE_ORDER.filter((k) => data.services[k]), ...Object.keys(data.services).filter((k) => !SERVICE_ORDER.includes(k))] : SERVICE_ORDER).map((key) => {
               const meta = SERVICE_META[key] ?? { label: key, icon: Cloud, detail: "" };
               const svc: PublicService | undefined = data?.services[key];
@@ -299,30 +307,6 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
               );
             })}
           </ul>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-            {([
-              { key: "database", label: "DB latency", icon: Database },
-              { key: "cache", label: "Cache latency", icon: Layers },
-            ] as const).map(({ key, label, icon: Icon }) => {
-              const service = data?.services[key];
-              const health = service ? latencyTone(service.latencyMs) : { tone: "idle" as Tone, label: "No data" };
-              return (
-                <article key={key} className="surface flex min-h-28 items-center justify-between gap-4 p-5 sm:p-6">
-                  <div className="flex min-w-0 items-center gap-3">
-                    <Icon className="size-5 shrink-0 text-brand" strokeWidth={1.75} />
-                    <div className="min-w-0">
-                      <p className="text-sm text-mute">{t(label)}</p>
-                      <p className={`mt-2 text-2xl font-semibold tabular-nums tracking-tight ${health.tone === "good" ? "text-fg" : TONE[health.tone].text}`}>
-                        {service && service.latencyMs > 0 ? `${service.latencyMs}ms` : data ? "N/A" : "..."}
-                      </p>
-                    </div>
-                  </div>
-                  <span className={`shrink-0 text-xs ${TONE[health.tone].text}`}>{t(health.label)}</span>
-                </article>
-              );
-            })}
-          </div>
-          </div>
         </section>
 
         {/* Shards */}

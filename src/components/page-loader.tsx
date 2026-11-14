@@ -9,7 +9,9 @@ const FIRST_MIN_MS = 3500;
 const FIRST_MAX_MS = 4500;
 const LOCALE_MS = 700;
 const MAX_MS = 8000;
-const ROUTE_FADE_MS = 900;
+// Page changes inside the site: a short cover, just enough to hide the swap.
+const ROUTE_MIN_MS = 350;
+const ROUTE_FADE_MS = 300;
 
 export function PageLoader() {
   const pathname = usePathname();
@@ -23,6 +25,8 @@ export function PageLoader() {
   const routeTimers = useRef<number[]>([]);
   const [visible, setVisible] = useState(() => isHome);
   const [fading, setFading] = useState(false);
+  // Page changes use a quicker exit than the first load.
+  const [quick, setQuick] = useState(false);
 
   const clearTimers = useCallback(() => {
     timers.current.forEach(window.clearTimeout);
@@ -46,50 +50,85 @@ export function PageLoader() {
     }, wait));
   }, [clearTimers]);
 
-  useEffect(() => {
-    const onRouteStart = () => {
-      routeEverStarted.current = true;
-      clearTimers();
-      clearRouteTimers();
-      routeTiming.current = {
-        startedAt: performance.now(),
-        minimumMs: FIRST_MIN_MS + Math.random() * (FIRST_MAX_MS - FIRST_MIN_MS),
-      };
-      setFading(false);
-      setVisible(false);
-    };
+  // Is the app/loading.tsx boundary currently showing (server data pending)?
+  const routeLoading = useRef(false);
 
-    const onRouteEnd = () => {
-      const timing = routeTiming.current;
-      routeTiming.current = null;
-      if (!timing) return;
-
-      const remaining = timing.startedAt + timing.minimumMs - performance.now();
-      if (remaining <= 0) {
+  const finishRoute = useCallback(() => {
+    const timing = routeTiming.current;
+    if (!timing || routeLoading.current) return;
+    routeTiming.current = null;
+    clearRouteTimers();
+    const remaining = Math.max(0, timing.startedAt + timing.minimumMs - performance.now());
+    routeTimers.current.push(window.setTimeout(() => {
+      setFading(true);
+      routeTimers.current.push(window.setTimeout(() => {
         setVisible(false);
         setFading(false);
-        return;
-      }
+      }, ROUTE_FADE_MS));
+    }, remaining));
+  }, [clearRouteTimers]);
 
-      setFading(false);
-      setVisible(true);
-      routeTimers.current.push(window.setTimeout(() => {
-        setFading(true);
-        routeTimers.current.push(window.setTimeout(() => {
-          setVisible(false);
-          setFading(false);
-        }, ROUTE_FADE_MS));
-      }, remaining));
+  const startRoute = useCallback(() => {
+    routeEverStarted.current = true;
+    clearTimers();
+    clearRouteTimers();
+    if (!routeTiming.current) {
+      routeTiming.current = { startedAt: performance.now(), minimumMs: ROUTE_MIN_MS };
+    }
+    setQuick(true);
+    setFading(false);
+    setVisible(true);
+  }, [clearRouteTimers, clearTimers]);
+
+  // Cover the screen the moment an internal link is clicked, before Next.js
+  // has fetched anything, so neither page flashes in between.
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const a = (e.target as Element | null)?.closest?.("a");
+      if (!a || (a.target && a.target !== "_self") || a.hasAttribute("download")) return;
+      const url = new URL(a.href, window.location.href);
+      if (url.origin !== window.location.origin || url.pathname.startsWith("/api/")) return;
+      if (url.pathname === window.location.pathname) return; // same page or an #anchor
+      startRoute();
     };
-
+    const onRouteStart = () => {
+      routeLoading.current = true;
+      startRoute();
+    };
+    const onRouteEnd = () => {
+      routeLoading.current = false;
+      finishRoute();
+    };
+    document.addEventListener("click", onClick, true);
     window.addEventListener("drew:route-loading-start", onRouteStart);
     window.addEventListener("drew:route-loading-end", onRouteEnd);
     return () => {
+      document.removeEventListener("click", onClick, true);
       window.removeEventListener("drew:route-loading-start", onRouteStart);
       window.removeEventListener("drew:route-loading-end", onRouteEnd);
       clearRouteTimers();
     };
-  }, [clearRouteTimers, clearTimers]);
+  }, [clearRouteTimers, finishRoute, startRoute]);
+
+  // The new page is in place (and no server data is pending): let it go.
+  useEffect(() => {
+    finishRoute();
+  }, [pathname, finishRoute]);
+
+  // Back/forward with the browser buttons has no click: cover until the page changes.
+  // The browser URL (with the language prefix) of the page on screen.
+  const lastPath = useRef("");
+  useEffect(() => {
+    lastPath.current = window.location.pathname;
+  }, [pathname]);
+  useEffect(() => {
+    const onPop = () => {
+      if (window.location.pathname !== lastPath.current) startRoute();
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, [startRoute]);
 
   useEffect(() => {
     if (!initialHome.current) {
@@ -151,7 +190,7 @@ export function PageLoader() {
   if (!visible) return null;
   return (
     <div
-      className={"page-loader fixed inset-0 z-[200] flex h-dvh w-screen items-center justify-center bg-black " + (fading ? "page-loader-leave pointer-events-none" : "")}
+      className={"page-loader fixed inset-0 z-[200] flex h-dvh w-screen items-center justify-center bg-black " + (fading ? `page-loader-leave pointer-events-none ${quick ? "page-loader-leave-quick" : ""}` : "")}
       aria-hidden={fading}
     >
       <div className="page-loader-mark">
