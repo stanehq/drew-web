@@ -85,14 +85,19 @@ export function PricingBoard() {
   // Remember the visitor's pick (falls back to the language default).
   useEffect(() => {
     try {
-      const saved = localStorage.getItem(CURRENCY_KEY) as Currency | null;
-      if (saved && (CURRENCY_CODES as readonly string[]).includes(saved)) requestAnimationFrame(() => setCurrency(saved));
+      const cookieValue = document.cookie.split("; ").find((part) => part.startsWith(`${CURRENCY_KEY}=`))?.split("=")[1];
+      const saved = (localStorage.getItem(CURRENCY_KEY) ?? cookieValue) as Currency | null;
+      if (saved && (CURRENCY_CODES as readonly string[]).includes(saved)) {
+        setCurrency(saved);
+        localStorage.setItem(CURRENCY_KEY, saved);
+      }
     } catch {}
   }, []);
   const pickCurrency = (c: Currency) => {
     setCurrency(c);
     try {
       localStorage.setItem(CURRENCY_KEY, c);
+      document.cookie = `${CURRENCY_KEY}=${c}; path=/; max-age=31536000; samesite=lax`;
     } catch {}
   };
   // Live rates (cached server side for 6 hours); fallback rates until they load.
