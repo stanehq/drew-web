@@ -47,7 +47,7 @@ export function useSlidingHighlight<K extends string>(active: K, watch?: unknown
 
   const containerProps = { onMouseLeave: () => moveTo(active) };
 
-  const highlight = (className = "bg-white/10") =>
+  const highlight = (className = "bg-white/15") =>
     box ? (
       <span
         aria-hidden
