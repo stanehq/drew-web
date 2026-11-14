@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { useSlidingHighlight } from "@/components/sliding-highlight";
 import { CurrencyPicker } from "@/components/pricing/currency-picker";
 import { CURRENCY_CODES, FALLBACK_RATES, type CurrencyCode } from "@/lib/currency";
 import { Highlight } from "@/components/highlight";
@@ -109,15 +110,8 @@ export function PricingBoard() {
   const money = (usd: number) =>
     new Intl.NumberFormat(locale, { style: "currency", currency, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(usd * rates[currency]);
 
-  // Sliding highlight behind the selected billing period, like the legal tabs.
-  const billingRefs = useRef<Record<Billing, HTMLButtonElement | null>>({ monthly: null, yearly: null });
-  const [pill, setPill] = useState<{ left: number; width: number } | null>(null);
-  useEffect(() => {
-    const el = billingRefs.current[billing];
-    if (!el) return;
-    const raf = requestAnimationFrame(() => setPill({ left: el.offsetLeft, width: el.offsetWidth }));
-    return () => cancelAnimationFrame(raf);
-  }, [billing, locale]);
+  // Sliding highlight behind the billing period, like the legal tabs.
+  const billingSlide = useSlidingHighlight<Billing>(billing, locale);
 
 
   return (
@@ -134,20 +128,12 @@ export function PricingBoard() {
           </p>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <div role="radiogroup" aria-label={t("Billing period")} className="relative flex w-fit gap-1 rounded-xl border border-white/10 p-1">
-            {pill && (
-              <span
-                aria-hidden
-                className="pointer-events-none absolute bottom-1 top-1 rounded-lg bg-white/10 transition-[left,width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
-                style={{ left: pill.left, width: pill.width }}
-              />
-            )}
+          <div role="radiogroup" aria-label={t("Billing period")} className="relative flex w-fit gap-1 rounded-xl border border-white/10 p-1" {...billingSlide.containerProps}>
+            {billingSlide.highlight("bg-white/10")}
             {(["monthly", "yearly"] as const).map((b) => (
               <button
                 key={b}
-                ref={(el) => {
-                  billingRefs.current[b] = el;
-                }}
+                {...billingSlide.itemProps(b)}
                 role="radio"
                 aria-checked={billing === b}
                 onClick={() => setBilling(b)}

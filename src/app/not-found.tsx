@@ -1,4 +1,4 @@
-import { ArrowLeft, LayoutDashboard } from "lucide-react";
+import { LayoutDashboard } from "lucide-react";
 import { ButtonLink } from "@/components/button";
 import { TwoTone } from "@/components/two-tone";
 
@@ -16,7 +16,7 @@ export default function NotFound() {
         </h1>
         <div className="mt-12 flex flex-wrap justify-center gap-3">
           <ButtonLink href="/">
-            <ArrowLeft className="size-4" aria-hidden /> Back home
+            Back home
           </ButtonLink>
           <ButtonLink href="/dashboard" variant="secondary">
             <LayoutDashboard className="size-4" aria-hidden /> Go to dashboard

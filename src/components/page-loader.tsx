@@ -9,7 +9,9 @@ const FIRST_MIN_MS = 3500;
 const FIRST_MAX_MS = 4500;
 const LOCALE_MS = 700;
 const MAX_MS = 8000;
-const ROUTE_FADE_MS = 900;
+// Page changes inside the site: a short cover, just enough to hide the swap.
+const ROUTE_MIN_MS = 350;
+const ROUTE_FADE_MS = 300;
 
 export function PageLoader() {
   const pathname = usePathname();
@@ -23,6 +25,8 @@ export function PageLoader() {
   const routeTimers = useRef<number[]>([]);
   const [visible, setVisible] = useState(() => isHome);
   const [fading, setFading] = useState(false);
+  // Page changes use a quicker exit than the first load.
+  const [quick, setQuick] = useState(false);
 
   const clearTimers = useCallback(() => {
     timers.current.forEach(window.clearTimeout);
@@ -69,11 +73,9 @@ export function PageLoader() {
     clearTimers();
     clearRouteTimers();
     if (!routeTiming.current) {
-      routeTiming.current = {
-        startedAt: performance.now(),
-        minimumMs: FIRST_MIN_MS + Math.random() * (FIRST_MAX_MS - FIRST_MIN_MS),
-      };
+      routeTiming.current = { startedAt: performance.now(), minimumMs: ROUTE_MIN_MS };
     }
+    setQuick(true);
     setFading(false);
     setVisible(true);
   }, [clearRouteTimers, clearTimers]);
@@ -188,7 +190,7 @@ export function PageLoader() {
   if (!visible) return null;
   return (
     <div
-      className={"page-loader fixed inset-0 z-[200] flex h-dvh w-screen items-center justify-center bg-black " + (fading ? "page-loader-leave pointer-events-none" : "")}
+      className={"page-loader fixed inset-0 z-[200] flex h-dvh w-screen items-center justify-center bg-black " + (fading ? `page-loader-leave pointer-events-none ${quick ? "page-loader-leave-quick" : ""}` : "")}
       aria-hidden={fading}
     >
       <div className="page-loader-mark">

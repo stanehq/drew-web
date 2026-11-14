@@ -5,6 +5,7 @@ import { Check, ChevronDown } from "lucide-react";
 import { AU, BR, CA, EU, GB, MX, US } from "country-flag-icons/react/3x2";
 import { CURRENCY_CODES, CURRENCY_NAMES, type CurrencyCode } from "@/lib/currency";
 import { useI18n } from "@/lib/i18n";
+import { useSlidingHighlight } from "@/components/sliding-highlight";
 
 const FLAGS: Record<CurrencyCode, typeof US> = { USD: US, EUR: EU, GBP: GB, BRL: BR, MXN: MX, CAD: CA, AUD: AU };
 
@@ -22,6 +23,7 @@ export function CurrencyPicker({ value, onChange }: { value: CurrencyCode; onCha
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const slide = useSlidingHighlight<CurrencyCode>(value, open);
 
   useEffect(() => {
     if (!open) return;
@@ -51,20 +53,22 @@ export function CurrencyPicker({ value, onChange }: { value: CurrencyCode; onCha
       </button>
       {open && (
         <div className="lang-panel-in absolute right-0 z-50 mt-2 w-[min(17rem,calc(100vw-2rem))] origin-top-right rounded-2xl border border-white/10 bg-[#0a0a0a] p-1.5 text-left shadow-[0_20px_50px_rgba(0,0,0,0.6)]">
-          <ul role="listbox" aria-label={t("Currency")} className="grid gap-0.5">
+          <ul role="listbox" aria-label={t("Currency")} className="relative grid gap-0.5" {...slide.containerProps}>
+            {slide.highlight("bg-white/[0.08]")}
             {CURRENCY_CODES.map((c, i) => {
               const active = c === value;
               return (
                 <li key={c} role="option" aria-selected={active}>
                   <button
                     type="button"
+                    {...slide.itemProps(c)}
                     onClick={() => {
                       onChange(c);
                       setOpen(false);
                     }}
                     style={{ animationDelay: `${i * 22}ms` }}
-                    className={`lang-item-in flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm transition-colors ${
-                      active ? "bg-brand/10 text-fg ring-1 ring-inset ring-brand/40" : "text-soft hover:bg-white/[0.05] hover:text-fg"
+                    className={`lang-item-in relative flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm transition-colors ${
+                      active ? "text-fg" : "text-soft hover:text-fg"
                     }`}
                   >
                     <Flag code={c} className="h-[18px] w-[27px]" />

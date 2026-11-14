@@ -338,6 +338,15 @@
 .page-loader-leave .page-loader-mark {
   animation: page-loader-mark-out 0.55s cubic-bezier(0.4, 0, 1, 1) forwards;
 }
+.page-loader-leave.page-loader-leave-quick {
+  animation: page-loader-curtain-quick 0.3s ease-out forwards;
+}
+.page-loader-leave.page-loader-leave-quick .page-loader-mark {
+  animation: page-loader-mark-out 0.2s ease-in forwards;
+}
+@keyframes page-loader-curtain-quick {
+  to { opacity: 0; }
+}
 @keyframes page-loader-curtain {
   0%, 35% { opacity: 1; }
   100% { opacity: 0; }
