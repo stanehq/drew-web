@@ -282,7 +282,9 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <section aria-labelledby="metrics-snapshot">
+          <h2 id="metrics-snapshot" className="mb-3 font-sans text-sm font-semibold text-soft">{t("Current snapshot")}</h2>
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           {kpis.map(({ label, icon: Icon, value, suffix }: { label: string; icon: typeof Server; value: string; suffix?: string }) => (
             <div key={label} className="surface min-w-0 p-5 sm:p-6">
               <p className="flex items-center gap-2 text-xs text-mute">
@@ -291,7 +293,8 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
               <p className="mt-4 truncate font-sans text-2xl font-semibold leading-none tabular-nums tracking-[-0.02em] sm:text-3xl">{data ? value : "..."}</p>
             </div>
           ))}
-        </div>
+          </div>
+        </section>
 
         {points.length < 2 ? (
           <div className="surface mt-3 flex flex-col items-center gap-3 px-6 py-20 text-center">
@@ -302,7 +305,9 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
             )}
           </div>
         ) : (
-          <div className="mt-3 grid gap-3 lg:grid-cols-2">
+          <section className="mt-8" aria-labelledby="metrics-history">
+            <h2 id="metrics-history" className="mb-3 font-sans text-sm font-semibold text-soft">{t("Trends over time")}</h2>
+            <div className="grid gap-3 lg:grid-cols-2">
             {CHARTS.map((s) => (
               <article key={s.key} className="surface min-w-0 p-5 sm:p-6">
                 <header className="mb-3 flex items-center justify-between">
@@ -314,7 +319,8 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
                 <Chart points={points} series={s} range={range} />
               </article>
             ))}
-          </div>
+            </div>
+          </section>
         )}
         {failed && data && <p className="py-3 text-center text-xs text-warn">Showing the last data we received. Retrying...</p>}
       </div>
