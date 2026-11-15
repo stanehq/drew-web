@@ -229,18 +229,29 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
         </section>
 
         {/* Numbers: read left to right, counts on the first row and latencies on the second */}
-        <section className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-6" aria-label="Summary">
-          {kpis.map(({ icon: Icon, label, value }, index) => (
-            <div
-              key={label}
-              className={`min-w-0 bg-ink p-4 sm:p-5 ${index === 3 ? "sm:col-start-2 sm:col-span-2" : index === 4 ? "sm:col-start-4 sm:col-span-2" : "sm:col-span-2"} ${index === 4 ? "col-span-2 sm:col-span-2" : ""}`}
-            >
-              <p className="flex items-center gap-1.5 text-sm text-mute">
-                <Icon className="drew-icon-gradient size-4 shrink-0" strokeWidth={1.75} /> <span className="truncate">{t(label)}</span>
-              </p>
-              <p className="mt-3 truncate text-xl font-semibold leading-none tabular-nums tracking-tight text-fg sm:text-3xl">{value}</p>
-            </div>
-          ))}
+        <section className="mt-6 overflow-hidden rounded-2xl border border-white/10 bg-ink" aria-label="Summary">
+          <div className="grid grid-cols-2 gap-px bg-white/10 sm:grid-cols-3">
+            {kpis.slice(0, 3).map(({ icon: Icon, label, value }, index) => (
+              <div key={label} className={`min-w-0 bg-ink p-4 sm:p-5 ${index === 2 ? "col-span-2 sm:col-span-1" : ""}`}>
+                <p className="flex items-center gap-1.5 text-sm text-mute">
+                  <Icon className="drew-icon-gradient size-4 shrink-0" strokeWidth={1.75} />
+                  <span className="truncate">{t(label)}</span>
+                </p>
+                <p className="mt-3 truncate text-xl font-semibold leading-none tabular-nums tracking-tight text-fg sm:text-3xl">{value}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mx-auto grid w-full max-w-2xl grid-cols-2 gap-px bg-white/10">
+            {kpis.slice(3).map(({ icon: Icon, label, value }) => (
+              <div key={label} className="min-w-0 bg-ink p-4 sm:p-5">
+                <p className="flex items-center gap-1.5 text-sm text-mute">
+                  <Icon className="drew-icon-gradient size-4 shrink-0" strokeWidth={1.75} />
+                  <span className="truncate">{t(label)}</span>
+                </p>
+                <p className="mt-3 truncate text-xl font-semibold leading-none tabular-nums tracking-tight text-fg sm:text-3xl">{value}</p>
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* Services and infrastructure latency */}
