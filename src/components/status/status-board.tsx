@@ -154,12 +154,12 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
     {
       icon: Database,
       label: "Database latency",
-      value: data?.services.database?.latencyMs ? `${data.services.database.latencyMs} ms` : data ? "N/A" : "...",
+      value: data?.services.database?.latencyMs ? `${data.services.database.latencyMs} ms` : "...",
     },
     {
       icon: Layers,
       label: "Cache latency",
-      value: data?.services.cache?.latencyMs ? `${data.services.cache.latencyMs} ms` : data ? "N/A" : "...",
+      value: data?.services.cache?.latencyMs ? `${data.services.cache.latencyMs} ms` : "...",
     },
   ];
 
