@@ -19,6 +19,42 @@ const fmtTime = (t: number, range: Range) =>
 const fmtFull = (t: number) =>
   new Date(t * 1000).toLocaleString("en", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
 
+/** Smooth line through the points (monotone cubic, so it never overshoots the data). */
+function smoothPath(pts: [number, number][]): string {
+  const n = pts.length;
+  if (n === 0) return "";
+  if (n < 3) return pts.map(([x, y], i) => `${i ? "L" : "M"}${x.toFixed(1)},${y.toFixed(1)}`).join("");
+  const dx: number[] = [];
+  const slope: number[] = [];
+  for (let i = 0; i < n - 1; i++) {
+    dx.push(pts[i + 1][0] - pts[i][0]);
+    slope.push(dx[i] === 0 ? 0 : (pts[i + 1][1] - pts[i][1]) / dx[i]);
+  }
+  const tan: number[] = [slope[0]];
+  for (let i = 1; i < n - 1; i++) tan.push(slope[i - 1] * slope[i] <= 0 ? 0 : (slope[i - 1] + slope[i]) / 2);
+  tan.push(slope[n - 2]);
+  for (let i = 0; i < n - 1; i++) {
+    if (slope[i] === 0) {
+      tan[i] = 0;
+      tan[i + 1] = 0;
+      continue;
+    }
+    const a = tan[i] / slope[i];
+    const b = tan[i + 1] / slope[i];
+    const h = Math.hypot(a, b);
+    if (h > 3) {
+      tan[i] = (3 * a * slope[i]) / h;
+      tan[i + 1] = (3 * b * slope[i]) / h;
+    }
+  }
+  let d = `M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)}`;
+  for (let i = 0; i < n - 1; i++) {
+    const w = dx[i] / 3;
+    d += `C${(pts[i][0] + w).toFixed(1)},${(pts[i][1] + tan[i] * w).toFixed(1)} ${(pts[i + 1][0] - w).toFixed(1)},${(pts[i + 1][1] - tan[i + 1] * w).toFixed(1)} ${pts[i + 1][0].toFixed(1)},${pts[i + 1][1].toFixed(1)}`;
+  }
+  return d;
+}
+
 function Chart({ points, series, range }: { points: PublicMetricPoint[]; series: Series; range: Range }) {
   const { t } = useI18n();
   const id = useId().replace(/:/g, "");
@@ -36,7 +72,7 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
   const x = (i: number) => PAD.l + (points.length <= 1 ? (W - PAD.l - PAD.r) / 2 : (i / (points.length - 1)) * (W - PAD.l - PAD.r));
   const y = (v: number) => PAD.t + (1 - (v - lo) / (hi - lo || 1)) * (H - PAD.t - PAD.b);
   const ticks = [lo, (lo + hi) / 2, hi].filter((t, i, a) => a.findIndex((u) => Math.round(u) === Math.round(t)) === i);
-  const line = values.map((v, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join("");
+  const line = smoothPath(values.map((v, i) => [x(i), y(v)] as [number, number]));
   const area = `${line}L${x(values.length - 1).toFixed(1)},${H - PAD.b}L${x(0).toFixed(1)},${H - PAD.b}Z`;
   const barW = Math.max(2, ((W - PAD.l - PAD.r) / Math.max(points.length, 1)) * 0.6);
   const h = hover != null ? points[hover] : null;
@@ -59,8 +95,14 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
       >
         <defs>
           <linearGradient id={`g${id}`} x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="#41cf8b" stopOpacity="0.30" />
-            <stop offset="100%" stopColor="#41cf8b" stopOpacity="0" />
+            <stop offset="0%" stopColor="#7ee8b5" stopOpacity="0.28" />
+            <stop offset="100%" stopColor="#7ee8b5" stopOpacity="0" />
+          </linearGradient>
+          {/* Green on the left fading to white on the right, in absolute units so flat lines get it too */}
+          <linearGradient id={`l${id}`} gradientUnits="userSpaceOnUse" x1={PAD.l} x2={W - PAD.r} y1="0" y2="0">
+            <stop offset="0%" stopColor="#35c98d" />
+            <stop offset="55%" stopColor="#7ee8b5" />
+            <stop offset="100%" stopColor="#ffffff" />
           </linearGradient>
         </defs>
         {ticks.map((t) => (
@@ -80,13 +122,13 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
               width={barW}
               height={Math.max(0, H - PAD.b - y(v))}
               rx={1.5}
-              className={hover === i ? "fill-white" : "fill-[#41cf8b]/80"}
+              fill={hover === i ? "#ffffff" : `url(#l${id})`} fillOpacity={hover === i ? 1 : 0.85}
             />
           ))
         ) : (
           <>
             <path d={area} fill={`url(#g${id})`} />
-            <path d={line} fill="none" stroke="#41cf8b" strokeWidth={1.9} strokeLinejoin="round" strokeLinecap="round" />
+            <path d={line} fill="none" stroke={`url(#l${id})`} strokeWidth={1.9} strokeLinejoin="round" strokeLinecap="round" />
           </>
         )}
         {[0, Math.floor((points.length - 1) / 2), points.length - 1]
@@ -99,7 +141,7 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
         {h && hover != null && (
           <g>
             <line x1={x(hover)} x2={x(hover)} y1={PAD.t} y2={H - PAD.b} stroke="rgb(255 255 255 / 0.18)" strokeDasharray="3 3" />
-            {!series.bars && <circle cx={x(hover)} cy={y(values[hover])} r={3.5} fill="#ffffff" stroke="#41cf8b" strokeWidth={2} />}
+            {!series.bars && <circle cx={x(hover)} cy={y(values[hover])} r={3.5} fill="#000000" stroke="#ffffff" strokeWidth={2} />}
           </g>
         )}
       </svg>
@@ -217,10 +259,16 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
     };
   }, [points]);
   const cur = data?.current;
+  // Each chart shows its latest value (commands: the total for the period), so the snapshot above does not repeat them.
+  const headline = (s: Series) => {
+    const last = points[points.length - 1];
+    if (!last) return "";
+    if (s.key === "commands") return formatCompact(points.reduce((sum, p) => sum + p.commands, 0));
+    const v = Number(last[s.key]);
+    return s.unit ? `${Math.round(v)} ${s.unit}` : formatCompact(v);
+  };
 
   const kpis = [
-    { label: "Servers", icon: Server, value: formatExact(cur?.guilds ?? 0) },
-    { label: "Members", icon: Users, value: formatCompact(cur?.users ?? 0) },
     {
       label: "Members per server",
       icon: TrendingUp,
@@ -282,7 +330,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
 
         <section aria-labelledby="metrics-snapshot">
           <h2 id="metrics-snapshot" className="mb-3 font-sans text-sm font-semibold text-soft">{t("Current snapshot")}</h2>
-          <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           {kpis.map(({ label, icon: Icon, value, suffix }: { label: string; icon: typeof Server; value: string; suffix?: string }) => (
             <div key={label} className="surface min-w-0 p-5 sm:p-6">
               <p className="flex items-center gap-2 text-xs text-mute">
@@ -304,7 +352,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
           </div>
         ) : (
           <section className="mt-8" aria-labelledby="metrics-history">
-            <h2 id="metrics-history" className="mb-3 font-sans text-sm font-semibold text-soft">{t("Trends over time")}</h2>
+            <h2 id="metrics-history" className="mb-3 font-sans text-sm font-semibold text-soft">{t("Trends over time")} <span className="font-normal text-mute">· {t(RANGE_LABEL[range])}</span></h2>
             <div className="grid gap-3 lg:grid-cols-2">
             {CHARTS.map((s) => (
               <article key={s.key} className="surface min-w-0 p-5 sm:p-6">
@@ -312,7 +360,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
                   <h2 className="font-sans flex items-center gap-2 text-sm font-medium">
                     <s.icon className="drew-icon-gradient size-4" /> {t(s.label)}
                   </h2>
-                  <span className="text-xs text-mute">{t(RANGE_LABEL[range])}</span>
+                  <span className="font-sans text-lg font-semibold tabular-nums text-fg">{headline(s)}</span>
                 </header>
                 <Chart points={points} series={s} range={range} />
               </article>

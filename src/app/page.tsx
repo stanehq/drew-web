@@ -67,12 +67,14 @@ export default function HomePage() {
     <>
       {/* Hero: centered, one soft glow, nothing else in the background */}
       <section className="relative isolate overflow-hidden pt-[76px]">
-        <HeroAtmosphere />
         {/* Soft glow behind the stats, fully faded before any edge so no seam shows */}
         <div
           className="pointer-events-none absolute inset-x-0 top-[38%] -z-10 h-[560px] bg-[radial-gradient(45%_50%_at_50%_50%,rgb(65_207_139/0.13),transparent_100%)]"
           aria-hidden
         />
+        {/* The ASCII background only lives behind the title and buttons, so the counters and the carousel sit on plain black */}
+        <div className="relative">
+        <HeroAtmosphere />
         <div className="mx-auto max-w-4xl px-5 pb-10 pt-6 text-center sm:pb-12 sm:pt-8">
           <h1 className="mx-auto max-w-[14ch] text-balance text-[clamp(2.4rem,6.2vw,6rem)] font-semibold leading-[1.04] tracking-[-0.035em]">
             <TwoTone text={`${t("Discord security")} ${t("that never sleeps")}`} greenWords={2} />
@@ -88,6 +90,7 @@ export default function HomePage() {
               <LayoutDashboard className="size-4" /> {t("Open dashboard")}
             </a>
           </div>
+        </div>
         </div>
         <ProtectionStats />
         <ServerShowcase />

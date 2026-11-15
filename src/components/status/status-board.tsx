@@ -147,20 +147,14 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
   const lookupInvalid = trimmed !== "" && target === null;
 
 
+  // Each figure appears once on this page: the service rows below only show the state.
   const kpis = [
     { icon: Layers, label: "Shards", value: data ? `${online.length}/${shards.length}` : "..." },
-    { icon: Gauge, label: "Latency", value: data && data.latencyMs > 0 ? `${Math.round(data.latencyMs)} ms` : "..." },
     { icon: Clock3, label: "Uptime", value: data ? formatUptime(data.uptimeSeconds) : "..." },
-    {
-      icon: Database,
-      label: "Database latency",
-      value: data?.services.database?.latencyMs ? `${data.services.database.latencyMs} ms` : "...",
-    },
-    {
-      icon: Layers,
-      label: "Cache latency",
-      value: data?.services.cache?.latencyMs ? `${data.services.cache.latencyMs} ms` : "...",
-    },
+    { icon: Gauge, label: "Gateway latency", value: data && data.latencyMs > 0 ? `${Math.round(data.latencyMs)} ms` : "..." },
+    { icon: Zap, label: "API latency", value: data?.services.api?.latencyMs ? `${data.services.api.latencyMs} ms` : "..." },
+    { icon: Database, label: "Database latency", value: data?.services.database?.latencyMs ? `${data.services.database.latencyMs} ms` : "..." },
+    { icon: Layers, label: "Cache latency", value: data?.services.cache?.latencyMs ? `${data.services.cache.latencyMs} ms` : "..." },
   ];
 
   const tone = overall === "operational" ? "good" : overall === "degraded" ? "warn" : "bad";
@@ -230,9 +224,9 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
 
         {/* Numbers: read left to right, counts on the first row and latencies on the second */}
         <section className="mt-6 overflow-hidden rounded-2xl border border-white/10" aria-label="Summary">
-          <div className="grid grid-cols-2 gap-px bg-white/10 sm:grid-cols-6">
-            {kpis.map(({ icon: Icon, label, value }, index) => (
-              <div key={label} className={`min-w-0 bg-ink p-4 sm:p-5 ${index === 2 ? "col-span-2 sm:col-span-2" : index < 2 ? "sm:col-span-2" : "sm:col-span-3"}`}>
+          <div className="grid grid-cols-2 gap-px bg-white/10 sm:grid-cols-3">
+            {kpis.map(({ icon: Icon, label, value }) => (
+              <div key={label} className="min-w-0 bg-ink p-4 sm:p-5">
                 <p className="flex items-center gap-1.5 text-sm text-mute">
                   <Icon className="drew-icon-gradient size-4 shrink-0" strokeWidth={1.75} />
                   <span className="truncate">{t(label)}</span>
@@ -264,7 +258,6 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
                     </div>
                   </div>
                   <div className="flex items-center gap-3 text-sm">
-                    {svc && key !== "database" && key !== "cache" && svc.status === "operational" && svc.latencyMs > 0 && <span className="hidden text-xs text-mute sm:inline">{svc.latencyMs}ms</span>}
                     <span className={`inline-flex items-center gap-2 text-sm ${STATE[state].ring}`}>
                       <Dot state={state} />
                       {data ? t(STATE[state].text) : error ? t("Unavailable") : "..."}
