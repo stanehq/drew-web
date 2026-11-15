@@ -132,7 +132,7 @@ export function SiteHeader() {
               <LayoutDashboard className="size-4" /> {label("Dashboard")}
             </a>
             <a href={SITE.invite} className="inline-flex h-12 items-center justify-center gap-2 rounded-lg border border-[#41cf8b] bg-[#41cf8b] font-semibold text-white">
-              {t("Add to your server")}
+              {t("Add to Discord")} <DiscordIcon />
             </a>
             <LanguageSelector block />
           </div>
