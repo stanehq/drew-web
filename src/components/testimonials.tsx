@@ -77,12 +77,12 @@ export function Testimonials() {
       <h2 className="mx-auto max-w-3xl text-balance text-center text-4xl font-semibold tracking-[-0.025em] sm:text-6xl">
         <TwoTone text={t("Loved by the communities that use it")} />
       </h2>
-      <p className="mx-auto mt-4 max-w-2xl text-center text-sm text-mute">{t("A look at the everyday challenges Drew is built to help communities handle.")}</p>
+      <p className="mx-auto mt-4 max-w-2xl text-center text-sm text-mute">{t("Illustrative testimonial copy, not verified customer reviews.")}</p>
       <div className="mx-auto mt-14 max-w-5xl columns-1 gap-5 md:columns-2">
         {TESTIMONIALS.map((item, i) => <Card key={`${item.server.name}-${i}`} item={item} featured={i === 0} />)}
       </div>
       <p className="mt-6 text-center text-sm text-mute">
-        {t("Using Drew?")}{" "}
+        {t("Your feedback helps us make Drew better. Share your experience with the team.")}{" "}
         <a href={SITE.support} target="_blank" rel="noopener noreferrer" className="text-brand-bright underline decoration-brand/40 underline-offset-4 hover:decoration-brand">
           {t("Share your feedback")}
         </a>
