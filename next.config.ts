@@ -10,8 +10,6 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
-  // Self-contained server for the Docker image.
-  output: "standalone",
   // Legal pages read their markdown at request time.
   outputFileTracingIncludes: {
     "/terms": ["./content/legal/**"],
