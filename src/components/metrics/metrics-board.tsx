@@ -59,8 +59,14 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
       >
         <defs>
           <linearGradient id={`g${id}`} x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.22" />
-            <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+            <stop offset="0%" stopColor="#7ee8b5" stopOpacity="0.28" />
+            <stop offset="100%" stopColor="#7ee8b5" stopOpacity="0" />
+          </linearGradient>
+          {/* Green on the left fading to white on the right, in absolute units so flat lines get it too */}
+          <linearGradient id={`l${id}`} gradientUnits="userSpaceOnUse" x1={PAD.l} x2={W - PAD.r} y1="0" y2="0">
+            <stop offset="0%" stopColor="#35c98d" />
+            <stop offset="55%" stopColor="#7ee8b5" />
+            <stop offset="100%" stopColor="#ffffff" />
           </linearGradient>
         </defs>
         {ticks.map((t) => (
@@ -80,13 +86,13 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
               width={barW}
               height={Math.max(0, H - PAD.b - y(v))}
               rx={1.5}
-              className={hover === i ? "fill-white" : "fill-white/70"}
+              fill={hover === i ? "#ffffff" : `url(#l${id})`} fillOpacity={hover === i ? 1 : 0.85}
             />
           ))
         ) : (
           <>
             <path d={area} fill={`url(#g${id})`} />
-            <path d={line} fill="none" stroke="#ffffff" strokeWidth={1.9} strokeLinejoin="round" strokeLinecap="round" />
+            <path d={line} fill="none" stroke={`url(#l${id})`} strokeWidth={1.9} strokeLinejoin="round" strokeLinecap="round" />
           </>
         )}
         {[0, Math.floor((points.length - 1) / 2), points.length - 1]
