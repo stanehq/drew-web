@@ -164,7 +164,7 @@ export function PricingBoard() {
               >
                 {b === "monthly" ? t("Monthly") : t("Yearly")}
                 {b === "yearly" && (
-                  <span className="rounded-md border border-brand/30 bg-gradient-to-r from-brand/20 via-brand/10 to-white/[0.12] px-2 py-0.5 text-[0.68rem] font-bold drew-gradient-x">
+                  <span className="rounded-md border border-brand/40 bg-gradient-to-r from-brand/25 via-brand/15 to-white/[0.10] px-2 py-0.5 text-[0.68rem] font-bold text-white shadow-[inset_0_0_12px_rgb(65_207_139/0.08)]">
                     {t("2 MONTHS FREE")}
                   </span>
                 )}
@@ -236,7 +236,7 @@ export function PricingBoard() {
                 <ul className="mt-8 space-y-3 border-t border-white/10 pt-8 text-[0.95rem]">
                   {p.features.map((f) => (
                     <li key={f} className={`flex gap-3 ${popular ? "text-fg" : "text-mute"}`}>
-                      <GradientCheck className="mt-0.5 size-4 shrink-0" />
+                      {popular ? <GradientCheck className="mt-0.5 size-4 shrink-0" /> : <Check className="mt-0.5 size-4 shrink-0 text-white/35" strokeWidth={2} />}
                       <span>{t(f)}</span>
                     </li>
                   ))}
@@ -327,7 +327,7 @@ export function PricingBoard() {
                       <td key={i} className={`px-2 py-4 sm:px-4 ${i === 1 ? "bg-brand/[0.07]" : ""}`}>
                         {v === true ? (
                           <span className={`inline-flex size-6 items-center justify-center rounded-full ${i === 1 ? "bg-brand/25 ring-1 ring-brand/35" : "bg-white/[0.05]"}`} aria-label={t("Included")}>
-                            <GradientCheck className="size-3.5" />
+                            {i === 1 ? <GradientCheck className="size-3.5" /> : <Check className="size-3.5 text-white/45" strokeWidth={3} />}
                           </span>
                         ) : v === false ? (
                           <span className="inline-flex size-6 items-center justify-center rounded-full bg-white/[0.05]" aria-label={t("Not included")}>
