@@ -16,20 +16,20 @@ function Avatar({ src, name, className }: { src?: string | null; name: string; c
   );
 }
 
-function Card({ item, featured }: { item: Testimonial; featured: boolean }) {
+function Card({ item }: { item: Testimonial }) {
   const { t } = useI18n();
   const { server, quote, author } = item;
   const accent = item.color ?? (server.badge ? BADGE[server.badge].color : null);
   return (
-    <figure className={`relative mb-5 flex break-inside-avoid flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#0b0d0c] p-7 ${featured ? "sm:min-h-[460px] sm:p-9" : ""}`}>
+    <figure className={`relative flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#0b0d0c] p-7 sm:p-8`}>
       {server.icon && (
-        <Image src={server.icon} alt="" aria-hidden width={96} height={96} className={`pointer-events-none absolute left-1/2 top-1/3 size-[140%] max-w-none -translate-x-1/2 -translate-y-1/2 object-cover blur-3xl saturate-150 ${featured ? "opacity-25" : "opacity-10"}`} />
+        <Image src={server.icon} alt="" aria-hidden width={96} height={96} className={`pointer-events-none absolute left-1/2 top-1/3 size-[140%] max-w-none -translate-x-1/2 -translate-y-1/2 object-cover blur-3xl saturate-150 opacity-10`} />
       )}
       {!server.icon && accent && (
-        <span className="pointer-events-none absolute inset-0" style={{ background: `radial-gradient(120% 90% at 0% 0%, ${accent}${featured ? "59" : "40"}, transparent 60%), linear-gradient(160deg, ${accent}1a, transparent 55%)` }} aria-hidden />
+        <span className="pointer-events-none absolute inset-0" style={{ background: `radial-gradient(120% 90% at 0% 0%, ${accent}40, transparent 60%), linear-gradient(160deg, ${accent}1a, transparent 55%)` }} aria-hidden />
       )}
       <div className="relative flex items-center gap-4">
-        <Avatar src={server.icon} name={t(server.name)} className={featured ? "size-16 text-xl" : "size-12"} />
+        <Avatar src={server.icon} name={t(server.name)} className="size-12" />
         <div className="min-w-0">
           <p className="flex items-center gap-2 font-semibold text-fg">
             <span className="truncate">{t(server.name)}</span>
@@ -38,15 +38,12 @@ function Card({ item, featured }: { item: Testimonial; featured: boolean }) {
           {server.members != null && <p className="text-sm text-mute">{formatCompact(server.members)} {t("members")}</p>}
         </div>
       </div>
-      <blockquote className={`relative my-7 text-pretty leading-relaxed text-white ${featured ? "text-xl sm:text-2xl" : "flex-1 text-[1.02rem]"}`}>
+      <blockquote className="relative my-6 flex-1 text-pretty text-[1.05rem] leading-relaxed text-white">
         <p>&ldquo;{t(quote)}&rdquo;</p>
       </blockquote>
-      <figcaption className="relative flex items-end justify-between gap-4">
-        <div>
-          <p className="font-semibold text-white">{t(author.name)}</p>
-          <p className="text-sm text-white/75">{t(author.role)}</p>
-        </div>
-        <Avatar src={author.avatar} name={t(author.name)} className="size-11" />
+      <figcaption className="relative">
+        <p className="font-semibold text-white">{t(author.name)}</p>
+        <p className="text-sm text-white/75">{t(author.role)}</p>
       </figcaption>
     </figure>
   );
@@ -78,8 +75,8 @@ export function Testimonials() {
         <TwoTone text={t("Loved by the communities that use it")} />
       </h2>
       <p className="mx-auto mt-4 max-w-2xl text-center text-sm text-mute">{t("A look at the everyday challenges Drew is built to help communities handle.")}</p>
-      <div className="mx-auto mt-14 max-w-5xl columns-1 gap-5 md:columns-2">
-        {TESTIMONIALS.map((item, i) => <Card key={`${item.server.name}-${i}`} item={item} featured={i === 0} />)}
+      <div className="mx-auto mt-14 grid max-w-5xl gap-5 md:grid-cols-2">
+        {TESTIMONIALS.map((item, i) => <Card key={`${item.server.name}-${i}`} item={item} />)}
       </div>
       <div className="mt-8 text-center">
         <p className="text-sm text-mute">
