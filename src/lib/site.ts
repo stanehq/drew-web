@@ -2,7 +2,7 @@ export const SITE = {
   name: "Drew",
   url: "https://drewbot.xyz",
   description:
-    "Drew is a security and automation bot for modern online communities: anti-nuke, anti-raid, verification, logging and a configuration API built for AI agents.",
+    "Drew is the Discord security bot for modern communities: anti-nuke, anti-raid, verification, logging and a configuration API built for AI agents.",
   support: "https://discord.gg/stane",
   stane: {
     web: "https://stanelabs.com/?utm_source=drewbot.xyz",
