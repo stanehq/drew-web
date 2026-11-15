@@ -58,13 +58,16 @@ export function Testimonials() {
 
   if (TESTIMONIALS.length === 0) {
     return (
-      <section className="px-5 pb-24 text-center">
-        <p className="text-sm text-mute">
-          {t("Using Drew?")}{" "}
-          <a href={SITE.support} target="_blank" rel="noopener noreferrer" className="text-brand-bright underline decoration-brand/40 underline-offset-4 hover:decoration-brand">
-            {t("Share your feedback")}
-          </a>
+      <section className="px-5 pb-28 pt-8 text-center">
+        <h2 className="mx-auto max-w-3xl text-balance text-4xl font-semibold tracking-[-0.025em] sm:text-6xl">
+          <TwoTone text={t("Loved by the communities that use it")} />
+        </h2>
+        <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-mute">
+          {t("Your feedback helps us make Drew better. Share your experience with the team.")}
         </p>
+        <a href={SITE.support} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex items-center justify-center rounded-lg border border-white/20 px-5 py-3 text-sm font-semibold text-white transition-colors hover:border-white/40 hover:bg-white/[0.06]">
+          {t("Share your feedback")}
+        </a>
       </section>
     );
   }
