@@ -77,6 +77,20 @@ const DEFAULT_CURRENCY: Record<string, Currency> = { en: "USD", es: "EUR", fr: "
 // Monthly price shown for a plan: yearly billing is 10 months spread over 12.
 const monthlyPrice = (monthly: number, billing: Billing) => (billing === "monthly" ? monthly : +(monthly * 10).toFixed(2) / 12);
 
+function GradientCheck({ className = "size-4 shrink-0" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className={className}>
+      <defs>
+        <linearGradient id="drew-check-green-white" x1="3" y1="20" x2="21" y2="4" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#35c98d" />
+          <stop offset="1" stopColor="#ffffff" />
+        </linearGradient>
+      </defs>
+      <path d="m5 12 4 4L19 6" stroke="url(#drew-check-green-white)" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 export function PricingBoard() {
   const [billing, setBilling] = useState<Billing>("yearly");
   const [open, setOpen] = useState<number | null>(0);
@@ -150,7 +164,7 @@ export function PricingBoard() {
               >
                 {b === "monthly" ? t("Monthly") : t("Yearly")}
                 {b === "yearly" && (
-                  <span className="rounded-md bg-brand/15 px-1.5 py-0.5 text-[0.68rem] font-semibold text-brand-bright">
+                  <span className="rounded-md border border-brand/30 bg-gradient-to-r from-brand/20 via-brand/10 to-white/[0.12] px-2 py-0.5 text-[0.68rem] font-bold drew-gradient-x">
                     {t("2 MONTHS FREE")}
                   </span>
                 )}
@@ -198,7 +212,7 @@ export function PricingBoard() {
                   )}
                 </p>
                 {popular && (
-                  <p className="mt-3 w-fit rounded-lg bg-white/[0.06] px-3 py-1.5 text-sm text-soft">
+                  <p className="mt-3 w-fit rounded-lg bg-white/[0.06] px-3 py-1.5 text-sm text-white">
                     <span>
                       {t("Only ")}<span className="font-semibold drew-gradient-x">{money(diff)}</span>{t(" more a month than Standard")}
                     </span>
@@ -222,7 +236,7 @@ export function PricingBoard() {
                 <ul className="mt-8 space-y-3 border-t border-white/10 pt-8 text-[0.95rem]">
                   {p.features.map((f) => (
                     <li key={f} className={`flex gap-3 ${popular ? "text-fg" : "text-mute"}`}>
-                      <Check className={`mt-0.5 size-4 shrink-0 ${popular ? "text-white" : "text-white/35"}`} strokeWidth={popular ? 2.75 : 2} />
+                      <GradientCheck className="mt-0.5 size-4 shrink-0" />
                       <span>{t(f)}</span>
                     </li>
                   ))}
@@ -313,7 +327,7 @@ export function PricingBoard() {
                       <td key={i} className={`px-2 py-4 sm:px-4 ${i === 1 ? "bg-brand/[0.07]" : ""}`}>
                         {v === true ? (
                           <span className={`inline-flex size-6 items-center justify-center rounded-full ${i === 1 ? "bg-brand/25 ring-1 ring-brand/35" : "bg-white/[0.05]"}`} aria-label={t("Included")}>
-                            <Check className={`size-3.5 ${i === 1 ? "text-[#eafff4]" : "text-white/45"}`} strokeWidth={3} />
+                            <GradientCheck className="size-3.5" />
                           </span>
                         ) : v === false ? (
                           <span className="inline-flex size-6 items-center justify-center rounded-full bg-white/[0.05]" aria-label={t("Not included")}>
@@ -352,7 +366,7 @@ export function PricingBoard() {
             <h2 className="text-4xl font-semibold tracking-[-0.025em] sm:text-6xl">{t("Questions?")}</h2>
             <p className="mt-4 text-lg text-soft">
               {t("Still unsure?")}{" "}
-              <a href={SITE.support} target="_blank" rel="noreferrer" className="text-brand-bright underline decoration-brand/40 underline-offset-4 hover:decoration-brand">
+              <a href={SITE.support} target="_blank" rel="noreferrer" className="text-white underline decoration-white/40 underline-offset-4 hover:decoration-white">
                 {t("Ask us on Discord")}
               </a>
             </p>
