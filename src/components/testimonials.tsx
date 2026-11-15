@@ -1,84 +1,50 @@
 "use client";
 
-import Image from "next/image";
+import { ShieldCheck, ClipboardList, SlidersHorizontal } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
-import { formatCompact } from "@/lib/format";
-import { TESTIMONIALS, type Testimonial } from "@/lib/testimonials";
 import { SITE } from "@/lib/site";
-import { BADGE, ServerBadge } from "@/components/server-badge";
-import { TwoTone } from "@/components/two-tone";
 
-function Avatar({ src, name, className }: { src?: string | null; name: string; className: string }) {
-  return src ? (
-    <Image src={src} alt="" width={96} height={96} className={`shrink-0 rounded-full object-cover ${className}`} />
-  ) : (
-    <span className={`flex shrink-0 items-center justify-center rounded-full bg-white/[0.06] font-semibold text-soft ${className}`}>{name.slice(0, 1).toUpperCase()}</span>
-  );
-}
+const USE_CASES = [
+  {
+    icon: ShieldCheck,
+    title: "Protection against raids",
+    description: "Layer verification, invite filtering and anti-raid response to help keep sudden attacks under control.",
+  },
+  {
+    icon: ClipboardList,
+    title: "Clear moderation history",
+    description: "Keep moderation activity and configuration changes easier to review when your team needs context.",
+  },
+  {
+    icon: SlidersHorizontal,
+    title: "One consistent setup",
+    description: "Manage automod presets and server profiles without piecing together a collection of separate tools.",
+  },
+] as const;
 
-function Card({ item, featured }: { item: Testimonial; featured: boolean }) {
-  const { t } = useI18n();
-  const { server, quote, author } = item;
-  const accent = item.color ?? (server.badge ? BADGE[server.badge].color : null);
-  return (
-    <figure className={`relative mb-5 flex break-inside-avoid flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#0b0d0c] p-7 ${featured ? "sm:min-h-[460px] sm:p-9" : ""}`}>
-      {server.icon && (
-        <Image src={server.icon} alt="" aria-hidden width={96} height={96} className={`pointer-events-none absolute left-1/2 top-1/3 size-[140%] max-w-none -translate-x-1/2 -translate-y-1/2 object-cover blur-3xl saturate-150 ${featured ? "opacity-25" : "opacity-10"}`} />
-      )}
-      {!server.icon && accent && (
-        <span className="pointer-events-none absolute inset-0" style={{ background: `radial-gradient(120% 90% at 0% 0%, ${accent}${featured ? "59" : "40"}, transparent 60%), linear-gradient(160deg, ${accent}1a, transparent 55%)` }} aria-hidden />
-      )}
-      <div className="relative flex items-center gap-4">
-        <Avatar src={server.icon} name={t(server.name)} className={featured ? "size-16 text-xl" : "size-12"} />
-        <div className="min-w-0">
-          <p className="flex items-center gap-2 font-semibold text-fg">
-            <span className="truncate">{t(server.name)}</span>
-            {server.badge && <ServerBadge badge={server.badge} />}
-          </p>
-          {server.members != null && <p className="text-sm text-mute">{formatCompact(server.members)} {t("members")}</p>}
-        </div>
-      </div>
-      <blockquote className={`relative my-7 text-pretty leading-relaxed text-white ${featured ? "text-xl sm:text-2xl" : "flex-1 text-[1.02rem]"}`}>
-        <p>&ldquo;{t(quote)}&rdquo;</p>
-      </blockquote>
-      <figcaption className="relative flex items-end justify-between gap-4">
-        <div>
-          <p className="font-semibold text-white">{t(author.name)}</p>
-          <p className="text-sm text-white/75">{t(author.role)}</p>
-        </div>
-        <Avatar src={author.avatar} name={t(author.name)} className="size-11" />
-      </figcaption>
-    </figure>
-  );
-}
-
-/** Only publish quotes that are real and approved. Never fill this section with placeholder testimonials. */
 export function Testimonials() {
   const { t } = useI18n();
 
-  if (TESTIMONIALS.length === 0) {
-    return (
-      <section className="px-5 pb-24 text-center">
-        <p className="text-sm text-mute">
-          {t("Using Drew?")}{" "}
-          <a href={SITE.support} target="_blank" rel="noopener noreferrer" className="text-brand-bright underline decoration-brand/40 underline-offset-4 hover:decoration-brand">
-            {t("Share your feedback")}
-          </a>
-        </p>
-      </section>
-    );
-  }
-
   return (
     <section className="px-5 pb-28">
-      <h2 className="mx-auto max-w-3xl text-balance text-center text-4xl font-semibold tracking-[-0.025em] sm:text-6xl">
-        <TwoTone text={t("Loved by the communities that use it")} />
+      <h2 className="mx-auto max-w-3xl text-balance text-center text-4xl font-semibold tracking-[-0.025em] text-white sm:text-6xl">
+        {t("Built for safer communities")}
       </h2>
-      <p className="mx-auto mt-4 max-w-2xl text-center text-sm text-mute">{t("A look at the everyday challenges Drew is built to help communities handle.")}</p>
-      <div className="mx-auto mt-14 max-w-5xl columns-1 gap-5 md:columns-2">
-        {TESTIMONIALS.map((item, i) => <Card key={`${item.server.name}-${i}`} item={item} featured={i === 0} />)}
+      <p className="mx-auto mt-4 max-w-2xl text-center text-sm text-mute">
+        {t("The problems Drew is designed to help server teams handle every day.")}
+      </p>
+      <div className="mx-auto mt-12 grid max-w-5xl gap-4 md:grid-cols-3">
+        {USE_CASES.map(({ icon: Icon, title, description }) => (
+          <article key={title} className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0b0d0c] p-7 transition-colors hover:border-brand/35">
+            <div className="mb-7 inline-flex size-11 items-center justify-center rounded-xl border border-brand/25 bg-brand/10">
+              <Icon className="size-5 text-brand-bright" strokeWidth={1.8} aria-hidden="true" />
+            </div>
+            <h3 className="text-lg font-semibold text-white">{t(title)}</h3>
+            <p className="mt-3 text-sm leading-6 text-white/75">{t(description)}</p>
+          </article>
+        ))}
       </div>
-      <p className="mt-6 text-center text-sm text-mute">
+      <p className="mt-8 text-center text-sm text-mute">
         {t("Using Drew?")}{" "}
         <a href={SITE.support} target="_blank" rel="noopener noreferrer" className="text-brand-bright underline decoration-brand/40 underline-offset-4 hover:decoration-brand">
           {t("Share your feedback")}
