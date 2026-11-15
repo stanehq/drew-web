@@ -151,6 +151,16 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
     { icon: Layers, label: "Shards", value: data ? `${online.length}/${shards.length}` : "..." },
     { icon: Gauge, label: "Latency", value: data && data.latencyMs > 0 ? `${Math.round(data.latencyMs)} ms` : "..." },
     { icon: Clock3, label: "Uptime", value: data ? formatUptime(data.uptimeSeconds) : "..." },
+    {
+      icon: Database,
+      label: "Database latency",
+      value: data?.services.database?.latencyMs ? `${data.services.database.latencyMs} ms` : data ? "N/A" : "...",
+    },
+    {
+      icon: Layers,
+      label: "Cache latency",
+      value: data?.services.cache?.latencyMs ? `${data.services.cache.latencyMs} ms` : data ? "N/A" : "...",
+    },
   ];
 
   const tone = overall === "operational" ? "good" : overall === "degraded" ? "warn" : "bad";
@@ -219,9 +229,12 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
         </section>
 
         {/* Numbers: read left to right, counts on the first row and latencies on the second */}
-        <section className="mt-6 grid grid-cols-3 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 " aria-label="Summary">
-          {kpis.map(({ icon: Icon, label, value }) => (
-            <div key={label} className="min-w-0 bg-ink p-4 sm:p-5">
+        <section className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-6" aria-label="Summary">
+          {kpis.map(({ icon: Icon, label, value }, index) => (
+            <div
+              key={label}
+              className={`min-w-0 bg-ink p-4 sm:p-5 ${index === 3 ? "sm:col-start-2 sm:col-span-2" : index === 4 ? "sm:col-start-4 sm:col-span-2" : "sm:col-span-2"} ${index === 4 ? "col-span-2 sm:col-span-2" : ""}`}
+            >
               <p className="flex items-center gap-1.5 text-sm text-mute">
                 <Icon className="drew-icon-gradient size-4 shrink-0" strokeWidth={1.75} /> <span className="truncate">{t(label)}</span>
               </p>
