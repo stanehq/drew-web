@@ -1,7 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Albert_Sans, JetBrains_Mono, Unbounded } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { PageLoader } from "@/components/page-loader";
@@ -61,8 +59,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <SiteHeader />
         <main className="relative">{children}</main>
         <SiteFooter />
-        <Analytics />
-        <SpeedInsights />
         </I18nProvider>
       </body>
     </html>
