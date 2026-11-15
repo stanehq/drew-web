@@ -59,8 +59,8 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
       >
         <defs>
           <linearGradient id={`g${id}`} x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="#41cf8b" stopOpacity="0.30" />
-            <stop offset="100%" stopColor="#41cf8b" stopOpacity="0" />
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.22" />
+            <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
           </linearGradient>
         </defs>
         {ticks.map((t) => (
@@ -80,13 +80,13 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
               width={barW}
               height={Math.max(0, H - PAD.b - y(v))}
               rx={1.5}
-              className={hover === i ? "fill-white" : "fill-[#41cf8b]/80"}
+              className={hover === i ? "fill-white" : "fill-white/70"}
             />
           ))
         ) : (
           <>
             <path d={area} fill={`url(#g${id})`} />
-            <path d={line} fill="none" stroke="#41cf8b" strokeWidth={1.9} strokeLinejoin="round" strokeLinecap="round" />
+            <path d={line} fill="none" stroke="#ffffff" strokeWidth={1.9} strokeLinejoin="round" strokeLinecap="round" />
           </>
         )}
         {[0, Math.floor((points.length - 1) / 2), points.length - 1]
@@ -99,7 +99,7 @@ function Chart({ points, series, range }: { points: PublicMetricPoint[]; series:
         {h && hover != null && (
           <g>
             <line x1={x(hover)} x2={x(hover)} y1={PAD.t} y2={H - PAD.b} stroke="rgb(255 255 255 / 0.18)" strokeDasharray="3 3" />
-            {!series.bars && <circle cx={x(hover)} cy={y(values[hover])} r={3.5} fill="#ffffff" stroke="#41cf8b" strokeWidth={2} />}
+            {!series.bars && <circle cx={x(hover)} cy={y(values[hover])} r={3.5} fill="#000000" stroke="#ffffff" strokeWidth={2} />}
           </g>
         )}
       </svg>
@@ -217,10 +217,16 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
     };
   }, [points]);
   const cur = data?.current;
+  // Each chart shows its latest value (commands: the total for the period), so the snapshot above does not repeat them.
+  const headline = (s: Series) => {
+    const last = points[points.length - 1];
+    if (!last) return "";
+    if (s.key === "commands") return formatCompact(points.reduce((sum, p) => sum + p.commands, 0));
+    const v = Number(last[s.key]);
+    return s.unit ? `${Math.round(v)} ${s.unit}` : formatCompact(v);
+  };
 
   const kpis = [
-    { label: "Servers", icon: Server, value: formatExact(cur?.guilds ?? 0) },
-    { label: "Members", icon: Users, value: formatCompact(cur?.users ?? 0) },
     {
       label: "Members per server",
       icon: TrendingUp,
@@ -282,7 +288,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
 
         <section aria-labelledby="metrics-snapshot">
           <h2 id="metrics-snapshot" className="mb-3 font-sans text-sm font-semibold text-soft">{t("Current snapshot")}</h2>
-          <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           {kpis.map(({ label, icon: Icon, value, suffix }: { label: string; icon: typeof Server; value: string; suffix?: string }) => (
             <div key={label} className="surface min-w-0 p-5 sm:p-6">
               <p className="flex items-center gap-2 text-xs text-mute">
@@ -304,7 +310,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
           </div>
         ) : (
           <section className="mt-8" aria-labelledby="metrics-history">
-            <h2 id="metrics-history" className="mb-3 font-sans text-sm font-semibold text-soft">{t("Trends over time")}</h2>
+            <h2 id="metrics-history" className="mb-3 font-sans text-sm font-semibold text-soft">{t("Trends over time")} <span className="font-normal text-mute">· {t(RANGE_LABEL[range])}</span></h2>
             <div className="grid gap-3 lg:grid-cols-2">
             {CHARTS.map((s) => (
               <article key={s.key} className="surface min-w-0 p-5 sm:p-6">
@@ -312,7 +318,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
                   <h2 className="font-sans flex items-center gap-2 text-sm font-medium">
                     <s.icon className="drew-icon-gradient size-4" /> {t(s.label)}
                   </h2>
-                  <span className="text-xs text-mute">{t(RANGE_LABEL[range])}</span>
+                  <span className="font-sans text-lg font-semibold tabular-nums text-fg">{headline(s)}</span>
                 </header>
                 <Chart points={points} series={s} range={range} />
               </article>
