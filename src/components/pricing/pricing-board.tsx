@@ -375,7 +375,7 @@ export function PricingBoard() {
             {FAQ.map(([q, a], i) => {
               const isOpen = open === i;
               return (
-                <div key={q} className={`surface transition-colors ${isOpen ? "!border-brand/40 !bg-brand/[0.04]" : "hover:!border-white/20"}`}>
+                <div key={q} className={`surface transition-colors ${isOpen ? "!border-white/25 !bg-white/[0.025]" : "hover:!border-white/20"}`}>
                   <button
                     type="button"
                     aria-expanded={isOpen}
@@ -383,7 +383,7 @@ export function PricingBoard() {
                     className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left text-[1.02rem] font-semibold"
                   >
                     {t(q)}
-                    <span className={`inline-flex size-7 shrink-0 items-center justify-center rounded-full transition-all duration-300 ${isOpen ? "rotate-45 bg-brand text-[#03110a]" : "bg-white/[0.06] text-soft"}`}>
+                    <span className={`inline-flex size-7 shrink-0 items-center justify-center rounded-full transition-all duration-300 ${isOpen ? "rotate-45 bg-white/[0.08] text-white" : "bg-white/[0.06] text-soft"}`}>
                       <Plus className="size-4" strokeWidth={2.25} />
                     </span>
                   </button>
