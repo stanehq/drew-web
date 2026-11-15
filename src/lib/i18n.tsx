@@ -18,6 +18,7 @@ export type Locale = (typeof LOCALES)[number]["code"];
 const messages: Record<Locale, Record<string, string>> = {
 en: {},
 es: {
+"Realtime connection":"Conexión en tiempo real",
 "Latency":"Latencia",
 "Raids Stopped":"Raids detenidos","Nukes Stopped":"Nukes detenidos","Members Quarantined":"Miembros en cuarentena","Accounts Flagged":"Cuentas marcadas",
 "Discord security":"Seguridad de Discord",
@@ -46,6 +47,7 @@ es: {
 "Read-only: only the server owner can save changes from the website. Administrators can use /sudo in Discord or an /api token.":"Solo lectura: únicamente el propietario del servidor puede guardar cambios desde la web. Los administradores pueden usar /sudo en Discord o un token /api.","Changes are validated by the same API your tokens use, recorded in the audit log and announced in your log channel.":"Los cambios se validan mediante la misma API que usan tus tokens, se registran en la auditoría y se anuncian en tu canal de registros.","Nothing to change. Those values were already set.":"No hay cambios. Esos valores ya estaban configurados.","Couldn't reach the server.":"No se ha podido conectar con el servidor.","Couldn't validate the changes.":"No se han podido validar los cambios.","Review the changes and apply them.":"Revisa los cambios y aplícalos.","Discard":"Descartar","Apply changes":"Aplicar cambios","Review changes":"Revisar cambios","Everything":"Todo","One user ID per line":"Un ID de usuario por línea","No roles":"No hay roles","None":"Ninguno","on":"activado","off":"desactivado","Privileged":"Privilegiado","Coming soon":"Próximamente","Show ":"Mostrar ","Unsaved":"Sin guardar","Saved ":"Guardados "," change(s). Recorded in the audit log.":" cambio(s). Registrados en el historial de auditoría."
 },
 pt:{
+"Realtime connection":"Ligação em tempo real",
 "Latency":"Latência",
 "Raids Stopped":"Raids travados","Nukes Stopped":"Nukes travados","Members Quarantined":"Membros em quarentena","Accounts Flagged":"Contas sinalizadas",
 "Discord security":"Segurança do Discord",
@@ -72,6 +74,7 @@ pt:{
 "Read-only: only the server owner can save changes from the website. Administrators can use /sudo in Discord or an /api token.":"Só de leitura: apenas o proprietário do servidor pode guardar alterações no site. Os administradores podem usar /sudo no Discord ou um token /api.","Changes are validated by the same API your tokens use, recorded in the audit log and announced in your log channel.":"As alterações são validadas pela mesma API dos seus tokens, registadas na auditoria e anunciadas no canal de registos.","Nothing to change. Those values were already set.":"Nada a alterar. Esses valores já estavam definidos.","Couldn't reach the server.":"Não foi possível contactar o servidor.","Couldn't validate the changes.":"Não foi possível validar as alterações.","Review the changes and apply them.":"Reveja as alterações e aplique-as.","Discard":"Descartar","Apply changes":"Aplicar alterações","Review changes":"Rever alterações","Everything":"Tudo","One user ID per line":"Um ID de utilizador por linha","No roles":"Sem cargos","None":"Nenhum","Privileged":"Privilegiado","Coming soon":"Em breve","Show ":"Mostrar ","Unsaved":"Por guardar"
 },
 fr:{
+"Realtime connection":"Connexion en temps réel",
 "Latency":"Latence",
 "Raids Stopped":"Raids stoppés","Nukes Stopped":"Nukes stoppés","Members Quarantined":"Membres en quarantaine","Accounts Flagged":"Comptes signalés",
 "Discord security":"Sécurité Discord",
@@ -98,6 +101,7 @@ fr:{
 "Read-only: only the server owner can save changes from the website. Administrators can use /sudo in Discord or an /api token.":"Lecture seule : seul le propriétaire du serveur peut enregistrer les changements depuis le site. Les administrateurs peuvent utiliser /sudo dans Discord ou un jeton /api.","Changes are validated by the same API your tokens use, recorded in the audit log and announced in your log channel.":"Les changements sont validés par la même API que vos jetons, consignés dans le journal d'audit et annoncés dans votre salon de journaux.","Nothing to change. Those values were already set.":"Aucun changement. Ces valeurs sont déjà définies.","Couldn't reach the server.":"Impossible de joindre le serveur.","Couldn't validate the changes.":"Impossible de valider les changements.","Review the changes and apply them.":"Vérifiez les changements et appliquez-les.","Discard":"Annuler","Apply changes":"Appliquer les changements","Review changes":"Vérifier les changements","Everything":"Tout","One user ID per line":"Un identifiant utilisateur par ligne","No roles":"Aucun rôle","None":"Aucun","Privileged":"Privilégié","Coming soon":"Bientôt disponible","Show ":"Afficher ","Unsaved":"Non enregistré"
 },
 de:{
+"Realtime connection":"Echtzeitverbindung",
 "Latency":"Latenz",
 "Raids Stopped":"Raids gestoppt","Nukes Stopped":"Nukes gestoppt","Members Quarantined":"Mitglieder in Quarantäne","Accounts Flagged":"Markierte Konten",
 "Discord security":"Discord-Sicherheit,",
@@ -124,6 +128,7 @@ de:{
 "Read-only: only the server owner can save changes from the website. Administrators can use /sudo in Discord or an /api token.":"Nur-Lesezugriff: Nur der Servereigentümer kann Änderungen auf der Website speichern. Administratoren können /sudo in Discord oder ein /api-Token verwenden.","Changes are validated by the same API your tokens use, recorded in the audit log and announced in your log channel.":"Änderungen werden über dieselbe API wie deine Tokens geprüft, im Audit-Protokoll gespeichert und in deinem Protokollkanal angekündigt.","Nothing to change. Those values were already set.":"Keine Änderungen nötig. Diese Werte sind bereits gesetzt.","Couldn't reach the server.":"Der Server ist nicht erreichbar.","Couldn't validate the changes.":"Änderungen konnten nicht validiert werden.","Review the changes and apply them.":"Prüfe die Änderungen und wende sie an.","Discard":"Verwerfen","Apply changes":"Änderungen anwenden","Review changes":"Änderungen prüfen","Everything":"Alles","One user ID per line":"Eine Benutzer-ID pro Zeile","No roles":"Keine Rollen","None":"Keine","Privileged":"Privilegiert","Coming soon":"Demnächst","Show ":"Anzeigen ","Unsaved":"Nicht gespeichert"
 },
 ru:{
+"Realtime connection":"Соединение в реальном времени",
 "Latency":"Задержка",
 "Raids Stopped":"Рейдов остановлено","Nukes Stopped":"Нюков остановлено","Members Quarantined":"Участников в карантине","Accounts Flagged":"Помеченных аккаунтов",
 "Discord security":"Безопасность Discord,",
