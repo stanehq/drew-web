@@ -164,7 +164,7 @@ export function PricingBoard() {
               >
                 {b === "monthly" ? t("Monthly") : t("Yearly")}
                 {b === "yearly" && (
-                  <span className="rounded-md border border-brand/40 bg-gradient-to-r from-brand/25 via-brand/15 to-white/[0.10] px-2 py-0.5 text-[0.68rem] font-bold text-white shadow-[inset_0_0_12px_rgb(65_207_139/0.08)]">
+                  <span className="rounded-md border border-white/20 bg-transparent px-2 py-0.5 text-[0.68rem] font-bold text-white">
                     {t("2 MONTHS FREE")}
                   </span>
                 )}
