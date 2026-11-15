@@ -81,12 +81,14 @@ export function Testimonials() {
       <div className="mx-auto mt-14 max-w-5xl columns-1 gap-5 md:columns-2">
         {TESTIMONIALS.map((item, i) => <Card key={`${item.server.name}-${i}`} item={item} featured={i === 0} />)}
       </div>
-      <p className="mt-6 text-center text-sm text-mute">
-        {t("Your feedback helps us make Drew better. Share your experience with the team.")}{" "}
-        <a href={SITE.support} target="_blank" rel="noopener noreferrer" className="text-brand-bright underline decoration-brand/40 underline-offset-4 hover:decoration-brand">
+      <div className="mt-8 text-center">
+        <p className="text-sm text-mute">
+          {t("Your feedback helps us make Drew better. Share your experience with the team.")}
+        </p>
+        <a href={SITE.support} target="_blank" rel="noopener noreferrer" className="mt-3 inline-block text-sm font-semibold text-white underline decoration-white/40 underline-offset-4 transition-colors hover:decoration-white">
           {t("Share your feedback")}
         </a>
-      </p>
+      </div>
     </section>
   );
 }
