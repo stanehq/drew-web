@@ -5,7 +5,6 @@ import { Copyright } from "lucide-react";
 import { SITE } from "@/lib/site";
 import { Logo } from "./logo";
 import { LanguageSelector } from "./language-selector";
-import { DiscordIcon } from "./discord-icon";
 import { InstagramIcon, XIcon } from "./social-icons";
 import { useI18n } from "@/lib/i18n";
 
@@ -48,7 +47,7 @@ export function SiteFooter() {
         <div className="col-span-2 space-y-4 sm:col-span-3 md:col-span-1">
           <Logo />
           <p className="max-w-xs text-sm leading-relaxed text-mute">
-            {t("Advanced security and automation for Discord communities. Made by Stane.")}
+            {t("Advanced security and automation for online communities. Made by Stane.")}
           </p>
           <LanguageSelector up />
         </div>
@@ -85,11 +84,10 @@ export function SiteFooter() {
           <div className="flex items-center gap-1" aria-label={t("Stane on social media")}>
             {[
               { href: SITE.stane.x, label: "Stane on X", Icon: XIcon },
-              { href: SITE.stane.discord, label: "Stane on Discord", Icon: DiscordIcon },
               { href: SITE.stane.instagram, label: "Stane on Instagram", Icon: InstagramIcon },
             ].map(({ href, label, Icon }) => (
               <a key={href} href={href} target="_blank" rel="noopener" aria-label={label} title={label} className="group inline-flex size-9 items-center justify-center rounded-lg text-mute transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/[0.06] hover:text-fg">
-                {Icon === DiscordIcon ? <DiscordIcon className="size-[18px] transition-transform duration-200 group-hover:scale-110" color="#5865F2" /> : <Icon className="size-[18px] transition-transform duration-200 group-hover:scale-110" />}
+                <Icon className="size-[18px] transition-transform duration-200 group-hover:scale-110" />
               </a>
             ))}
           </div>
