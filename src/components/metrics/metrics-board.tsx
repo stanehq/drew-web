@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Activity, Gauge, Hash, Layers, Server, ShieldCheck, Terminal, TrendingUp, Users } from "lucide-react";
+import { Activity, Gauge, Hash, Server, ShieldCheck, Terminal, TrendingUp, Users } from "lucide-react";
 import type { PublicMetricPoint, PublicMetrics } from "@/lib/public-metrics";
 import { useI18n } from "@/lib/i18n";
 import { formatCompact, formatExact } from "@/lib/format";
@@ -12,7 +12,8 @@ type Range = (typeof RANGES)[number];
 const RANGE_LABEL: Record<Range, string> = { "24h": "24 hours", "7d": "7 days", "30d": "30 days", "90d": "90 days" };
 const REFRESH_MS = 120_000;
 
-type Series = { key: keyof PublicMetricPoint; label: string; icon: typeof Server; unit?: string; bars?: boolean };
+type ChartPoint = PublicMetricPoint & { perServer: number };
+type Series = { key: keyof ChartPoint; label: string; icon: typeof Server; unit?: string; bars?: boolean };
 
 const fmtTime = (t: number, range: Range) =>
   new Date(t * 1000).toLocaleString("en", range === "24h" ? { hour: "2-digit", minute: "2-digit" } : { month: "short", day: "numeric" });
@@ -55,7 +56,7 @@ function smoothPath(pts: [number, number][]): string {
   return d;
 }
 
-function Chart({ points, series, range }: { points: PublicMetricPoint[]; series: Series; range: Range }) {
+function Chart({ points, series, range }: { points: ChartPoint[]; series: Series; range: Range }) {
   const { t } = useI18n();
   const id = useId().replace(/:/g, "");
   const [hover, setHover] = useState<number | null>(null);
@@ -161,7 +162,7 @@ const CHARTS: Series[] = [
   { key: "users", label: "Members", icon: Users },
   { key: "channels", label: "Channels", icon: Hash },
   { key: "latencyMs", label: "Gateway latency", icon: Gauge, unit: "ms" },
-  { key: "shardsOnline", label: "Shards online", icon: Layers },
+  { key: "perServer", label: "Members per server", icon: TrendingUp },
   { key: "commands", label: "Commands", icon: Terminal },
 ];
 
@@ -240,6 +241,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
   };
 
   const points = useMemo(() => (data?.range === range ? data.points : []), [data, range]);
+  const chartPoints = useMemo<ChartPoint[]>(() => points.map((p) => ({ ...p, perServer: p.guilds ? p.users / p.guilds : 0 })), [points]);
   const stats = useMemo(() => {
     const first = points[0];
     const last = points[points.length - 1];
@@ -261,30 +263,20 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
   const cur = data?.current;
   // Each chart shows its latest value (commands: the total for the period), so the snapshot above does not repeat them.
   const headline = (s: Series) => {
-    const last = points[points.length - 1];
+    const last = chartPoints[chartPoints.length - 1];
     if (!last) return "";
-    if (s.key === "commands") return formatCompact(points.reduce((sum, p) => sum + p.commands, 0));
+    if (s.key === "commands") return formatCompact(chartPoints.reduce((sum, p) => sum + p.commands, 0));
     const v = Number(last[s.key]);
-    return s.unit ? `${Math.round(v)} ${s.unit}` : formatCompact(v);
+    return s.unit ? `${Math.round(v)} ${s.unit}` : s.key === "perServer" ? formatExact(Math.round(v)) : formatCompact(v);
   };
 
+  // While the figures are still loading (or there is no history yet) every card shows the same placeholder.
+  const loading = !data || data.range !== range || points.length < 2;
   const kpis = [
-    {
-      label: "Members per server",
-      icon: TrendingUp,
-      value: cur?.guilds ? formatExact(Math.round(cur.users / cur.guilds)) : "0",
-    },
+    { label: "Commands per hour", icon: TrendingUp, value: formatCompact(Math.round(stats.perHour)) },
     { label: "Commands run", icon: Terminal, value: formatCompact(cur?.commandsUsed ?? 0) },
-    {
-      label: "Avg latency",
-      icon: Gauge,
-      value: `${Math.round(stats.avgLatency || cur?.latencyMs || 0)} ms`,
-    },
-    {
-      label: "Availability",
-      icon: ShieldCheck,
-      value: points.length ? `${stats.availability.toFixed(stats.availability === 100 ? 0 : 2)}%` : "...",
-    },
+    { label: "Avg latency", icon: Gauge, value: `${Math.round(stats.avgLatency || cur?.latencyMs || 0)} ms` },
+    { label: "Availability", icon: ShieldCheck, value: `${stats.availability.toFixed(stats.availability === 100 ? 0 : 2)}%` },
   ];
 
   return (
@@ -336,7 +328,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
               <p className="flex items-center gap-2 text-xs text-mute">
                 <Icon className="drew-icon-gradient size-3.5" /> {t(label)}{suffix}
               </p>
-              <p className="mt-4 truncate font-sans text-2xl font-semibold leading-none tabular-nums tracking-[-0.02em] sm:text-3xl">{data ? value : "..."}</p>
+              <p className="mt-4 truncate font-sans text-2xl font-semibold leading-none tabular-nums tracking-[-0.02em] sm:text-3xl">{loading ? "..." : value}</p>
             </div>
           ))}
           </div>
@@ -362,7 +354,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
                   </h2>
                   <span className="font-sans text-lg font-semibold tabular-nums text-fg">{headline(s)}</span>
                 </header>
-                <Chart points={points} series={s} range={range} />
+                <Chart points={chartPoints} series={s} range={range} />
               </article>
             ))}
             </div>
