@@ -21,7 +21,7 @@ function Card({ item, featured }: { item: Testimonial; featured: boolean }) {
   const { server, quote, author } = item;
   const accent = item.color ?? (server.badge ? BADGE[server.badge].color : null);
   return (
-    <figure className={`relative mb-5 flex break-inside-avoid flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#0b0d0c] p-7 ${featured ? "sm:min-h-[560px] sm:p-9" : ""}`}>
+    <figure className={`relative mb-5 flex break-inside-avoid flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#0b0d0c] p-7 ${featured ? "sm:min-h-[460px] sm:p-9" : ""}`}>
       {server.icon && (
         <Image src={server.icon} alt="" aria-hidden width={96} height={96} className={`pointer-events-none absolute left-1/2 top-1/3 size-[140%] max-w-none -translate-x-1/2 -translate-y-1/2 object-cover blur-3xl saturate-150 ${featured ? "opacity-25" : "opacity-10"}`} />
       )}
@@ -38,13 +38,13 @@ function Card({ item, featured }: { item: Testimonial; featured: boolean }) {
           {server.members != null && <p className="text-sm text-mute">{formatCompact(server.members)} {t("members")}</p>}
         </div>
       </div>
-      <blockquote className={`relative my-8 flex-1 text-pretty leading-relaxed text-fg/90 ${featured ? "flex items-center text-xl sm:text-2xl" : "text-[1.02rem]"}`}>
+      <blockquote className={`relative my-7 text-pretty leading-relaxed text-white ${featured ? "text-xl sm:text-2xl" : "flex-1 text-[1.02rem]"}`}>
         <p>&ldquo;{t(quote)}&rdquo;</p>
       </blockquote>
       <figcaption className="relative flex items-end justify-between gap-4">
         <div>
           <p className="font-semibold text-white">{t(author.name)}</p>
-          <p className="text-sm text-mute">{t(author.role)}</p>
+          <p className="text-sm text-white/75">{t(author.role)}</p>
         </div>
         <Avatar src={author.avatar} name={t(author.name)} className="size-11" />
       </figcaption>
