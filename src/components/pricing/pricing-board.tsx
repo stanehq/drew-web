@@ -60,7 +60,7 @@ const COMPARE: [string, boolean | string, boolean | string][] = [
 const FAQ = [
   [
     "How does the free trial work?",
-    "New users get 5 days of Premium for free. Add a payment method to start it. Cancel before the trial ends and you pay nothing.",
+    "New users get 15 days of Premium for free. Add a payment method to start it. Cancel before the trial ends and you pay nothing.",
   ],
   ["Can I cancel anytime?", "Yes. Cancelling stops future renewals and you keep Premium until the end of the period you paid for."],
   ["Can I switch plans later?", "Yes. Upgrade or downgrade whenever you want and the new price applies from your next billing cycle."],
@@ -145,7 +145,7 @@ export function PricingBoard() {
         <div className="mx-auto max-w-6xl px-5 pb-12 pt-20 text-center">
           <h1 className="mx-auto max-w-3xl text-balance text-4xl font-semibold tracking-[-0.025em] sm:text-6xl"><TwoTone text={t("Protection for less than a coffee")} greenWords={2} /></h1>
           <p className="mx-auto mt-4 max-w-lg text-balance text-soft">
-            {t("Try every Premium feature free for 5 days. Cancel before it ends and you won't pay a cent.")}
+            {t("Try every Premium feature free for 15 days. Cancel before it ends and you won't pay a cent.")}
           </p>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -229,7 +229,7 @@ export function PricingBoard() {
                       : "mt-8 inline-flex h-12 w-full items-center justify-center rounded-lg border border-white/10 text-sm font-medium text-soft transition-colors hover:border-white/20 hover:text-fg"
                   }
                 >
-                  {popular ? t("Start 5-day free trial") : t("Choose Standard")}
+                  {popular ? t("Start 15-day free trial") : t("Choose Standard")}
                 </a>
                 <p className="mt-3 text-center text-xs text-mute">{popular ? t("No charge today. Cancel anytime.") : "\u00a0"}</p>
 
@@ -349,7 +349,7 @@ export function PricingBoard() {
                   </td>
                   <td className="rounded-b-xl bg-brand/[0.07] px-4 py-5">
                     <a href={SITE.support} target="_blank" rel="noreferrer" className={`${buttonClass("primary", "md")} w-full whitespace-nowrap shadow-[0_10px_30px_-8px_rgb(65_207_139/0.6)]`}>
-                      {t("Start free trial")}
+                      {t("Start 15-day free trial")}
                     </a>
                   </td>
                 </tr>
@@ -367,7 +367,7 @@ export function PricingBoard() {
             <p className="mt-4 text-lg text-soft">
               {t("Still unsure?")}{" "}
               <a href={SITE.support} target="_blank" rel="noreferrer" className="text-white underline decoration-white/40 underline-offset-4 hover:decoration-white">
-                {t("Ask us on Discord")}
+                {t("Contact support")}
               </a>
             </p>
           </div>
