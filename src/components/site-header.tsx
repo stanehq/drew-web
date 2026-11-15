@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { ExternalLink, LayoutDashboard, Menu, X } from "lucide-react";
 import { SITE } from "@/lib/site";
 import { LanguageSelector } from "./language-selector";
+import { DiscordIcon } from "./discord-icon";
 import { useI18n } from "@/lib/i18n";
 
 const LOGIN = "/api/auth/discord";
@@ -99,7 +100,7 @@ export function SiteHeader() {
             <LayoutDashboard className="size-4" /> {label("Dashboard")}
           </a>
           <a href={SITE.invite} className="inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-lg border border-[#41cf8b] bg-[#41cf8b] px-4 text-[0.95rem] font-semibold text-white transition-all hover:bg-[#5bd9a0]">
-            {t("Add to your server")}
+            {t("Add to Discord")} <DiscordIcon />
           </a>
         </div>
 
