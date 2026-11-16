@@ -128,8 +128,8 @@ function Chart({ points, series, range }: { points: ChartPoint[]; series: Series
           ))
         ) : (
           <>
-            <path d={area} fill={`url(#g${id})`} />
-            <path d={line} fill="none" stroke={`url(#l${id})`} strokeWidth={1.9} strokeLinejoin="round" strokeLinecap="round" />
+            <path d={area} fill={`url(#g${id})`} className="chart-area" />
+            <path d={line} pathLength={1} className="chart-line" fill="none" stroke={`url(#l${id})`} strokeWidth={1.9} strokeLinejoin="round" strokeLinecap="round" />
           </>
         )}
         {[0, Math.floor((points.length - 1) / 2), points.length - 1]
@@ -328,8 +328,8 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
         <section aria-labelledby="metrics-snapshot">
           <h2 id="metrics-snapshot" className="mb-3 font-sans text-sm font-semibold text-soft">{t("Current snapshot")}</h2>
           <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          {kpis.map(({ label, icon: Icon, value, suffix }: { label: string; icon: typeof Server; value: string; suffix?: string }) => (
-            <div key={label} className="surface min-w-0 p-5 sm:p-6">
+          {kpis.map(({ label, icon: Icon, value, suffix }: { label: string; icon: typeof Server; value: string; suffix?: string }, i) => (
+            <div key={label} style={{ "--d": `${i * 70}ms` } as React.CSSProperties} className="rise lift surface min-w-0 p-5 sm:p-6">
               <p className="flex items-center gap-2 text-xs text-mute">
                 <Icon className="drew-icon-gradient size-3.5" /> {t(label)}{suffix}
               </p>
@@ -351,15 +351,15 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
           <section className="mt-8" aria-labelledby="metrics-history">
             <h2 id="metrics-history" className="mb-3 font-sans text-sm font-semibold text-soft">{t("Trends over time")} <span className="font-normal text-mute">· {t(RANGE_LABEL[range])}</span></h2>
             <div className="grid gap-3 lg:grid-cols-2">
-            {CHARTS.map((s) => (
-              <article key={s.key} className="surface min-w-0 p-5 sm:p-6">
+            {CHARTS.map((s, i) => (
+              <article key={`${range}-${s.key}`} style={{ "--d": `${(i % 2) * 90 + Math.floor(i / 2) * 70}ms` } as React.CSSProperties} className="rise lift surface min-w-0 p-5 sm:p-6">
                 <header className="mb-3 flex items-center justify-between">
                   <h2 className="font-sans flex items-center gap-2 text-sm font-medium">
                     <s.icon className="drew-icon-gradient size-4" /> {t(s.label)}
                   </h2>
                   <span className="font-sans text-lg font-semibold tabular-nums text-fg">{headline(s)}</span>
                 </header>
-                <Chart points={chartPoints} series={s} range={range} />
+                <Chart key={range} points={chartPoints} series={s} range={range} />
               </article>
             ))}
             </div>

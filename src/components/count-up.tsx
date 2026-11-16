@@ -8,7 +8,7 @@ import { formatExact } from "@/lib/format";
  * visible it starts right away instead of waiting for the observer, and a new
  * `value` counts on from the number already shown, so it never stays at 0.
  */
-export function CountUp({ value, ms = 1600 }: { value: number; ms?: number }) {
+export function CountUp({ value, ms = 1600, format = formatExact }: { value: number; ms?: number; format?: (n: number) => string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const current = useRef(0);
   const [shown, setShown] = useState(0);
@@ -61,7 +61,7 @@ export function CountUp({ value, ms = 1600 }: { value: number; ms?: number }) {
 
   return (
     <span ref={ref} className="tabular-nums" aria-label={formatExact(value)}>
-      {formatExact(shown)}
+      {format(shown)}
     </span>
   );
 }

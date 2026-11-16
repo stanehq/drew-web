@@ -12,6 +12,7 @@ import { Testimonials } from "@/components/testimonials";
 import { SITE } from "@/lib/site";
 import { HeroAtmosphere } from "@/components/hero-atmosphere";
 import { TwoTone } from "@/components/two-tone";
+import { Reveal } from "@/components/reveal";
 
 // Two highlighted protections, then the rest in a quieter grid (GitHub-style).
 const highlights = [
@@ -43,16 +44,16 @@ const steps = [
 ];
 
 const primary =
-  "inline-flex h-12 items-center gap-2 rounded-md border border-[#3fca88] bg-[#3fca88] px-6 text-[0.98rem] font-semibold text-white transition-all hover:bg-[#55d79a]";
+  "inline-flex h-12 items-center gap-2 rounded-md border border-[#3fca88] bg-[#3fca88] px-6 text-[0.98rem] font-semibold text-white transition-all active:scale-[0.97] hover:bg-[#55d79a]";
 const secondary =
-  "inline-flex h-12 items-center gap-2 rounded-md border border-white/30 bg-black px-6 text-[0.98rem] font-semibold text-fg transition-colors hover:border-white/50 hover:bg-[#111]";
+  "inline-flex h-12 items-center gap-2 rounded-md border border-white/30 bg-black px-6 text-[0.98rem] font-semibold text-fg transition-all active:scale-[0.97] hover:border-white/50 hover:bg-[#111]";
 
 function SectionTitle({ title, children }: { title: string; children?: React.ReactNode }) {
   return (
-    <div className="mx-auto max-w-3xl text-center">
+    <Reveal className="mx-auto max-w-3xl text-center">
       <h2 className="text-balance text-4xl font-semibold tracking-[-0.025em] sm:text-6xl"><TwoTone text={title} /></h2>
       {children && <p className="mx-auto mt-5 max-w-2xl text-pretty text-lg leading-relaxed text-soft">{children}</p>}
-    </div>
+    </Reveal>
   );
 }
 
@@ -74,13 +75,13 @@ export default function HomePage() {
           aria-hidden
         />
         <div className="mx-auto max-w-4xl px-5 pb-10 pt-6 text-center sm:pb-12 sm:pt-8">
-          <h1 className="mx-auto max-w-[14ch] text-balance text-[clamp(2.4rem,6.2vw,6rem)] font-semibold leading-[1.04] tracking-[-0.035em]">
+          <h1 className="rise mx-auto max-w-[14ch] text-balance text-[clamp(2.4rem,6.2vw,6rem)] font-semibold leading-[1.04] tracking-[-0.035em]">
             <TwoTone text={`${t("Discord security")} ${t("that never sleeps")}`} greenWords={2} />
           </h1>
-          <p className="mx-auto mt-5 max-w-2xl px-2 text-pretty text-[clamp(1rem,1.5vw,1.3rem)] leading-relaxed text-white">
+          <p style={{ "--d": "140ms" } as React.CSSProperties} className="rise mx-auto mt-5 max-w-2xl px-2 text-pretty text-[clamp(1rem,1.5vw,1.3rem)] leading-relaxed text-white">
             {t("Anti-nuke, anti-raid, verification and logging in one bot. Set it up in a minute and let Drew do the watching")}
           </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <div style={{ "--d": "260ms" } as React.CSSProperties} className="rise mt-8 flex flex-wrap items-center justify-center gap-3">
             <a href={SITE.invite} className={primary}>
               <DiscordIcon /> {t("Add to Discord")}
             </a>
@@ -99,19 +100,21 @@ export default function HomePage() {
           {t("Set it up in minutes, Drew does the watching 24/7")}
         </SectionTitle>
         <div className="mx-auto mt-16 grid max-w-6xl gap-4 md:grid-cols-2">
-          {highlights.map(({ icon: Icon, title, body }) => (
-            <article
+          {highlights.map(({ icon: Icon, title, body }, i) => (
+            <Reveal
+              as="article"
               key={title}
-              className="surface relative overflow-hidden p-8 sm:p-10"
+              delay={i * 100}
+              className="surface lift relative overflow-hidden p-8 sm:p-10"
             >
               <Icon className="drew-icon-gradient size-7" strokeWidth={1.75} />
               <h3 className="mt-8 text-2xl font-semibold tracking-tight text-white">{t(title)}</h3>
               <p className="mt-3 max-w-md leading-relaxed text-soft">{t(body)}</p>
-            </article>
+            </Reveal>
           ))}
         </div>
         <div className="mx-auto mt-4 grid max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {features.map(({ icon: Icon, title, body, href }) => {
+          {features.map(({ icon: Icon, title, body, href }, i) => {
             const inner = (
               <>
                 <Icon className="drew-icon-gradient size-5" strokeWidth={1.75} />
@@ -124,15 +127,17 @@ export default function HomePage() {
                 )}
               </>
             );
-            const cls = "block rounded-2xl border border-white/10 p-7 transition-colors hover:border-white/20 hover:bg-white/[0.02]";
-            return href ? (
-              <Link key={title} href={href} className={cls}>
-                {inner}
-              </Link>
-            ) : (
-              <article key={title} className={cls}>
-                {inner}
-              </article>
+            const cls = "lift block h-full rounded-2xl border border-white/10 p-7 hover:bg-white/[0.02]";
+            return (
+              <Reveal key={title} delay={(i % 3) * 90}>
+                {href ? (
+                  <Link href={href} className={cls}>
+                    {inner}
+                  </Link>
+                ) : (
+                  <article className={cls}>{inner}</article>
+                )}
+              </Reveal>
             );
           })}
         </div>
@@ -142,14 +147,14 @@ export default function HomePage() {
       <section className="px-5 pb-28">
         <SectionTitle title={t("Up and running in three steps")} />
         <ol className="mx-auto mt-14 grid max-w-5xl gap-10 md:grid-cols-3">
-          {steps.map((s) => (
-            <li key={s.n} className="text-center md:text-left">
+          {steps.map((s, i) => (
+            <Reveal as="li" key={s.n} delay={i * 110} className="text-center md:text-left">
               <span className="inline-flex size-12 items-center justify-center rounded-full border border-white/15 text-2xl font-bold">
                 <span className="drew-title-green leading-none">{s.n}</span>
               </span>
               <h3 className="mt-5 text-xl font-semibold tracking-tight">{t(s.title)}</h3>
               <p className="mt-2 text-soft">{t(s.body)}</p>
-            </li>
+            </Reveal>
           ))}
         </ol>
       </section>
@@ -159,7 +164,8 @@ export default function HomePage() {
 
       {/* Closing CTA card, Wick/Kena style: centered, vivid multi-color gradient, joined buttons */}
       <section className="relative px-5 pb-28">
-        <div className="cta-gradient relative mx-auto max-w-4xl overflow-hidden rounded-2xl px-6 py-16 text-center shadow-[0_40px_100px_-50px_rgba(63,202,136,0.5)] sm:px-12 sm:py-20">
+        <Reveal className="mx-auto max-w-4xl">
+        <div className="cta-gradient relative overflow-hidden rounded-2xl px-6 py-16 text-center shadow-[0_40px_100px_-50px_rgba(63,202,136,0.5)] sm:px-12 sm:py-20">
           <Image
             src="/brand/drew-icon.svg"
             unoptimized
@@ -180,6 +186,7 @@ export default function HomePage() {
             </a>
           </div>
         </div>
+        </Reveal>
       </section>
     </>
   );

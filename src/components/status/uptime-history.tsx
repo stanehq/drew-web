@@ -32,23 +32,31 @@ const tone = (d: Day) =>
   d.down === null ? "bg-white/[0.08]" : d.down === 0 ? "bg-brand" : d.down / d.total < 0.5 ? "bg-warn" : "bg-bad";
 
 /** Shard health for the last 30 days, one segment per day, from the public metrics history. */
-export function UptimeHistory({ live = null }: { live?: Live }) {
+export type History = { points: PublicMetricPoint[]; to: number };
+
+export function UptimeHistory({ live = null, initial = null }: { live?: Live; initial?: History | null }) {
   const { t, locale } = useI18n();
-  const [history, setHistory] = useState<{ points: PublicMetricPoint[]; to: number } | null>(null);
+  const [history, setHistory] = useState<History | null>(initial);
   const days = useMemo(() => (history ? toDays(history.points, history.to, live) : null), [history, live]);
 
+  // The page already comes with the history from the server, so the bar is coloured from the first paint.
+  // The client only loads it when the server could not, and refreshes it every few minutes.
   useEffect(() => {
     let alive = true;
-    fetch("/api/metrics?range=30d")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d: { available?: boolean; points?: PublicMetricPoint[]; to?: number } | null) => {
-        if (alive && d?.available && Array.isArray(d.points)) setHistory({ points: d.points, to: d.to ?? Date.now() / 1000 });
-      })
-      .catch(() => {});
+    const load = () =>
+      fetch("/api/metrics?range=30d")
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d: { available?: boolean; points?: PublicMetricPoint[]; to?: number } | null) => {
+          if (alive && d?.available && Array.isArray(d.points)) setHistory({ points: d.points, to: d.to ?? Date.now() / 1000 });
+        })
+        .catch(() => {});
+    if (!initial) void load();
+    const timer = setInterval(load, 300_000);
     return () => {
       alive = false;
+      clearInterval(timer);
     };
-  }, []);
+  }, [initial]);
 
   const known = days?.filter((d) => d.down !== null) ?? [];
   const clean = known.filter((d) => d.down === 0).length;
@@ -57,15 +65,16 @@ export function UptimeHistory({ live = null }: { live?: Live }) {
   return (
     <div>
       <div className="flex h-2 gap-1" role="img" aria-label={`${t("Last 30 days")}: ${clean}/${known.length} ${t("days with every shard online")}`}>
-        {(days ?? Array.from({ length: DAYS }, (_, i) => ({ start: i, down: null, total: 0 }))).map((d) => (
+        {(days ?? Array.from({ length: DAYS }, (_, i) => ({ start: i, down: null, total: 0 }))).map((d, i) => (
           <span
             key={d.start}
+            style={{ "--i": i } as React.CSSProperties}
             title={
               days
                 ? `${fmtDay(d.start)}: ${d.down === null ? t("No data") : d.down === 0 ? t("All shards online") : `${d.down}/${d.total} ${t("shards down")}`}`
                 : undefined
             }
-            className={`h-full flex-1 rounded-full ${days ? tone(d) : "bg-white/[0.08]"}`}
+            className={`h-full flex-1 rounded-full ${days ? `seg ${tone(d)}` : "animate-pulse bg-white/[0.08]"}`}
           />
         ))}
       </div>
