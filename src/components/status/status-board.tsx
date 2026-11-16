@@ -26,7 +26,7 @@ const REFRESH = 30;
 
 const SERVICE_META: Record<string, { label: string; icon: typeof Cloud; detail: string }> = {
   gateway: { label: "Gateway", icon: Wifi, detail: "Realtime connection" },
-  api: { label: "API", icon: Zap, detail: "Configuration & dashboard API" },
+  api: { label: "API", icon: Zap, detail: "Public API" },
   database: { label: "Database", icon: Database, detail: "Settings and history storage" },
   cache: { label: "Cache", icon: Layers, detail: "Sessions and rate limiting" },
 };
@@ -148,13 +148,21 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
 
 
   // Each figure appears once on this page: the service rows below only show the state.
+  // A latency of 0 means "under a millisecond" for a healthy service, and "no reading yet" otherwise.
+  const svcMs = (key: string) => {
+    if (!data) return "...";
+    const svc = data.services[key];
+    if (svc?.latencyMs && svc.latencyMs > 0) return `${svc.latencyMs} ms`;
+    return svc?.status === "operational" ? "< 1 ms" : "...";
+  };
+  // Each figure appears once on this page: the service rows below only show the state.
   const kpis = [
     { icon: Layers, label: "Shards", value: data ? `${online.length}/${shards.length}` : "..." },
     { icon: Clock3, label: "Uptime", value: data ? formatUptime(data.uptimeSeconds) : "..." },
     { icon: Gauge, label: "Gateway latency", value: data && data.latencyMs > 0 ? `${Math.round(data.latencyMs)} ms` : "..." },
-    { icon: Zap, label: "API latency", value: data?.services.api?.latencyMs ? `${data.services.api.latencyMs} ms` : "..." },
-    { icon: Database, label: "Database latency", value: data?.services.database?.latencyMs ? `${data.services.database.latencyMs} ms` : "..." },
-    { icon: Layers, label: "Cache latency", value: data?.services.cache?.latencyMs ? `${data.services.cache.latencyMs} ms` : "..." },
+    { icon: Zap, label: "API latency", value: svcMs("api") },
+    { icon: Database, label: "Database latency", value: svcMs("database") },
+    { icon: Layers, label: "Cache latency", value: svcMs("cache") },
   ];
 
   const tone = overall === "operational" ? "good" : overall === "degraded" ? "warn" : "bad";
@@ -218,7 +226,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
           </div>
           {!data && error && <p className="mt-4 text-sm text-soft">{t("We couldn't reach the bot. This page retries automatically.")}</p>}
           <div className="mt-6">
-            <UptimeHistory />
+            <UptimeHistory live={data ? { down: Math.max(0, shards.length - online.length), total: shards.length } : null} />
           </div>
         </section>
 

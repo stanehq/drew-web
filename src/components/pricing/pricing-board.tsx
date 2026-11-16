@@ -305,11 +305,11 @@ export function PricingBoard() {
         <div className="mx-auto max-w-5xl px-5">
           <h2 className="pb-10 pt-24 text-center text-4xl font-semibold tracking-[-0.025em] sm:text-6xl">{t("Compare plans")}</h2>
           <div className="surface overflow-x-auto">
-            <table className="w-full table-fixed text-left text-[0.85rem] sm:table-auto sm:text-[0.95rem]">
+            <table className="w-full table-fixed text-left text-[0.85rem] sm:text-[0.95rem]">
               <colgroup>
                 <col />
-                <col className="w-[5.75rem] sm:w-44" />
-                <col className="w-[5.75rem] sm:w-44" />
+                <col className="w-[5.75rem] sm:w-56" />
+                <col className="w-[5.75rem] sm:w-56" />
               </colgroup>
               <thead>
                 <tr>
@@ -319,8 +319,8 @@ export function PricingBoard() {
                     <p className="mt-0.5 text-xs font-normal text-mute sm:text-sm">{money(monthlyPrice(PLANS[0].monthly, billing))} {t("/ month")}</p>
                   </th>
                   <th className="rounded-t-xl bg-white/[0.035] px-1.5 pb-5 pt-6 align-bottom sm:px-4">
-                    <p className="[overflow-wrap:anywhere] text-[0.7rem] font-bold tracking-tight drew-title-green sm:text-xl sm:tracking-normal">{t("Advanced")}</p>
-                    <p className="mt-0.5 text-xs font-normal text-mute sm:text-sm">{money(monthlyPrice(PLANS[1].monthly, billing))} {t("/ month")}</p>
+                    <p className="[overflow-wrap:anywhere] text-[0.7rem] font-bold tracking-tight text-white sm:text-xl sm:tracking-normal">{t("Advanced")}</p>
+                    <p className="mt-0.5 text-xs font-normal sm:text-sm"><span className="drew-gradient-x">{money(monthlyPrice(PLANS[1].monthly, billing))}</span> <span className="text-mute">{t("/ month")}</span></p>
                   </th>
                 </tr>
               </thead>
@@ -331,15 +331,15 @@ export function PricingBoard() {
                     {[a, b].map((v, i) => (
                       <td key={i} className={`px-1.5 py-4 sm:px-4 ${i === 1 ? "bg-white/[0.035]" : ""}`}>
                         {v === true ? (
-                          <span className={`inline-flex size-6 items-center justify-center rounded-full ${i === 1 ? "bg-white/10 ring-1 ring-white/20" : "bg-white/[0.05]"}`} aria-label={t("Included")}>
-                            {i === 1 ? <GradientCheck className="size-3.5" /> : <Check className="size-3.5 text-white/45" strokeWidth={3} />}
+                          <span className="inline-flex" aria-label={t("Included")}>
+                            {i === 1 ? <GradientCheck className="size-5" /> : <Check className="size-5 text-white/40" strokeWidth={2.5} />}
                           </span>
                         ) : v === false ? (
-                          <span className="inline-flex size-6 items-center justify-center rounded-full bg-white/[0.05]" aria-label={t("Not included")}>
-                            <Minus className="size-3.5 text-white/30" strokeWidth={3} />
+                          <span className="inline-flex" aria-label={t("Not included")}>
+                            <Minus className="size-5 text-white/25" strokeWidth={2.5} />
                           </span>
                         ) : (
-                          <span className={`[overflow-wrap:anywhere] text-[0.7rem] tracking-tight sm:text-[0.95rem] sm:tracking-normal ${i === 1 ? "font-semibold text-white" : "text-mute"}`}>{t(v)}</span>
+                          <span className={`[overflow-wrap:anywhere] text-[0.7rem] tracking-tight sm:text-[0.95rem] sm:tracking-normal ${i === 1 ? "font-semibold drew-gradient-x" : "text-mute"}`}>{t(v)}</span>
                         )}
                       </td>
                     ))}

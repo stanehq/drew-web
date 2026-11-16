@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { PublicMetricPoint } from "@/lib/public-metrics";
 import { useI18n } from "@/lib/i18n";
 
@@ -10,12 +10,15 @@ const DAY = 86400;
 // Per UTC day: the most shards that were down at the same time, out of how many.
 type Day = { start: number; down: number | null; total: number };
 
-function toDays(points: PublicMetricPoint[], now: number): Day[] {
+type Live = { down: number; total: number } | null;
+
+function toDays(points: PublicMetricPoint[], now: number, live: Live): Day[] {
   const today = Math.floor(now / DAY) * DAY;
   return Array.from({ length: DAYS }, (_, i) => {
     const start = today - (DAYS - 1 - i) * DAY;
     const inDay = points.filter((p) => p.t >= start && p.t < start + DAY && p.shardsTotal > 0);
-    if (!inDay.length) return { start, down: null, total: 0 };
+    // Right after midnight UTC today has no samples yet: show the current state instead of an empty segment.
+    if (!inDay.length) return i === DAYS - 1 && live && live.total > 0 ? { start, down: live.down, total: live.total } : { start, down: null, total: 0 };
     return {
       start,
       down: Math.max(...inDay.map((p) => Math.max(0, p.shardsTotal - p.shardsOnline))),
@@ -29,16 +32,17 @@ const tone = (d: Day) =>
   d.down === null ? "bg-white/[0.08]" : d.down === 0 ? "bg-brand" : d.down / d.total < 0.5 ? "bg-warn" : "bg-bad";
 
 /** Shard health for the last 30 days, one segment per day, from the public metrics history. */
-export function UptimeHistory() {
+export function UptimeHistory({ live = null }: { live?: Live }) {
   const { t, locale } = useI18n();
-  const [days, setDays] = useState<Day[] | null>(null);
+  const [history, setHistory] = useState<{ points: PublicMetricPoint[]; to: number } | null>(null);
+  const days = useMemo(() => (history ? toDays(history.points, history.to, live) : null), [history, live]);
 
   useEffect(() => {
     let alive = true;
     fetch("/api/metrics?range=30d")
       .then((r) => (r.ok ? r.json() : null))
       .then((d: { available?: boolean; points?: PublicMetricPoint[]; to?: number } | null) => {
-        if (alive && d?.available && Array.isArray(d.points)) setDays(toDays(d.points, d.to ?? Date.now() / 1000));
+        if (alive && d?.available && Array.isArray(d.points)) setHistory({ points: d.points, to: d.to ?? Date.now() / 1000 });
       })
       .catch(() => {});
     return () => {
