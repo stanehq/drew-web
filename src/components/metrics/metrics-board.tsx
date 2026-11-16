@@ -170,7 +170,10 @@ const CHARTS: Series[] = [
 export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics | null; initialRange: Range }) {
   const { t } = useI18n();
   const [range, setRange] = useState<Range>(initialRange);
-  const [data, setData] = useState<PublicMetrics | null>(initial);
+  // Keep what was loaded for every range, so coming back to one shows its data right away.
+  const [byRange, setByRange] = useState<Partial<Record<Range, PublicMetrics>>>(initial ? { [initialRange]: initial } : {});
+  const data = byRange[range] ?? null;
+  const skipFirstLoad = useRef(!!initial);
   const [failed, setFailed] = useState(false);
   const rangeListRef = useRef<HTMLDivElement>(null);
   const rangeButtonRefs = useRef<Partial<Record<Range, HTMLButtonElement | null>>>({});
@@ -220,17 +223,19 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
         .then((r) => (r.ok ? (r.json() as Promise<PublicMetrics>) : Promise.reject(new Error(String(r.status)))))
         .then((d) => {
           if (!alive) return;
-          setData(d);
+          setByRange((prev) => ({ ...prev, [d.range]: d }));
           setFailed(false);
         })
         .catch(() => alive && setFailed(true));
-    if (range !== initialRange || !initial) void load();
+    // The page already came with the first range, every other visit (including coming back to it) loads fresh data.
+    if (skipFirstLoad.current && range === initialRange) skipFirstLoad.current = false;
+    else void load();
     const t = setInterval(load, REFRESH_MS);
     return () => {
       alive = false;
       clearInterval(t);
     };
-  }, [range, initialRange, initial]);
+  }, [range, initialRange]);
 
   const pick = (r: Range) => {
     setRange(r);
@@ -240,7 +245,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
     window.history.replaceState(null, "", u);
   };
 
-  const points = useMemo(() => (data?.range === range ? data.points : []), [data, range]);
+  const points = useMemo(() => data?.points ?? [], [data]);
   const chartPoints = useMemo<ChartPoint[]>(() => points.map((p) => ({ ...p, perServer: p.guilds ? p.users / p.guilds : 0 })), [points]);
   const stats = useMemo(() => {
     const first = points[0];
@@ -271,7 +276,7 @@ export function MetricsBoard({ initial, initialRange }: { initial: PublicMetrics
   };
 
   // While the figures are still loading (or there is no history yet) every card shows the same placeholder.
-  const loading = !data || data.range !== range || points.length < 2;
+  const loading = !data || points.length < 2;
   const kpis = [
     { label: "Commands per hour", icon: TrendingUp, value: formatCompact(Math.round(stats.perHour)) },
     { label: "Commands run", icon: Terminal, value: formatCompact(cur?.commandsUsed ?? 0) },

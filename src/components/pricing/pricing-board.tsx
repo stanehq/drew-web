@@ -225,7 +225,7 @@ export function PricingBoard() {
                   rel="noreferrer"
                   className={
                     popular
-                      ? `${buttonClass("primary", "lg")} mt-8 w-full shadow-[0_10px_30px_-8px_rgb(65_207_139/0.6)]`
+                      ? `${buttonClass("primary", "lg")} mt-8 w-full`
                       : "mt-8 inline-flex h-12 w-full items-center justify-center rounded-lg border border-white/10 text-sm font-medium text-soft transition-colors hover:border-white/20 hover:text-fg"
                   }
                 >
@@ -353,7 +353,7 @@ export function PricingBoard() {
                     </a>
                   </td>
                   <td className="rounded-b-xl bg-white/[0.035] px-4 py-5">
-                    <a href={SITE.support} target="_blank" rel="noreferrer" className={`${buttonClass("primary", "md")} w-full whitespace-nowrap shadow-[0_10px_30px_-8px_rgb(65_207_139/0.6)]`}>
+                    <a href={SITE.support} target="_blank" rel="noreferrer" className={`${buttonClass("primary", "md")} w-full whitespace-nowrap`}>
                       {t("Start 15-day free trial")}
                     </a>
                   </td>

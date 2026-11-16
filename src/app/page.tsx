@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { preload } from "react-dom";
 import Link from "@/components/locale-link";
-import { ArrowRight, Braces, DatabaseBackup, FileClock, KeyRound, LayoutDashboard, PlusCircle, ScrollText, ShieldAlert, UserCheck, Users } from "lucide-react";
+import { ArrowRight, Braces, DatabaseBackup, FileClock, KeyRound, LayoutDashboard, ScrollText, ShieldAlert, UserCheck, Users } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { DiscordIcon } from "@/components/discord-icon";
 import { ProtectionStats } from "@/components/protection-stats";
@@ -43,7 +43,7 @@ const steps = [
 ];
 
 const primary =
-  "inline-flex h-12 items-center gap-2 rounded-md border border-[#41cf8b] bg-[#41cf8b] px-6 text-[0.98rem] font-semibold text-white transition-all hover:bg-[#5bd9a0]";
+  "inline-flex h-12 items-center gap-2 rounded-md border border-[#3fca88] bg-[#3fca88] px-6 text-[0.98rem] font-semibold text-white transition-all hover:bg-[#55d79a]";
 const secondary =
   "inline-flex h-12 items-center gap-2 rounded-md border border-white/30 bg-black px-6 text-[0.98rem] font-semibold text-fg transition-colors hover:border-white/50 hover:bg-[#111]";
 
@@ -159,7 +159,7 @@ export default function HomePage() {
 
       {/* Closing CTA card, Wick/Kena style: centered, vivid multi-color gradient, joined buttons */}
       <section className="relative px-5 pb-28">
-        <div className="cta-gradient relative mx-auto max-w-4xl overflow-hidden rounded-2xl px-6 py-16 text-center shadow-[0_40px_100px_-40px_rgba(65,207,139,0.7)] sm:px-12 sm:py-20">
+        <div className="cta-gradient relative mx-auto max-w-4xl overflow-hidden rounded-2xl px-6 py-16 text-center shadow-[0_40px_100px_-50px_rgba(63,202,136,0.5)] sm:px-12 sm:py-20">
           <Image
             src="/brand/drew-icon.svg"
             unoptimized
@@ -171,13 +171,12 @@ export default function HomePage() {
           />
           <h2 className="relative text-balance text-4xl font-semibold tracking-[-0.025em] text-white sm:text-6xl">{t("Protect your server in under a minute")}</h2>
           <p className="relative mx-auto mt-5 max-w-xl text-pretty text-lg leading-relaxed text-white/90">{t("Invite Drew, run /opsec setup and sleep well tonight")}</p>
-          <div className="relative mx-auto mt-10 flex w-full max-w-xs flex-col overflow-hidden rounded-xl border border-white/70 text-white sm:inline-flex sm:w-auto sm:max-w-none sm:flex-row">
-            <a href={SITE.invite} className="inline-flex h-14 items-center justify-center gap-2.5 px-6 text-sm font-bold uppercase tracking-wider transition-colors hover:bg-white/15 sm:px-8">
-              <PlusCircle className="size-5" strokeWidth={1.75} /> {t("Invite")}
+          <div className="relative mx-auto mt-10 flex max-w-xs flex-col items-stretch justify-center gap-3 sm:max-w-none sm:flex-row sm:items-center">
+            <a href={SITE.invite} className="inline-flex h-12 items-center justify-center gap-2 rounded-md border border-white bg-white px-6 text-[0.98rem] font-semibold text-[#06140d] transition-colors hover:bg-white/90">
+              <DiscordIcon color="#06140d" /> {t("Add to Discord")}
             </a>
-            <span className="h-px w-full bg-white/70 sm:h-auto sm:w-px" aria-hidden />
-            <a href="/api/auth/discord" className="inline-flex h-14 items-center justify-center gap-2.5 px-6 text-sm font-bold uppercase tracking-wider transition-colors hover:bg-white/15 sm:px-8">
-              <LayoutDashboard className="size-5" strokeWidth={1.75} /> {t("Dashboard")}
+            <a href="/api/auth/discord" className="inline-flex h-12 items-center justify-center gap-2 rounded-md border border-white/70 px-6 text-[0.98rem] font-semibold text-white transition-colors hover:bg-white/15">
+              <LayoutDashboard className="size-4" /> {t("Open dashboard")}
             </a>
           </div>
           <p className="relative mt-6 text-sm text-white/85">

@@ -99,7 +99,7 @@ export function SiteHeader() {
           <a href={LOGIN} className={DASHBOARD_BTN}>
             <LayoutDashboard className="size-4" /> {label("Dashboard")}
           </a>
-          <a href={SITE.invite} className="inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-lg border border-[#41cf8b] bg-[#41cf8b] px-4 text-[0.95rem] font-semibold text-white transition-all hover:bg-[#5bd9a0]">
+          <a href={SITE.invite} className="inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-lg border border-[#3fca88] bg-[#3fca88] px-4 text-[0.95rem] font-semibold text-white transition-all hover:bg-[#55d79a]">
             {t("Add to Discord")} <DiscordIcon />
           </a>
         </div>
@@ -131,7 +131,7 @@ export function SiteHeader() {
             <a href={LOGIN} className={`${DASHBOARD_BTN} h-12 justify-center`}>
               <LayoutDashboard className="size-4" /> {label("Dashboard")}
             </a>
-            <a href={SITE.invite} className="inline-flex h-12 items-center justify-center gap-2 rounded-lg border border-[#41cf8b] bg-[#41cf8b] font-semibold text-white">
+            <a href={SITE.invite} className="inline-flex h-12 items-center justify-center gap-2 rounded-lg border border-[#3fca88] bg-[#3fca88] font-semibold text-white">
               {t("Add to Discord")} <DiscordIcon />
             </a>
             <LanguageSelector block />
