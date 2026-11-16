@@ -148,18 +148,18 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
 
 
   // Each figure appears once on this page: the service rows below only show the state.
-  // A latency of 0 means "under a millisecond" for a healthy service, and "no reading" otherwise.
+  // A latency of 0 means "under a millisecond" for a healthy service, and "no reading yet" otherwise.
   const svcMs = (key: string) => {
     if (!data) return "...";
     const svc = data.services[key];
     if (svc?.latencyMs && svc.latencyMs > 0) return `${svc.latencyMs} ms`;
-    return svc?.status === "operational" ? "< 1 ms" : "N/A";
+    return svc?.status === "operational" ? "< 1 ms" : "...";
   };
   // Each figure appears once on this page: the service rows below only show the state.
   const kpis = [
     { icon: Layers, label: "Shards", value: data ? `${online.length}/${shards.length}` : "..." },
     { icon: Clock3, label: "Uptime", value: data ? formatUptime(data.uptimeSeconds) : "..." },
-    { icon: Gauge, label: "Gateway latency", value: !data ? "..." : data.latencyMs > 0 ? `${Math.round(data.latencyMs)} ms` : "N/A" },
+    { icon: Gauge, label: "Gateway latency", value: data && data.latencyMs > 0 ? `${Math.round(data.latencyMs)} ms` : "..." },
     { icon: Zap, label: "API latency", value: svcMs("api") },
     { icon: Database, label: "Database latency", value: svcMs("database") },
     { icon: Layers, label: "Cache latency", value: svcMs("cache") },

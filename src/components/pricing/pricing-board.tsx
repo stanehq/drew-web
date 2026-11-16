@@ -305,8 +305,8 @@ export function PricingBoard() {
         <div className="mx-auto max-w-5xl px-5">
           <h2 className="pb-10 pt-24 text-center text-4xl font-semibold tracking-[-0.025em] sm:text-6xl">{t("Compare plans")}</h2>
           <div className="surface relative overflow-x-auto">
-            {/* Green to white frame around the Advanced column only (it is the last, fixed width column) */}
-            <span aria-hidden className="drew-gradient-outline pointer-events-none absolute inset-y-0 right-0 w-[5.75rem] rounded-[0.875rem] sm:w-56" />
+            {/* White frame around the Advanced column only (it is the last, fixed width column) */}
+            <span aria-hidden className="pointer-events-none absolute inset-y-0 right-0 w-[5.75rem] rounded-[0.875rem] border border-white/80 sm:w-56" />
             <table className="w-full table-fixed text-left text-[0.85rem] sm:text-[0.95rem]">
               <colgroup>
                 <col />

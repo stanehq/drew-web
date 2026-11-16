@@ -96,14 +96,6 @@
       linear-gradient(180deg, #040b08 0%, #000 45%) padding-box,
       linear-gradient(160deg, #35c98d 0%, #7ee8b5 45%, rgb(255 255 255 / 0.92) 100%) border-box;
   }
-  /* Gradient outline with a see-through middle, for framing one part of a larger block. */
-  .drew-gradient-outline {
-    padding: 1px;
-    background: linear-gradient(160deg, #35c98d 0%, #7ee8b5 45%, rgb(255 255 255 / 0.92) 100%);
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
-  }
   /* Same vertical gradient as the Drew logo (public/brand/drew-icon.svg). */
   .drew-wordmark {
     background: linear-gradient(180deg, #35c98d 0%, #5bd4a6 48%, #ddf8ea 78%, #ffffff 100%);
