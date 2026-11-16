@@ -263,11 +263,11 @@
 /* Closing CTA: Drew green with soft color spots that drift slowly. */
 .cta-gradient {
   background:
-    radial-gradient(60% 80% at 15% 20%, #52c997 0%, transparent 60%),
-    radial-gradient(55% 75% at 85% 30%, #3ab67e 0%, transparent 60%),
-    radial-gradient(70% 90% at 50% 110%, #67d6a6 0%, transparent 55%),
-    radial-gradient(50% 70% at 70% 90%, #2a9663 0%, transparent 60%),
-    linear-gradient(135deg, #3ab67e, #2a9663);
+    radial-gradient(60% 80% at 15% 20%, #58d29f 0%, transparent 60%),
+    radial-gradient(55% 75% at 85% 30%, #3dc182 0%, transparent 60%),
+    radial-gradient(70% 90% at 50% 110%, #70dcae 0%, transparent 55%),
+    radial-gradient(50% 70% at 70% 90%, #2faa6f 0%, transparent 60%),
+    linear-gradient(135deg, #3dc182, #2faa6f);
   background-size: 160% 160%;
   animation: cta-drift 14s ease-in-out infinite alternate;
 }
