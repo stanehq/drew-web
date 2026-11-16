@@ -198,13 +198,13 @@
   font-weight: 600;
 }
 .legal a {
-  color: var(--color-brand-bright);
+  color: #fff;
   text-decoration: underline;
-  text-decoration-color: rgb(65 207 139 / 0.4);
+  text-decoration-color: rgb(255 255 255 / 0.4);
   text-underline-offset: 3px;
 }
 .legal a:hover {
-  text-decoration-color: var(--color-brand);
+  text-decoration-color: #fff;
 }
 .legal hr {
   margin: 2.5rem 0;
