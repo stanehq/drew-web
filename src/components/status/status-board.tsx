@@ -173,7 +173,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
           <h1 className="text-4xl font-semibold tracking-[-0.025em] sm:text-6xl"><TwoTone text={t("Drew status")} /></h1>
           <p className="mx-auto mt-4 max-w-lg text-balance text-soft">{t("Live health of every shard and service, and the shard your server runs on")}</p>
           <div className="mx-auto mt-8 max-w-md">
-            <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 focus-within:border-brand/50">
+            <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 focus-within:border-white/40">
               <Search className="size-4 text-mute" />
               <input
                 id="server-id"

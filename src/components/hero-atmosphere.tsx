@@ -100,7 +100,7 @@ export function HeroAtmosphere() {
   }, []);
 
   return (
-    <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden [mask-image:linear-gradient(to_bottom,black_55%,transparent)]" aria-hidden="true">
+    <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
       <canvas ref={canvasRef} className="absolute inset-0 block size-full" />
     </div>
   );

@@ -46,7 +46,7 @@ export function ProtectionStats() {
   // like the old stats panel: big number, name underneath, icon on top.
   return (
     <div className="mx-auto max-w-5xl px-5 pb-6">
-      <ul className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/[0.06] sm:grid-cols-4">
+      <ul className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-[#1b201d] sm:grid-cols-4">
         {stats.map((s) => {
           const meta = KNOWN[s.key];
           const Icon = meta?.icon ?? ShieldCheck;
