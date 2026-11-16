@@ -15,7 +15,7 @@ export function buttonClass(variant: Variant = "primary", size: "sm" | "md" | "l
     md: "h-11 rounded-md px-5 text-[0.94rem]",
     lg: "h-12 rounded-md px-6 text-[0.98rem]",
   };
-  return `inline-flex items-center justify-center gap-2 font-semibold tracking-[-0.01em] transition-all duration-200 disabled:pointer-events-none disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand ${sizes[size]} ${styles[variant]}`;
+  return `inline-flex items-center justify-center gap-2 font-semibold tracking-[-0.01em] transition-all duration-200 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand ${sizes[size]} ${styles[variant]}`;
 }
 
 export function ButtonLink({

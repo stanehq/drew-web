@@ -20,7 +20,7 @@ import type { PublicService, PublicShard, PublicStatus } from "@/lib/public-stat
 import { formatCompact, formatExact, formatUptime } from "@/lib/format";
 import { useI18n } from "@/lib/i18n";
 import { TwoTone } from "@/components/two-tone";
-import { UptimeHistory } from "./uptime-history";
+import { UptimeHistory, type History } from "./uptime-history";
 
 const REFRESH = 30;
 
@@ -93,7 +93,7 @@ function shardForGuild(id: string, count: number) {
   return Number((BigInt(id) >> 22n) % BigInt(count));
 }
 
-export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicStatus | null; initialQuery?: string }) {
+export function StatusBoard({ initial, initialHistory = null, initialQuery = "" }: { initial: PublicStatus | null; initialHistory?: History | null; initialQuery?: string }) {
   const { t } = useI18n();
   const [data, setData] = useState<PublicStatus | null>(initial);
   const [error, setError] = useState(false);
@@ -211,7 +211,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
         </div>
 
         {/* Overall */}
-        <section className={`mt-10 rounded-2xl p-6 ring-1 ring-inset sm:p-8 ${banner}`} aria-labelledby="overall">
+        <section className={`rise mt-10 rounded-2xl p-6 ring-1 ring-inset sm:p-8 ${banner}`} aria-labelledby="overall">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               {tone === "good" ? <CheckCircle2 className="size-7" /> : tone === "warn" ? <TriangleAlert className="size-7" /> : <XCircle className="size-7" />}
@@ -226,12 +226,12 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
           </div>
           {!data && error && <p className="mt-4 text-sm text-soft">{t("We couldn't reach the bot. This page retries automatically.")}</p>}
           <div className="mt-6">
-            <UptimeHistory live={data ? { down: Math.max(0, shards.length - online.length), total: shards.length } : null} />
+            <UptimeHistory initial={initialHistory} live={data ? { down: Math.max(0, shards.length - online.length), total: shards.length } : null} />
           </div>
         </section>
 
         {/* Numbers: read left to right, counts on the first row and latencies on the second */}
-        <section className="mt-6 overflow-hidden rounded-2xl border border-white/10" aria-label="Summary">
+        <section style={{ "--d": "120ms" } as React.CSSProperties} className="rise mt-6 overflow-hidden rounded-2xl border border-white/10" aria-label="Summary">
           <div className="grid grid-cols-2 gap-px bg-white/10 sm:grid-cols-3">
             {kpis.map(({ icon: Icon, label, value }) => (
               <div key={label} className="min-w-0 bg-ink p-4 sm:p-5">
@@ -246,7 +246,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
         </section>
 
         {/* Services and infrastructure latency */}
-        <section className="mt-14" aria-labelledby="services">
+        <section style={{ "--d": "220ms" } as React.CSSProperties} className="rise mt-14" aria-labelledby="services">
           <h2 id="services" className="font-sans text-lg font-semibold tracking-tight">
             {t("Services")}
           </h2>
@@ -278,7 +278,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
         </section>
 
         {/* Shards */}
-        <section className={`mt-14 ${!shards.length && error ? "hidden" : ""}`} aria-labelledby="shards">
+        <section style={{ "--d": "320ms" } as React.CSSProperties} className={`rise mt-14 ${!shards.length && error ? "hidden" : ""}`} aria-labelledby="shards">
           <div className="flex items-end justify-between">
             <h2 id="shards" className="font-sans text-lg font-semibold tracking-tight">
               {t("Shards")}
@@ -293,7 +293,7 @@ export function StatusBoard({ initial, initialQuery = "" }: { initial: PublicSta
             {shards.map((s) => (
               <article
                 key={s.id}
-                className={`rounded-xl border p-4 transition-colors ${target === s.id ? "border-brand/70 bg-brand/[0.06]" : "border-white/10 hover:border-white/20"}`}
+                className={`lift rounded-xl border p-4 ${target === s.id ? "border-brand/70 bg-brand/[0.06]" : "border-white/10 hover:border-white/20"}`}
                 aria-label={`Shard ${s.id}, ${t(STATE[s.status].text)}`}
               >
                 <div className="flex items-center justify-between">

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Flag, Hand, ShieldCheck, UserX } from "lucide-react";
 import { formatCompact } from "@/lib/format";
 import { useI18n } from "@/lib/i18n";
+import { CountUp } from "@/components/count-up";
 
 type Stat = { key: string; total: number };
 
@@ -47,16 +48,16 @@ export function ProtectionStats() {
   return (
     <div className="mx-auto max-w-5xl px-5 pb-6">
       <ul className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-[#1b201d] sm:grid-cols-4">
-        {stats.map((s) => {
+        {stats.map((s, i) => {
           const meta = KNOWN[s.key];
           const Icon = meta?.icon ?? ShieldCheck;
           const label = meta ? t(meta.label) : titleCase(s.key);
           return (
-            <li key={s.key} className="min-w-0 bg-[#0b0f0d] px-5 py-6 text-left sm:px-6 sm:py-7">
+            <li key={s.key} style={{ "--d": `${380 + i * 90}ms` } as React.CSSProperties} className="rise min-w-0 bg-[#0b0f0d] px-5 py-6 text-left sm:px-6 sm:py-7">
               <Icon className="drew-icon-gradient size-6 sm:size-7" strokeWidth={1.6} aria-hidden />
               <p className="mt-4">
                 <span className="text-3xl font-bold tabular-nums leading-none tracking-[-0.02em] text-fg sm:text-[2.5rem]" title={s.total.toLocaleString("en")}>
-                  {formatCompact(s.total)}
+                  <CountUp value={s.total} ms={1500} format={formatCompact} />
                 </span>
               </p>
               <p className="mt-2 text-sm text-mute">{label}</p>

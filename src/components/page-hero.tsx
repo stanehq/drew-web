@@ -9,8 +9,8 @@ export function PageHero({ title, children }: { eyebrow?: string; title: ReactNo
         aria-hidden
       />
       <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
-        <h1 className="text-balance text-4xl font-semibold tracking-[-0.025em] sm:text-6xl">{typeof title === "string" ? <TwoTone text={title} /> : title}</h1>
-        {children && <div className="mx-auto mt-4 max-w-lg text-balance text-soft">{children}</div>}
+        <h1 className="rise text-balance text-4xl font-semibold tracking-[-0.025em] sm:text-6xl">{typeof title === "string" ? <TwoTone text={title} /> : title}</h1>
+        {children && <div style={{ "--d": "120ms" } as React.CSSProperties} className="rise mx-auto mt-4 max-w-lg text-balance text-soft">{children}</div>}
       </div>
     </section>
   );

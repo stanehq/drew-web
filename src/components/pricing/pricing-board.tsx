@@ -6,6 +6,7 @@ import { CurrencyPicker } from "@/components/pricing/currency-picker";
 import { CURRENCY_CODES, FALLBACK_RATES, type CurrencyCode } from "@/lib/currency";
 import { Highlight } from "@/components/highlight";
 import { Check, Minus, Plus } from "lucide-react";
+import { Reveal } from "@/components/reveal";
 import { buttonClass } from "@/components/button";
 import { SITE } from "@/lib/site";
 import { useI18n } from "@/lib/i18n";
@@ -143,12 +144,12 @@ export function PricingBoard() {
           aria-hidden
         />
         <div className="mx-auto max-w-6xl px-5 pb-12 pt-20 text-center">
-          <h1 className="mx-auto max-w-3xl text-balance text-4xl font-semibold tracking-[-0.025em] sm:text-6xl"><TwoTone text={t("Protection for less than a coffee")} greenWords={2} /></h1>
-          <p className="mx-auto mt-4 max-w-lg text-balance text-soft">
+          <h1 className="rise mx-auto max-w-3xl text-balance text-4xl font-semibold tracking-[-0.025em] sm:text-6xl"><TwoTone text={t("Protection for less than a coffee")} greenWords={2} /></h1>
+          <p style={{ "--d": "120ms" } as React.CSSProperties} className="rise mx-auto mt-4 max-w-lg text-balance text-soft">
             {t("Try every Premium feature free for 15 days. Cancel before it ends and you won't pay a cent.")}
           </p>
 
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <div style={{ "--d": "240ms" } as React.CSSProperties} className="rise mt-8 flex flex-wrap items-center justify-center gap-3">
           <div role="radiogroup" aria-label={t("Billing period")} className="relative flex w-fit gap-1 rounded-xl border border-white/10 p-1" {...billingSlide.containerProps}>
             {billingSlide.highlight("bg-white/10")}
             {(["monthly", "yearly"] as const).map((b) => (
@@ -177,7 +178,7 @@ export function PricingBoard() {
         </div>
 
         <div className="mx-auto grid max-w-5xl items-center gap-4 px-5 md:grid-cols-2 md:gap-6">
-          {PLANS.map((p) => {
+          {PLANS.map((p, planIndex) => {
             const yearly = +(p.monthly * 10).toFixed(2);
             const perMonth = billing === "monthly" ? p.monthly : yearly / 12;
             const perDay = perMonth / 30;
@@ -187,10 +188,11 @@ export function PricingBoard() {
             return (
               <article
                 key={p.id}
+                style={{ "--d": `${360 + planIndex * 130}ms` } as React.CSSProperties}
                 className={
                   popular
-                    ? "relative flex flex-col rounded-[0.875rem] drew-gradient-border p-8 shadow-[0_30px_90px_-40px_rgb(65_207_139/0.25)] sm:p-10 md:-my-4 md:py-14"
-                    : "surface relative flex flex-col p-8 opacity-90 sm:p-10"
+                    ? "rise relative flex flex-col rounded-[0.875rem] drew-gradient-border p-8 shadow-[0_30px_90px_-40px_rgb(65_207_139/0.25)] sm:p-10 md:-my-4 md:py-14"
+                    : "rise surface relative flex flex-col p-8 opacity-90 sm:p-10"
                 }
               >
                 <h2 className={`font-sans text-2xl font-bold tracking-tight ${popular ? "text-white" : "text-soft"}`}>{t(p.name)}</h2>
@@ -247,7 +249,7 @@ export function PricingBoard() {
         </div>
 
         <div className="mx-auto mt-10 max-w-5xl px-5">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.025] px-5 py-7 sm:px-8">
+          <Reveal className="rounded-2xl border border-white/10 bg-white/[0.025] px-5 py-7 sm:px-8">
             <h2 className="text-center text-2xl font-semibold tracking-tight text-white sm:text-3xl">{t("Accepted Payments")}</h2>
             <div className="mt-7 grid grid-cols-2 items-center gap-6 sm:grid-cols-4 sm:gap-8">
               <div className="flex min-h-16 items-center justify-center gap-3">
@@ -296,15 +298,15 @@ export function PricingBoard() {
                 <span className="text-sm font-bold text-white">Google Play</span>
               </div>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* Comparison */}
       <section>
         <div className="mx-auto max-w-5xl px-5">
-          <h2 className="pb-10 pt-24 text-center text-4xl font-semibold tracking-[-0.025em] sm:text-6xl">{t("Compare plans")}</h2>
-          <div className="surface overflow-x-auto">
+          <Reveal as="h2" className="pb-10 pt-24 text-center text-4xl font-semibold tracking-[-0.025em] sm:text-6xl">{t("Compare plans")}</Reveal>
+          <Reveal className="surface overflow-x-auto">
             <table className="w-full table-fixed text-left text-[0.85rem] sm:text-[0.95rem]">
               <colgroup>
                 <col />
@@ -360,14 +362,14 @@ export function PricingBoard() {
                 </tr>
               </tbody>
             </table>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* FAQ */}
       <section>
         <div className="mx-auto grid max-w-5xl gap-10 px-5 pb-28 pt-24 md:grid-cols-[1fr_1.7fr]">
-          <div>
+          <Reveal>
             <h2 className="text-4xl font-semibold tracking-[-0.025em] sm:text-6xl">{t("Questions?")}</h2>
             <p className="mt-4 text-lg text-soft">
               {t("Still unsure?")}{" "}
@@ -375,8 +377,8 @@ export function PricingBoard() {
                 {t("Contact support")}
               </a>
             </p>
-          </div>
-          <div className="grid gap-3">
+          </Reveal>
+          <Reveal className="grid gap-3" delay={120}>
             {FAQ.map(([q, a], i) => {
               const isOpen = open === i;
               return (
@@ -402,7 +404,7 @@ export function PricingBoard() {
                 </div>
               );
             })}
-          </div>
+          </Reveal>
         </div>
       </section>
     </>

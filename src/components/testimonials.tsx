@@ -7,6 +7,7 @@ import { TESTIMONIALS, type Testimonial } from "@/lib/testimonials";
 import { SITE } from "@/lib/site";
 import { BADGE, ServerBadge } from "@/components/server-badge";
 import { TwoTone } from "@/components/two-tone";
+import { Reveal } from "@/components/reveal";
 
 function Avatar({ src, name, className }: { src?: string | null; name: string; className: string }) {
   return src ? (
@@ -16,12 +17,12 @@ function Avatar({ src, name, className }: { src?: string | null; name: string; c
   );
 }
 
-function Card({ item, featured }: { item: Testimonial; featured: boolean }) {
+function Card({ item, featured, index }: { item: Testimonial; featured: boolean; index: number }) {
   const { t } = useI18n();
   const { server, quote, author } = item;
   const accent = item.color ?? (server.badge ? BADGE[server.badge].color : null);
   return (
-    <figure className={`relative mb-5 flex break-inside-avoid flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#0b0d0c] p-7 ${featured ? "sm:p-10" : ""}`}>
+    <Reveal as="figure" delay={(index % 2) * 120} className={`lift relative mb-5 flex break-inside-avoid flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#0b0d0c] p-7 ${featured ? "sm:p-10" : ""}`}>
       {server.icon && (
         <Image src={server.icon} alt="" aria-hidden width={96} height={96} className={`pointer-events-none absolute left-1/2 top-1/3 size-[140%] max-w-none -translate-x-1/2 -translate-y-1/2 object-cover blur-3xl saturate-150 ${featured ? "opacity-25" : "opacity-10"}`} />
       )}
@@ -45,7 +46,7 @@ function Card({ item, featured }: { item: Testimonial; featured: boolean }) {
         <p className="font-semibold text-white">{t(author.name)}</p>
         <p className="text-sm text-white/75">{t(author.role)}</p>
       </figcaption>
-    </figure>
+    </Reveal>
   );
 }
 
@@ -76,7 +77,7 @@ export function Testimonials() {
       </h2>
       <p className="mx-auto mt-4 max-w-2xl text-center text-sm text-mute">{t("A look at the everyday challenges Drew is built to help communities handle.")}</p>
       <div className="mx-auto mt-14 max-w-5xl columns-1 gap-5 md:columns-2">
-        {TESTIMONIALS.map((item, i) => <Card key={`${item.server.name}-${i}`} item={item} featured={i === 0} />)}
+        {TESTIMONIALS.map((item, i) => <Card key={`${item.server.name}-${i}`} item={item} featured={i === 0} index={i} />)}
       </div>
       <div className="mt-8 text-center">
         <p className="text-sm text-mute">
