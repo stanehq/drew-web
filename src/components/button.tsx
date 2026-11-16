@@ -3,7 +3,7 @@ import type { ComponentProps, ReactNode } from "react";
 
 type Variant = "primary" | "secondary" | "ghost" | "outline";
 const styles: Record<Variant, string> = {
-  primary: "border border-[#2f9e6e] bg-[#2f9e6e] text-white [&_svg]:!fill-white hover:border-[#38ad7c] hover:bg-[#38ad7c] hover:text-white",
+  primary: "border border-[#38b67c] bg-[#38b67c] text-white [&_svg]:!fill-white hover:border-[#44c58a] hover:bg-[#44c58a] hover:text-white",
   secondary: "border border-line-strong bg-white/[0.06] text-fg hover:border-white/30 hover:bg-white/[0.1]",
   ghost: "border border-transparent text-soft hover:border-line hover:bg-white/[0.05] hover:text-fg",
   outline: "border border-brand/55 bg-brand/[0.07] text-brand-bright hover:border-brand hover:bg-brand/[0.14]",
