@@ -43,7 +43,7 @@ const steps = [
 ];
 
 const primary =
-  "inline-flex h-12 items-center gap-2 rounded-md border border-[#41cf8b] bg-[#41cf8b] px-6 text-[0.98rem] font-semibold text-white transition-all hover:bg-[#5bd9a0]";
+  "inline-flex h-12 items-center gap-2 rounded-md border border-[#2f9e6e] bg-[#2f9e6e] px-6 text-[0.98rem] font-semibold text-white transition-all hover:bg-[#38ad7c]";
 const secondary =
   "inline-flex h-12 items-center gap-2 rounded-md border border-white/30 bg-black px-6 text-[0.98rem] font-semibold text-fg transition-colors hover:border-white/50 hover:bg-[#111]";
 
@@ -159,7 +159,7 @@ export default function HomePage() {
 
       {/* Closing CTA card, Wick/Kena style: centered, vivid multi-color gradient, joined buttons */}
       <section className="relative px-5 pb-28">
-        <div className="cta-gradient relative mx-auto max-w-4xl overflow-hidden rounded-2xl px-6 py-16 text-center shadow-[0_40px_100px_-40px_rgba(65,207,139,0.7)] sm:px-12 sm:py-20">
+        <div className="cta-gradient relative mx-auto max-w-4xl overflow-hidden rounded-2xl px-6 py-16 text-center shadow-[0_40px_100px_-50px_rgba(47,158,110,0.45)] sm:px-12 sm:py-20">
           <Image
             src="/brand/drew-icon.svg"
             unoptimized
