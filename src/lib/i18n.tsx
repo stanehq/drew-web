@@ -200,12 +200,14 @@ export function I18nProvider({ children, initialLocale = "en" }: { children: Rea
   const router = useRouter();
   const pathname = usePathname();
   // The URL is the source of truth: /es/... is Spanish, no prefix is English.
+  // It only runs when the page changes. If it also ran when the language was picked, it would still see the old
+  // URL for a moment and put the old language (and its cookie) back, so picking English from /es never left /es.
   useEffect(() => {
     const [fromUrl] = splitLocale(window.location.pathname);
-    if (fromUrl !== locale) Promise.resolve().then(() => setLocaleState(fromUrl));
+    Promise.resolve().then(() => setLocaleState((current) => (current === fromUrl ? current : fromUrl)));
     document.cookie = `${LOCALE_COOKIE}=${fromUrl}; path=/; max-age=31536000; samesite=lax`;
     document.documentElement.lang = fromUrl;
-  }, [pathname, locale]);
+  }, [pathname]);
   const setLocale = (next: Locale) => {
     if (next === locale) return;
     window.dispatchEvent(new Event("drew:locale-change"));
