@@ -149,7 +149,7 @@ export function PricingBoard() {
             {t("Try every Premium feature free for 15 days. Cancel before it ends and you won't pay a cent.")}
           </p>
 
-          <div style={{ "--d": "240ms" } as React.CSSProperties} className="rise mt-8 flex flex-wrap items-center justify-center gap-3">
+          <div style={{ "--d": "240ms" } as React.CSSProperties} className="rise relative z-30 mt-8 flex flex-wrap items-center justify-center gap-3">
           <div role="radiogroup" aria-label={t("Billing period")} className="relative flex w-fit gap-1 rounded-xl border border-white/10 p-1" {...billingSlide.containerProps}>
             {billingSlide.highlight("bg-white/10")}
             {(["monthly", "yearly"] as const).map((b) => (
